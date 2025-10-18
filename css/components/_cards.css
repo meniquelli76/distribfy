@@ -90,18 +90,19 @@
   padding: var(--spacing-3) var(--spacing-4);
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3); /* Espaçamento entre os itens */
   border-bottom: 1px solid var(--color-border);
   border-radius: var(--border-radius-large) 0 0 0;
-  position: relative;
-  padding-right: var(--spacing-7);
 }
+
 .festival-title-wrapper {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
   min-width: 0;
+  flex-grow: 1; /* Faz o título ocupar todo o espaço disponível */
 }
+
 .festival-title {
   font-size: 1rem;
   font-weight: var(--font-weight-bold);
@@ -111,17 +112,14 @@
   text-overflow: ellipsis;
 }
 .festival-chevron-btn {
-  position: absolute;
-  top: 50%;
-  right: var(--spacing-4);
-  transform: translateY(-50%);
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Impede que o botão encolha */
   transition: transform 0.3s ease;
 }
+
 .festival-accordion[open] summary .festival-chevron-btn {
   transform: translateY(-50%) rotate(180deg);
 }
@@ -742,9 +740,77 @@ border-radius: 10px; /* Ajuste o valor conforme desejado */
   color: var(--text-secondary-color); 
 }
 
+
+
 .festival-info-item img {
   width: 16px;       /* Define uma largura fixa para todos os ícones */
   height: 16px;      /* Define uma altura fixa para todos os ícones */
   object-fit: contain; /* Garante que a imagem do ícone se ajuste sem distorcer */
   flex-shrink: 0;    /* Impede que o ícone seja 'espremido' pelo texto */
+}
+
+.festival-status-btn {
+  background-color: transparent;
+  border: none; /* <-- Remove a borda */
+  border-radius: 0; /* <-- Remove o arredondamento desnecessário */
+  padding: 3px 0; /* <-- Ajusta o preenchimento para apenas vertical */
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.625rem;
+  cursor: pointer;
+  white-space: nowrap;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+  margin-right: var(--spacing-3);
+  opacity: 0.8; /* Um pouco de transparência para ficar mais discreto */
+}
+
+.festival-status-btn:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+/* --- CLASSES DE COR DINÂMICAS --- */
+/* Status 'A Pesquisar' (ID 1) */
+.festival-status-btn[data-status-id='1'] {
+  color: #adb5bd;
+}
+.festival-status-btn[data-status-id='1']:hover {
+  background-color: #e9ecef;
+}
+
+/* Status 'Em Análise' (ID 2) */
+.festival-status-btn[data-status-id='2'] {
+  color: #fca311;
+}
+.festival-status-btn[data-status-id='2']:hover {
+  background-color: #fff3e0;
+}
+
+/* Status 'Verificado' (ID 3) */
+.festival-status-btn[data-status-id='3'] {
+  color: #44bba4;
+}
+.festival-status-btn[data-status-id='3']:hover {
+  background-color: #e0f2f1;
+}
+
+.festival-status-btn.updating {
+  animation: pulse 0.5s ease-in-out;
+}
+/* Animação de pulso para feedback */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.festival-status-btn:hover {
+  background-color: #f1f3f5;
+}
+
+.festival-status-btn.updating {
+  background-color: #44bba4; /* Verde para feedback de sucesso */
+  color: white;
+
 }

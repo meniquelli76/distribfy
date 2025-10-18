@@ -117,6 +117,11 @@
     html += `<h3 class="festival-title">${festivalName}</h3>`;
     html += '<img src="public/icons/icon-verified.svg" alt="Verificado" class="icon-verified" />';
     html += '</div>';
+    const statusName = f.festival_status ? f.festival_status.status_name : 'A Pesquisar';
+const statusId = f.festival_status ? f.festival_status.id : 1; // Assumindo 1 como padrão
+html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-status-id="${statusId}">${statusName}</button>`;
+
+html += '<button class="festival-chevron-btn" type="button">';
     html += '<button class="festival-chevron-btn" type="button">';
     html += '<img src="public/icons/btn-chevron-down.svg" alt="Expandir" />';
     html += '</button>';
@@ -207,7 +212,7 @@
         try {
             const { data, error } = await supabaseClient
                 .from("festivals")
-                .select(`*, festival_edition!festivals_edition_id_fkey(id, edition), countries!festivals_country_id_fkey(id, country, flag_icon_url), month_held:months!festivals_month_held_id_fkey(id, months_id), month_opening:months!festivals_month_opening_id_fkey(id, months_id), platforms!festivals_platform_id_fkey(id, platform_name), fee_status!festivals_fee_status_id_fkey(id, status_name), qualifiers:festival_qualifiers_assignments(qualifiers(id, code)), categories:festival_categories_assignments(categories(id, category)), genres:festival_genres_assignments(genres(id, genre)), film_types:festival_film_types(film_types(id, type))`)
+                .select(`*, festival_status(*), festival_edition!festivals_edition_id_fkey(id, edition), countries!festivals_country_id_fkey(id, country, flag_icon_url), month_held:months!festivals_month_held_id_fkey(id, months_id), month_opening:months!festivals_month_opening_id_fkey(id, months_id), platforms!festivals_platform_id_fkey(id, platform_name), fee_status!festivals_fee_status_id_fkey(id, status_name), qualifiers:festival_qualifiers_assignments(qualifiers(id, code)), categories:festival_categories_assignments(categories(id, category)), genres:festival_genres_assignments(genres(id, genre)), film_types:festival_film_types(film_types(id, type))`)
                 .order("deadline_early", { ascending: true });
 
             if (error) throw error;
@@ -234,6 +239,7 @@
             if (typeof window.initializeTooltips === 'function') window.initializeTooltips();
             if (typeof window.initializeCardActions === 'function') window.initializeCardActions();
             if (typeof window.initializeAccordions === 'function') window.initializeAccordions();
+            if (typeof window.initializeStatusButtons === 'function') window.initializeStatusButtons();
             
         } catch (err) {
             console.error("Erro ao buscar e renderizar festivais:", err);
