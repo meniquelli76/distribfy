@@ -1,0 +1,243 @@
+/* ==========================================================================
+   TEMA CUSTOMIZADO PARA FLATPICKR - FESTMUNDI
+   Integrado com o Design System do projeto.
+   ========================================================================== */
+
+/* 1. Container Principal do Calendário */
+.flatpickr-calendar {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-panel);
+  font-family: var(--font-family-base);
+  width: 320px;
+}
+
+/* 2. Cabeçalho (Mês, Ano e Setas de Navegação) */
+.flatpickr-months {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 50px !important;
+  padding: 0 44px !important;
+  background-color: var(--color-background) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-months .flatpickr-month {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  pointer-events: auto !important;
+}
+
+.flatpickr-current-month {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-size: 0.9rem !important;
+  font-weight: var(--font-weight-bold) !important;
+  font-family: var(--font-family-base) !important;
+  color: var(--color-text-primary) !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+/* ===== seletor de mês (select) ===== */
+.flatpickr-monthDropdown-months {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 28px 4px 8px !important;
+  margin: 0 !important;
+  color: var(--color-text-primary) !important;
+  font-size: 0.9rem !important;
+  font-weight: var(--font-weight-bold) !important;
+  font-family: var(--font-family-base) !important;
+  cursor: pointer !important;
+  width: auto !important;
+  min-width: 90px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%231a1a1a' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 10px !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+}
+
+.flatpickr-monthDropdown-months option {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  font-size: 0.9rem !important;
+}
+
+/* ===== campo do ano (input number) ===== */
+.numInput.cur-year {
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  appearance: none !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 6px !important;
+  margin: 0 !important;
+  color: var(--color-text-primary) !important;
+  font-size: 0.9rem !important;
+  font-weight: var(--font-weight-bold) !important;
+  font-family: var(--font-family-base) !important;
+  width: 56px !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+
+.numInput.cur-year::-webkit-outer-spin-button,
+.numInput.cur-year::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* ===== setas laterais (meses) ===== */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--border-radius-medium) !important;
+  background: transparent !important;
+  border: none !important;
+  z-index: 30 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+}
+
+.flatpickr-prev-month { left: 8px !important; }
+.flatpickr-next-month { right: 8px !important; }
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  width: 12px !important;
+  height: 12px !important;
+  display: block !important;
+  stroke: currentColor !important;
+  color: var(--color-text-primary) !important;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  background-color: rgba(0,0,0,0.04) !important;
+}
+
+/* ===== correção Safari ===== */
+@supports (-webkit-touch-callout: none) {
+  .flatpickr-months,
+  .flatpickr-months .flatpickr-month,
+  .flatpickr-current-month {
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+  }
+}
+
+/* 3. Dias da Semana */
+.flatpickr-weekday {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* 4. Dias (Números) */
+.flatpickr-day {
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  line-height: 38px;
+  font-weight: var(--font-weight-medium);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.flatpickr-day:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.flatpickr-day:hover {
+  background-color: var(--color-background);
+}
+
+.flatpickr-day.today {
+  border: 1px solid var(--color-primary-accent);
+  color: var(--color-primary-accent);
+}
+.flatpickr-day.today:hover {
+  background-color: var(--color-primary-accent);
+  color: var(--color-primary-accent-text);
+}
+
+.flatpickr-day.selected {
+  background-color: var(--color-primary-accent);
+  color: var(--color-primary-accent-text);
+}
+.flatpickr-day.selected:hover {
+  background-color: #000;
+}
+
+/* ==========================================================================
+   CORREÇÃO VISUAL DAS SETAS DO ANO (numInputWrapper)
+   ========================================================================== */
+.numInputWrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: row !important;
+  gap: 2px !important;
+}
+
+/* cria coluna de setas à direita do ano */
+.numInputWrapper::after {
+  content: "";
+}
+
+.numInputWrapper span.arrowUp,
+.numInputWrapper span.arrowDown {
+  position: absolute !important;
+  right: -14px !important;
+  width: 14px !important;
+  height: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.numInputWrapper span.arrowUp { top: 2px !important; }
+.numInputWrapper span.arrowDown { bottom: 2px !important; }
+
+.numInputWrapper span.arrowUp svg,
+.numInputWrapper span.arrowDown svg {
+  width: 8px !important;
+  height: 6px !important;
+  stroke: var(--color-text-primary) !important;
+  stroke-width: 2 !important;
+}
+
+.numInputWrapper span.arrowUp:hover,
+.numInputWrapper span.arrowDown:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 3px !important;
+}
+

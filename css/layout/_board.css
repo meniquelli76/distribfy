@@ -1,0 +1,60 @@
+/* css/layout/_board.css */
+
+.festivals-board {
+  width: 100%;
+  margin-top: 0; /* 48px */
+}
+
+.board-header {
+  background-color: var(--color-background);
+  padding: var(--spacing-4) var(--spacing-7); /* 16px 48px */
+  margin-bottom: var(--spacing-6); /* 32px */
+}
+
+.board-title {
+  font-size: 2rem; /* 32px */
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.board-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--spacing-6); /* 32px */
+  padding: 0 var(--spacing-7); /* 48px */
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  align-items: start;
+}
+
+.board-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5); /* 24px */
+  /* AJUSTE: Impede que o conteúdo interno (cards) estoure o layout */
+  min-width: 0;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 1024px) {
+  .board-container {
+    grid-template-columns: 1fr;
+  }
+
+  .board-header,
+  .board-container {
+    padding-inline: var(--spacing-5);
+  }
+}
+
+.board-container-films {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--spacing-1); /* 32px */
+  padding: 0 var(--spacing-7); /* 48px */
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  align-items: start;
+}

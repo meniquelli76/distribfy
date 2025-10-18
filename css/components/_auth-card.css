@@ -1,0 +1,117 @@
+/* css/components/_auth-card.css */
+
+.card {
+  max-width: 480px;
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.card-header .brand-logo {
+  text-align: center;
+  margin-bottom: var(--spacing-5);
+}
+
+.card-header .title-wrap {
+  text-align: left;
+}
+
+.title-wrap h1 {
+  font-size: 1.4rem;
+  margin-bottom: var(--spacing-2);
+  /* --- AJUSTE: Cor do título principal --- */
+  color: #495057;
+}
+
+/* --- AJUSTE: Tamanho do texto de apoio ao formulário --- */
+.form-prompt {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  font-size: 0.8rem; 
+  margin-top: 0;
+}
+
+.card-footer {
+  text-align: center;
+  /* --- AJUSTE: Tamanho da fonte do rodapé --- */
+  font-size: 0.8125rem; /* 13px */
+}
+
+.card-footer span {
+  color: var(--color-text-secondary);
+}
+
+.card-footer a {
+  color: var(--color-primary-accent);
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
+}
+.card-footer a:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  color: var(--color-text-secondary);
+}
+
+.separator .line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 520px) {
+  .card {
+    padding: var(--spacing-5);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
+
+.forgotpassword {
+    margin-block-start: var(--spacing-5);
+    font-size: .6rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+.forgotpassword a {
+    color: var(--color-primary-accent);
+    font-weight: var(--font-weight-medium);
+}
+
+.forgot-password-container {
+    text-align: center;
+    margin-bottom: var(--spacing-4);
+    font-size: 0.8125rem; /* 13px - mesmo tamanho do .terms */
+}
+
+.forgot-password-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+}
+.forgot-password-link:hover {
+    text-decoration: underline;
+    color: var(--color-primary-accent);
+}
+
+.card {
+  max-width: 480px;
+  width: 100%;
+  margin: 0; /* Adicione esta linha */
+  background-color: var(--color-surface);
+  /* ... resto do seu código ... */
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — FestMundi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base/_variables.css" />
+  <link rel="stylesheet" href="css/base/_base.css" />
+  <link rel="stylesheet" href="css/base/_utilities.css" />
+  <link rel="stylesheet" href="css/layout/_main-container.css" />
+  <link rel="stylesheet" href="css/components/_buttons.css" />
+  <link rel="stylesheet" href="css/components/_auth-card.css" />
+  <link rel="stylesheet" href="css/forms.css" />
+  <link rel="stylesheet" href="css/layout/_header.css" />
+</head>
+<body class="backgroudgradient">
+   <header class="header">
+    <div class="logo">
+        <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
+        <span class="tagline">simplify your film distribution</span>
+    </div>
+    <nav class="menu">
+       <!-- <a href="#">Home</a>
+        <a href="https://festmundi.vercel.app/festivals.html">Festivais</a>
+        <a href="#">Meus Filmes</a>
+        <a href="#">Contato</a> -->
+    </nav>
+    <div class="user-area">
+        <button class="notification-btn">
+            <img src="public/icons/notification-icon.svg" alt="Notificações">
+        </button>
+
+        <div class="user-menu-container" id="user-menu" style="display: none;">
+            <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+                <img src="public/images/user-avatar.jpg" alt="Avatar do usuário" class="user-avatar-header">
+                <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
+            </button>
+            <div class="dropdown-menu" id="user-dropdown">
+                <ul>
+                    <li><a href="/userpage.html">Minha Conta</a></li>
+                    <li><a href="#" id="logout-button">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="login-container">
+            <a href="/login.html" class="header-login-link">Entrar</a>
+        </div>
+    </div>
+</header>
+  <div class="page">
+    <article class="card" role="main" aria-labelledby="titulo-login">
+      <div class="social">
+        <button type="button" class="google-btn" id="google-login" aria-label="Entrar com o Google">Entrar com o Google</button>
+      </div>
+
+       <div class="separator" aria-hidden="true">
+        <div class="line"></div><div class="label">ou</div><div class="line"></div>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="fields">
+          <div class="full">
+            <label for="email" class="sr-only">Email</label>
+            <input id="email" name="email" type="email" placeholder="Email" required />
+          </div>
+          <div class="full">
+            <label for="senha" class="sr-only">Senha</label>
+            <input id="senha" name="senha" type="password" placeholder="Senha" required />
+          </div>
+        </div>
+
+        <div class="forgotpassword">
+            <a href="#" class="forgot-password-link">Esqueceu sua senha?</a>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Entrar</button>
+        </div>
+      </form>
+
+      <footer class="card-footer">
+        <span>Não tem uma conta?</span>
+        <a href="/register.html" aria-label="Inscreva-se">Inscreva-se</a>
+      </footer>
+    </article>
+  </div>
+  
+<script src="js/supabase.min.js"></script>
+
+<script src="js/supabase-client.js"></script>
+
+<script src="https://www.google.com/recaptcha/api.js?render=6LfRcOwrAAAAAOCLiPzBCxk18HjwbdjIUsfEJGEB"></script>
+
+<script src="js/main.js"></script>
+
+<script src="js/auth-manager.js"></script>
+  </body>
+</html>

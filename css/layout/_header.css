@@ -1,0 +1,198 @@
+/* css/layout/_header.css */
+
+/* 1. Container Principal do Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-6); /* Espaço entre os blocos principais, se necessário */
+  
+  width: 100%;
+  /* AJUSTE AQUI: Aumentado de var(--spacing-4) para 20px */
+  padding: 20px var(--spacing-6); /* 20px vertical, 32px horizontal */
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 2. Seção da Logo */
+.header .logo {
+  display: flex;
+  align-items:  center;
+  gap: var(--spacing-3); /* Espaço entre a imagem da logo e o tagline */
+  flex-shrink: 0; /* Evita que a logo encolha */
+}
+
+.header .logo-image {
+  height: 30px; /* Altura de referência, ajuste se necessário */
+}
+
+.header .tagline {
+  font-size: 0.7rem; /* 14px */
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap; /* Impede a quebra de linha */
+  margin-top: 5px;
+}
+
+/* 3. Menu de Navegação */
+.header .menu {
+  display: flex;
+  justify-content: center; /* Centraliza os links no espaço disponível */
+  gap: var(--spacing-6);
+  width: 100%; /* Permite que o menu ocupe o espaço central */
+}
+
+.header .menu a {
+  text-decoration: none;
+  color: var(--color-nav-link);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.9375rem; /* 15px */
+  padding: var(--spacing-2) var(--spacing-1);
+  border-radius: var(--border-radius-small);
+  transition: color 0.2s ease;
+}
+
+.header .menu a:hover,
+.header .menu a:focus {
+  color: var(--color-nav-link-hover);
+}
+
+/* 4. Área do Usuário */
+.header .user-area {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-5); /* Espaço entre o sino e o perfil */
+  flex-shrink: 0; /* Evita que a área do usuário encolha */
+}
+
+/* css/layout/_header.css */
+
+.notification-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Garante que o estado inicial não seja transparente */
+  opacity: 1; 
+  /* Transição ajustada para o efeito de opacidade */
+  transition: opacity 0.2s ease; 
+}
+
+/* Opcional, mas boa prática para remover espaços extras abaixo da imagem */
+.notification-btn img {
+  display: block;
+}
+
+.notification-btn:hover,
+.notification-btn:focus {
+  /* Efeito de opacidade aplicado, fundo removido */
+  opacity: 0.7;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%; /* Transforma a imagem em um círculo */
+  object-fit: cover; /* Garante que a imagem não fique distorcida */
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border); /* Borda sutil */
+}
+
+/* 5. Menu Mobile (Oculto em Desktop-First) */
+.header .menu-toggle {
+  display: none;
+}
+
+/* =================================================== */
+/* ESTILOS PARA O MENU DROPDOWN DO USUÁRIO             */
+/* =================================================== */
+
+.user-menu-container {
+    position: relative;
+}
+
+.avatar-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 50px;
+}
+.user-avatar-header {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.chevron-down {
+    transition: transform 0.2s ease;
+}
+
+.dropdown-menu {
+    display: none; /* Escondido por padrão */
+    position: absolute;
+    top: 120%; /* Posição abaixo do botão */
+    right: 0;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-panel);
+    width: 200px;
+    z-index: 100;
+}
+
+/* Mostra o menu quando o container tem a classe 'active' */
+.user-menu-container.active .dropdown-menu {
+    display: block;
+}
+/* Gira a seta quando o menu está ativo */
+.user-menu-container.active .chevron-down {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: var(--spacing-2);
+}
+.dropdown-menu a {
+    display: block;
+    padding: var(--spacing-3);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: var(--border-radius-small);
+    font-size: 0.9375rem;
+}
+.dropdown-menu a:hover {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+
+.header-login-link {
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.9375rem;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius-medium);
+  transition: background-color 0.2s ease;
+}
+
+.header-login-link:hover {
+  background-color: var(--color-background);
+}

@@ -1,0 +1,596 @@
+/* css/components/_cards.css */
+
+/* ==========================================================================
+   1. ESTRUTURA PRINCIPAL DO ACORDEÃO (DETAILS/SUMMARY)
+   ========================================================================== */
+.festival-accordion {
+  position: relative;
+}
+.festival-accordion > summary {
+  list-style: none;
+  pointer-events: none;
+}
+.festival-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+.festival-accordion > summary * {
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   2. LAYOUT SUPERIOR (CARD + BARRA DE AÇÕES)
+   ========================================================================== */
+.festival-card-top {
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  gap: 2px;
+}
+.festival-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-large) 0 0 var(--border-radius-large);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  min-width: 0;
+}
+.festival-actions {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-medium);
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+.action-btn:hover {
+  opacity: 0.7;
+  background-color: var(--color-background);
+}
+.add-button {
+  margin-top: auto;
+  width: 100%;
+  height: 28px;
+  background-color: #343a40;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-radius: 0 0 var(--border-radius-large) 0;
+}
+.add-button:hover {
+  transform: scale(1.05);
+}
+.festival-actions .add-button img {
+  filter: brightness(0) invert(1);
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.festival-actions .add-button.active img {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* ==========================================================================
+   3. CABEÇALHO DO CARD (TÍTULO)
+   ========================================================================== */
+.festival-title-section {
+  background-color: #dee2e6;
+  padding: var(--spacing-3) var(--spacing-4);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large) 0 0 0;
+  position: relative;
+  padding-right: var(--spacing-7);
+}
+.festival-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: 0;
+}
+.festival-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  color: #343a40;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.festival-chevron-btn {
+  position: absolute;
+  top: 50%;
+  right: var(--spacing-4);
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.festival-accordion[open] summary .festival-chevron-btn {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+
+.festival-card-header {
+  display: grid;
+  grid-template-columns: 1.2fr 1px 1fr 1px minmax(110px, 0.8fr) minmax(110px, 0.8fr) minmax(270px, 1.5fr);
+  align-items: start;
+  padding: var(--spacing-4) var(--spacing-2);
+  gap: var(--spacing-3);
+  color: #495057; /* <-- COR BASE APLICADA AQUI */
+}
+
+.divider-vertical {
+  width: 1px;
+  background-color: var(--color-border);
+  align-self: stretch;
+}
+
+.festival-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: 0 var(--spacing-2);
+}
+
+.col-title {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  /* A propriedade 'color' foi removida para herdar do pai */
+}
+
+.festival-col-country {
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.festival-country {
+  font-size: 0.8125rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.festival-qualifiers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.festival-qualifiers .label-small {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-medium);
+  margin-top: var(--spacing-2);
+}
+
+.festival-qualifiers .tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.tag-qualifier {
+  border: 1px solid #495057; /* Ajustado para combinar com o texto */
+  border-radius: var(--border-radius-medium);
+  padding: 1px 6px;
+  font-size: 0.5625rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.festival-age {
+  font-size: 0.75rem;
+  margin-top: var(--spacing-0);
+  /* A propriedade 'color' foi removida para herdar do pai */
+}
+
+.festival-col-info {
+  gap: var(--spacing-3);
+}
+
+.festival-info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.75rem;
+  line-height: 100%;
+  /* A propriedade 'color' foi removida para herdar do pai */
+}
+
+.festival-info-item a {
+  text-decoration: none;
+  color: inherit; /* Força o link a ter a mesma cor do texto ao redor */
+}
+
+.festival-info-item a:hover {
+  text-decoration: underline;
+}
+
+.festival-col-deadlines {
+  gap: var(--spacing-2);
+}
+
+.deadline-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.deadline-label {
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.deadline-date {
+  font-size: 0.7rem;
+}
+
+.festival-col-result {
+  gap: var(--spacing-2);
+}
+
+.festival-col-result > .col-title, .festival-col-result > .result-date {
+  text-align: left;
+}
+
+.result-date {
+  font-size: 0.7rem;
+  margin-top: -5px;
+}
+
+.festival-col-fee {
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+  background-color: var(--color-background);
+  border-radius: var(--border-radius-medium);
+  padding: 10px var(--spacing-2);
+  width: 80px;
+  align-self: flex-start;
+}
+
+.festival-col-fee img {
+  height: 12px;
+  width: auto;
+}
+
+.fee-status {
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-bold);
+}
+/* ==========================================================================
+   5. SEÇÃO DE TAGS COM TOOLTIP (RESTAURADA)
+   ========================================================================== */
+.festival-item-tags {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  background-color: var(--color-background);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) 50px;
+  min-width: 0;
+}
+.icon-tag {
+  position: absolute;
+  left: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+}
+.tags-group .label-small {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-medium);
+  color: #343a40;
+  margin-bottom: var(--spacing-2);
+}
+.tags-box {
+  position: relative; /* Contexto para o ícone absoluto */
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  /* Padding direito para criar espaço para o ícone */
+  padding: 0 var(--spacing-5) 0 var(--spacing-3);
+  display: flex;
+  align-items: center;
+  height: 20px;
+  width: 100%;
+}
+.tags-box .tags-list {
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.tags-box .tags-list span:not(:last-child)::after {
+  content: ", ";
+}
+.tags-box .icon-chevron {
+  /* Retorna ao posicionamento absoluto que funciona */
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  height: 12px;
+  width: auto;
+}
+.tags-box.has-overflow .icon-chevron {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ==========================================================================
+   6. ESTILOS DO TOOLTIP
+   ========================================================================== */
+/* ... (Seção 6 sem alterações) ... */
+.tags-tooltip { position: fixed; background-color: #343a40; color: var(--color-primary-accent-text); font-size: 0.75rem; line-height: 1.5; padding: var(--spacing-2) var(--spacing-3); border-radius: var(--border-radius-medium); box-shadow: var(--shadow-panel); z-index: 100; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; max-width: 300px; }
+.tags-tooltip.visible { opacity: 1; visibility: visible; }
+.tags-tooltip::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; }
+.tags-tooltip:not(.tooltip-below)::after { top: 100%; border-top: 6px solid #343a40; }
+.tags-tooltip.tooltip-below::after { bottom: 100%; border-bottom: 6px solid #343a40; }
+
+/* ==========================================================================
+   7. CONTEÚDO EXPANDIDO E ANIMAÇÃO DO ACCORDION
+   ========================================================================== */
+/* ... (Seção 7 sem alterações) ... */
+.card-expanded-content { background-color: #dee2e6; border-radius: var(--border-radius-large); display: grid; grid-template-columns: 1fr 2fr; gap: var(--spacing-5); align-items: start; overflow: hidden; max-height: 0; opacity: 0; transform: translateY(-10px); padding-top: 0; padding-bottom: 0; margin-top: 0; border: 1px solid transparent; transition: max-height 0.5s ease-out, opacity 0.3s ease-out, transform 0.5s ease-out, padding 0.5s ease-out, margin 0.5s ease-out, border-color 0.5s ease-out; }
+.festival-accordion[open] .card-expanded-content { max-height: 2000px; opacity: 1; transform: translateY(0); padding: var(--spacing-5); margin-top: var(--spacing-2); border-color: var(--color-border); }
+.festival-accordion[open] .card-expanded-content.closing { max-height: 0; opacity: 0; transform: translateY(-10px); padding-top: 0; padding-bottom: 0; margin-top: 0; border-color: transparent; }
+.card-expanded-content .description { font-size: 0.8125rem; line-height: 1.6; color: var(--color-text-secondary); padding-right: var(--spacing-5); }
+.more-details-panel { background-color: #e9ecef; border-radius: var(--border-radius-large); padding: var(--spacing-5); display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-4); }
+.detail-section { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--spacing-4); }
+.detail-header { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-2); }
+.detail-header h4 { font-size: 1rem; font-weight: var(--font-weight-regular); }
+.detail-premiere .detail-header h4 { color: #fca311; }
+.detail-fee .detail-header h4 { color: #44bba4; }
+.detail-more .detail-header h4 { color: #219ebc; }
+.premiere-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: 0.7rem; }
+.premiere-list li.active { color: var(--color-text-primary); font-weight: var(--font-weight-bold); }
+.premiere-list li.inactive { color: var(--color-text-placeholder); }
+.fee-table { display: flex; flex-direction: column; gap: var(--spacing-2); width: 100%; align-items: center; }
+.fee-row { display: flex; justify-content: space-between; width: 55%; font-size: 0.7rem; }
+.fee-note { font-size: 0.6875rem; color: var(--color-text-secondary); }
+.more-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: 0.7rem; color: var(--color-text-secondary); }
+.action-btn--favorite img { filter: grayscale(1) brightness(0.2); transition: filter 0.3s ease, transform 0.3s ease; }
+.action-btn--favorite:hover img { transform: scale(1.1); }
+.action-btn--favorite.active img { filter: brightness(0) saturate(100%) invert(48%) sepia(49%) saturate(4561%) hue-rotate(320deg) brightness(91%) contrast(90%); transform: scale(1.1); }
+.add-button.active { background-color: #44bba4; }
+.add-button.feedback-success { background-color: #44bba4; }
+.add-button.transitioning img { transform: rotate(90deg) scale(0.5); opacity: 0; }
+.confirm-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(244, 246, 248, 0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+.confirm-modal-overlay.visible { opacity: 1; }
+.confirm-modal { background-color: var(--color-surface); border-radius: var(--border-radius-large); box-shadow: var(--shadow-panel); padding: var(--spacing-6); max-width: 400px; width: 90%; text-align: center; transform: scale(0.95); transition: transform 0.3s ease; }
+.confirm-modal-overlay.visible .confirm-modal { transform: scale(1); }
+.confirm-modal-message { font-size: 0.9rem; color: var(--color-text-primary); margin-bottom: var(--spacing-5); }
+.confirm-modal-buttons { display: flex; justify-content: center; gap: var(--spacing-4); }
+.confirm-modal .btn-primary, .confirm-modal .btn-secondary { padding: var(--spacing-2) var(--spacing-4); font-size: 0.8125rem; }
+
+/* ==========================================================================
+   8. RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 1200px) { .festival-card-header { grid-template-columns: 1.2fr 1px 1fr 1px 1fr 1fr; } .festival-item-tags { display: none; } }
+@media (max-width: 992px) { .festival-card-header { grid-template-columns: 1fr; } .divider-vertical { display: none; } .festival-col { border-bottom: 1px solid var(--color-border); padding-bottom: var(--spacing-4); min-height: auto; } .festival-col:last-child { border-bottom: none; } }
+@media (max-width: 768px) { .card-expanded-content { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .card-expanded-content,
+  .festival-accordion[open] .card-expanded-content,
+  .add-button, .add-button img, .action-btn--favorite img {
+    transition: none;
+  }
+}
+
+
+
+/* MY FILMS */
+
+.film-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-large) 0 0 var(--border-radius-large);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  height: 220px;
+  min-width: 0;
+}
+
+.film-title-wrapper {
+  display: flex;
+  justify-content: space-between; /* Distribui o espaço entre os elementos */
+  align-items: center; /* Alinha verticalmente ao centro */
+  width: 100%; /* Garante que ocupe toda a largura disponível */
+}
+
+.film-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  color: #343a40;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+   margin: 0; 
+  flex-shrink: 0; 
+}
+
+.film-country {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre a bandeira e o texto */
+  flex-shrink: 0; /* Impede que o país encolha */
+}
+
+.board-sidebar-films {
+  display: flex;
+  justify-content: flex-end;
+}
+.film-country { font-size: 0.8125rem; display: flex; align-items: center; gap: var(--spacing-2); margin-top: -5px; justify-content: flex-end;}
+
+
+.favorites-box,
+.filter-panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-5);
+}
+
+.conteiner-poster {
+display: inline-block;
+border-radius: 10px; /* Ajuste o valor conforme desejado */
+  overflow: hidden;
+}
+
+.image-wrapper-poster {
+ height: 220px;
+  overflow: hidden;
+}
+
+.image-wrapper-poster img {
+  height: 100%; 
+  width: auto; 
+  display: block; 
+}
+
+
+.film-col { display: flex; flex-direction: column; gap: var(--spacing-3); padding: 0 var(--spacing-2); width: 200px; }
+.film-col-info { gap: var(--spacing-2); }
+.film-info-item { display: flex; align-items: center; gap: var(--spacing-2); font-size: 0.85rem; color: var(--color-text-secondary); line-height: 26px; }
+.film-info-item a { color: var(--color-link); text-decoration: none; }
+.film-info-item a:hover { text-decoration: underline; }
+
+/* BUDGET PANEL MY FILMS */
+.account-board {
+  background: #f6f6f6;
+  border-radius: 10px;
+  width: 220px;
+  
+  padding: 10px 10px;
+  box-shadow: 0 0 4px #eee;
+}
+.account-board-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.account-board-section {
+  text-align: center;
+  line-height: 15px;
+}
+.account-board-label-green {
+  color: #2bb69b;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+.account-board-label-yellow {
+  color: #ffa640;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+.account-board-desc {
+  font-size: 0.7em;
+  color: #757575;
+}
+.account-board-divider {
+  height: 2px;
+  background: #ced4da;
+  margin: 8px 0;
+}
+.account-board-values {
+  margin-top: 12px;
+  text-align: center;
+}
+.account-board-value-red {
+  color: #fa5555;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+.account-board-value-green {
+  color: #2bb69b;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+
+.film-actions {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 220px;
+}
+
+.btn-control {
+  line-height: 3.5; /* Ou o valor desejado */
+}
+
+.rocket-btn {
+  margin-top: auto;
+  width: 100%;
+  height: 35px;
+  background-color: #343a40;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-radius: 0 0 var(--border-radius-large) 0;
+}
+.rocket-btn:hover {
+  background-color: #6c757d;
+}
+
+.flag-icon {
+    width: 25px;
+    height: 16px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* En dash qualifying */
+
+.tag-none {
+  opacity: 0.6;
+  font-style: italic;
+  color: var(--text-secondary-color); 
+}
+
+.festival-info-item img {
+  width: 16px;       /* Define uma largura fixa para todos os ícones */
+  height: 16px;      /* Define uma altura fixa para todos os ícones */
+  object-fit: contain; /* Garante que a imagem do ícone se ajuste sem distorcer */
+  flex-shrink: 0;    /* Impede que o ícone seja 'espremido' pelo texto */
+}

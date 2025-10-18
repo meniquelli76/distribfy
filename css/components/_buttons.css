@@ -1,0 +1,114 @@
+/* css/components/_buttons.css */
+
+/* --- Base para todos os botões --- */
+.btn-primary,
+.btn-secondary {
+  padding: 14px 24px; /* Aumentei um pouco o padding horizontal para melhor respiro */
+  border: none;
+  border-radius: var(--border-radius-medium); /* 8px */
+  font-size: 0.875rem; /* 14px */
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btn-gst-fest {
+  padding: 10px 10px; /* Aumentei um pouco o padding horizontal para melhor respiro */
+  border: none;
+  border-radius: var(--border-radius-medium); /* 8px */
+  font-size: 0.7rem; /* 14px */
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  background-color: #212529; 
+  color: var(--color-primary-accent-text);
+}
+.btn-gst-fest:hover {
+  background-color: #495057; /* Um preto mais puro para o hover */
+  transform: translateY(-2px); /* Efeito sutil de elevação */
+  box-shadow: var(--shadow-panel);
+}
+
+
+/* --- Botão Primário (Ex: "sugerir festival") --- */
+.btn-primary {
+  background-color: #212529; 
+  color: var(--color-primary-accent-text); /* #ffffff */
+}
+
+.btn-primary:hover {
+  background-color: #495057; /* Um preto mais puro para o hover */
+  transform: translateY(-2px); /* Efeito sutil de elevação */
+  box-shadow: var(--shadow-panel);
+}
+
+/* --- Botão Secundário (Ex: "cancelar") --- */
+.btn-secondary {
+  /* Vamos definir um estilo diferente para ele quando for necessário */
+  background-color: #f8f9fa;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: var(--color-text-secondary);
+}
+
+/* --- Estilo de Foco para Acessibilidade --- */
+.btn-primary:focus,
+.btn-secondary:focus {
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
+}
+
+/* css/components/_buttons.css */
+
+.actions {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.btn {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 1rem;
+  font-weight:500;
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  background-color: var(--color-background);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.primary {
+  background-color: var(--color-primary-accent);
+  color: var(--color-primary-accent-text);
+  border-color: var(--color-primary-accent);
+}
+
+.btn.primary:hover {
+  background-color: #333; /* Um pouco mais claro que o preto */
+}
+
+.google-btn {
+  /* Estilo específico para o botão do Google */
+  width: 100%;
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+}

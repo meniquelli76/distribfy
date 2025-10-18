@@ -1,0 +1,35 @@
+/* css/components/_modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background-color: var(--color-surface);
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-panel);
+  width: 90%;
+  max-width: 400px;
+}
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-5);
+}
+#crop-container {
+  width: 100%;
+  height: 300px; 
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-5);
+}

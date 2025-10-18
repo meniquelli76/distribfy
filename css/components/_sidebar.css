@@ -1,0 +1,196 @@
+/* css/components/_sidebar.css */
+
+.board-sidebar {
+  position: sticky;
+  top: 112px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.favorites-box,
+.filter-panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-5);
+}
+
+.favorites-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5) var(--spacing-6);
+}
+
+.favorites-title {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  text-transform: lowercase;
+}
+
+.favorites-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.favorites-badge span {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.film-selector {
+  position: relative;
+  width: 100%;
+}
+
+.film-selector select {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+}
+
+.film-selector select:focus {
+  outline: none;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-border);
+}
+
+.film-selector .select-icon {
+  position: absolute;
+  right: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.filter-panel {
+  position: relative;
+}
+
+.filter-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
+  /* AJUSTE 1: Aumenta o padding para afastar o campo de busca */
+  padding-top: var(--spacing-6);
+}
+
+.btn-clear {
+  position: absolute;
+  /* AJUSTE 2: Diminui o 'top' para subir o botão */
+  top: var(--spacing-3);
+  right: var(--spacing-5);
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  padding: var(--spacing-1);
+}
+
+.btn-clear:hover {
+  opacity: 0.7;
+}
+
+.search-field {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.search-field input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+.search-field input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.sort-options {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sort-label {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-2);
+  line-height: 1.2;
+}
+
+.sort-btn {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sort-btn.active {
+  background-color: var(--color-primary-accent);
+  color: var(--color-primary-accent-text);
+  border-color: var(--color-primary-accent);
+}
+
+.sort-btn:hover:not(.active) {
+  background-color: #e9ecef;
+}
+
+.filters-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.filter-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--spacing-2) var(--spacing-3);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-align: left;
+  border-radius: var(--border-radius-medium);
+  transition: background-color 0.2s ease;
+}
+.filter-item:hover {
+  background-color: var(--color-background);
+}

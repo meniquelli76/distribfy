@@ -1,0 +1,40 @@
+/* css/base/_variables.css */
+:root {
+  /* Cores */
+  --color-background: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5c5c5c;
+  --color-text-placeholder: #a9a9a9;
+  --color-border: #e6e6e6;
+  --color-primary-accent: #1a1a1a; /* Botão 'sugerir festival' */
+  --color-primary-accent-text: #ffffff;
+  --color-link: #007bff; 
+   --color-nav-link: #495057;
+  --color-nav-link-hover: #adb5bd;
+  /* Cor genérica para links, ajustar se necessário */
+
+  /* Tipografia */
+  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-base: 16px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Espaçamento (Escala consistente) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 48px;
+
+  /* Layout */
+  --container-max-width: 1440px;
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-panel: 0 4px 12px rgba(0, 0, 0, 0.08);
+}

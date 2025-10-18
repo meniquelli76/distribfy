@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Conta - FestMundi</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+
+  <link rel="stylesheet" href="css/main.css" />
+
+   <link rel="stylesheet" href="css/layout/userpage.css" />
+
+  <style>
+    body { visibility: hidden; }
+  </style>
+</head>
+<body>
+
+   <header class="header">
+    <div class="logo">
+        <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
+        <span class="tagline">simplify your film distribution</span>
+    </div>
+    <nav class="menu">
+        <a href="#">Home</a>
+        <a href="/festivals.html" data-protected>Festivais</a>
+    <a href="/myfilms.html" data-protected>Meus Filmes</a>
+        <a href="#">Contato</a>
+    </nav>
+    <div class="user-area">
+        <button class="notification-btn">
+            <img src="public/icons/notification-icon.svg" alt="Notificações">
+        </button>
+
+        <div class="user-menu-container" id="user-menu" style="display: none;">
+            <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+                <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header">
+                <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
+            </button>
+            <div class="dropdown-menu" id="user-dropdown">
+                <ul>
+                    <li><a href="/userpage.html">Minha Conta</a></li>
+                    <li><a href="#" id="logout-button">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="login-container">
+            <a href="/login.html" class="header-login-link">Entrar</a>
+        </div>
+    </div>
+</header>
+
+  <main class="account-page-container">
+    <div class="account-layout">
+      <aside class="account-sidebar">
+        <div class="avatar-uploader">
+          <div class="avatar-image-wrapper">
+            <img src="https://via.placeholder.com/150" alt="Avatar do usuário" class="avatar-image" id="avatar-display">
+          </div>
+          <label for="avatar-upload" class="btn btn-secondary upload-btn">Escolher foto</label>
+          <input type="file" id="avatar-upload" name="avatar" accept="image/png, image/jpeg" class="visually-hidden">
+        </div>
+      </aside>
+
+      <section class="account-content">
+        <div class="content-header">
+          <h1>Minha conta</h1>
+        </div>
+
+        <form id="account-form" class="account-form">
+          <div class="form-section">
+            <div class="form-group">
+              <label for="full_name">Nome</label>
+              <input type="text" id="full_name" name="full_name" value="Marcelo Meniquelli">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="meniquelli@gmail.com" disabled>
+              <small class="form-text-info"><a href="#">Para continuar confirme seu email</a></small>
+            </div>
+
+         <div class="form-row">
+  <div class="form-group">
+    <label for="country_id">País</label>
+    <select id="country_id" name="country_id" required>
+      <option value="">Selecione seu país</option>
+      <option value="BR">Brasil</option>
+      <option value="US">Estados Unidos</option>
+      <option value="PT">Portugal</option>
+      <!-- Mais países serão carregados via JS -->
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="phone">Telefone</label>
+    <input type="tel" id="phone" name="phone" placeholder="+55 (11) 99999-9999">
+  </div>
+</div>
+            
+            <div class="form-group">
+              <label>Data de Nascimento</label>
+              <div class="form-row">
+                <select id="dob_day" name="dob_day" aria-label="Dia de Nascimento"><option>Dia</option></select>
+                <select id="dob_month" name="dob_month" aria-label="Mês de Nascimento"><option>Mês</option></select>
+                <select id="dob_year" name="dob_year" aria-label="Ano de Nascimento"><option>Ano</option></select>
+              </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pronouns">Pronomes</label>
+                    <select id="pronouns" name="pronouns">
+                        <option value="personalizado">Personalizado</option>
+                        <option value="ele">Ele/Dele</option>
+                        <option value="ela">Ela/Dela</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gênero</label>
+                    <select id="gender" name="gender">
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="nao_identificar">Não identificar</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+            </div>
+
+           <div class="form-row">
+  <div class="form-group">
+    <label for="timezone">Fuso Horário</label>
+    <select id="timezone" name="timezone">
+      <option value="America/Sao_Paulo">(GMT-03:00) Brasília</option>
+      <option value="America/New_York">(GMT-05:00) Nova York</option>
+      <option value="America/Los_Angeles">(GMT-08:00) Los Angeles</option>
+      <option value="Europe/London">(GMT+00:00) Londres</option>
+      <option value="Europe/Paris">(GMT+01:00) Paris</option>
+      <!-- Mais fusos serão carregados via JS -->
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="currency">Moeda</label>
+    <select id="currency" name="currency">
+      <option value="BRL">Brasil - R$</option>
+      <option value="USD">Estados Unidos - $</option>
+      <option value="EUR">Euro - €</option>
+      <option value="GBP">Libra - £</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-section">
+  <div class="form-group password-group">
+    <label for="current_password">Senha Atual</label>
+    <input type="password" id="current_password" name="current_password" placeholder="Digite sua senha atual">
+  </div>
+
+  <div id="new-password-section">
+    <div class="form-group">
+      <label for="new_password">Nova Senha</label>
+      <input type="password" id="new_password" name="new_password" placeholder="Mínimo 8 caracteres">
+    </div>
+    
+    <div class="form-group">
+      <label for="confirm_password">Confirmar Nova Senha</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Repita a nova senha">
+    </div>
+    
+    <button type="button" class="password-save-btn">salvar</button>
+  </div>
+</div>
+
+        <div class="form-actions">
+  <button type="submit" class="btn btn-primary">salvar dados da conta</button>
+</div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="crop-modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Recortar Imagem</h2>
+      <div id="crop-container"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancel-crop-btn">Cancelar</button>
+        <button type="button" class="btn primary" id="save-crop-btn">Salvar Foto</button>
+      </div>
+    </div>
+  </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/account.js"></script>
+</body>
+</html>

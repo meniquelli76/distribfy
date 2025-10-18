@@ -1,0 +1,148 @@
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Form-Handler: DOM carregado. Iniciando lógica do formulário.");
+
+    let supabaseClient = null;
+    const FORM_ID = "festival-form";
+    const CANCEL_SELECTOR = ".btn-secondary";
+    const fieldMap = { festival_name: "festival-name", edition_id: "edition-number", premiere_id: "premiere-status", country_id: "country", month_opening_id: "open-month", month_held_id: "realization-month", fee_status_id: "fee-status", deadline_early: "deadline-early", deadline_late: "deadline-late", result_date: "results", fee_early_min: "fee-early-min", fee_early_max: "fee-early-max", fee_late_min: "fee-late-min", fee_late_max: "fee-late-max", synopsis: "synopsis", platform_id: "platform", platform_link: "platform-link", official_website: "festival-site", festival_social_link: "social-media", additional_info: "more-info" };
+
+    function findForm() { return document.getElementById(FORM_ID); }
+    function openForm() { const wrapper = document.querySelector(".form-panel-wrapper"); if (wrapper) wrapper.classList.remove("collapsed"); }
+    function closeForm() { const wrapper = document.querySelector(".form-panel-wrapper"); if (wrapper) wrapper.classList.add("collapsed"); }
+    
+    // ######################################################################
+    // ##### FUNÇÃO CORRIGIDA AQUI #####
+    // ######################################################################
+    function resetFormState(form) {
+        if (form) {
+            form.reset(); // Reseta os campos de input normais
+            delete form.dataset.editingId;
+            
+            // CORREÇÃO: Em vez de apagar todas as opções com clearStore(),
+            // apenas limpamos a seleção dos campos Choices.js.
+            const choicesInstances = window.choicesInstances || {};
+            Object.values(choicesInstances).forEach(instance => {
+                instance.clearInput(); // Limpa o texto de busca
+                instance.setValue([]); // Define a seleção como vazia
+            });
+        }
+    }
+
+    function getValueById(id) { const el = document.getElementById(id); if (!el) return null; if (el.multiple) { return Array.from(el.selectedOptions).map(o => o.value).filter(Boolean); } return el.value && el.value.trim() !== "" ? el.value.trim() : null; }
+    function setValueById(id, value) { const el = document.getElementById(id); if (!el) return; if (el.multiple) { const values = Array.isArray(value) ? value.map(String) : [String(value)]; Array.from(el.options).forEach(option => { option.selected = values.includes(option.value); }); } else { el.value = value ?? ""; } }
+    function parseCurrency(value) { if (typeof value !== 'string' || value === null || value.trim() === '') { return null; } if (value.includes(',')) { return parseFloat(value.replace(/\./g, '').replace(',', '.')); } else { return parseFloat(value); } }
+    async function handleJunctionTable(festivalId, selectedIds, config) { if (!supabaseClient || !festivalId) return; const { junctionTable, festivalIdColumn, relatedIdColumn } = config; await supabaseClient.from(junctionTable).delete().eq(festivalIdColumn, festivalId); const idsArray = Array.isArray(selectedIds) ? selectedIds : [selectedIds].filter(Boolean); if (idsArray.length > 0) { const newLinks = idsArray.map(id => ({ [festivalIdColumn]: festivalId, [relatedIdColumn]: parseInt(id, 10) })); const { error: insertError } = await supabaseClient.from(junctionTable).insert(newLinks); if (insertError) throw insertError; } }
+    function formToPayload() { const payload = {}; const multiSelectIds = {}; const currencyFields = ['fee-early-min', 'fee-early-max', 'fee-late-min', 'fee-late-max']; Object.entries(fieldMap).forEach(([dbField, inputId]) => { let val = getValueById(inputId); if (currencyFields.includes(inputId)) { val = parseCurrency(val); } if (dbField.endsWith('_id') && val) { const el = document.getElementById(inputId); if (el && !el.multiple) { payload[dbField] = parseInt(val, 10); } } else if (val !== null) { payload[dbField] = val; } }); multiSelectIds.genres = getValueById('genres'); multiSelectIds.categories = getValueById('categories'); multiSelectIds.qualifiers = getValueById('qualifying'); ["deadline_early", "deadline_late", "result_date"].forEach(k => { if (payload[k]) { const p = payload[k].split("/"); if (p.length === 3) payload[k] = `${p[2]}-${p[1]}-${p[0]}`; } }); delete payload.platform_id; return { payload, multiSelectIds }; }
+    async function insertFestival(payload) { const { data, error } = await supabaseClient.from("festivals").insert([payload]).select(); if (error) throw error; return data?.[0]; }
+    async function updateFestival(id, payload) { const { data, error } = await supabaseClient.from("festivals").update(payload).eq("id", id).select(); if (error) throw error; return data?.[0]; }
+    async function handleSubmit(e) { e.preventDefault(); const form = findForm(); if (!form) return; const { payload, multiSelectIds } = formToPayload(); console.log("Payload sendo enviado ao Supabase:", payload); try { let savedFestival; if (form.dataset.editingId) { savedFestival = await updateFestival(parseInt(form.dataset.editingId, 10), payload); } else { savedFestival = await insertFestival(payload); } if (savedFestival?.id) { await handleJunctionTable(savedFestival.id, multiSelectIds.genres, { junctionTable: 'festival_genres_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'genre_id' }); await handleJunctionTable(savedFestival.id, multiSelectIds.categories, { junctionTable: 'festival_categories_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'category_id' }); await handleJunctionTable(savedFestival.id, multiSelectIds.qualifiers, { junctionTable: 'festival_qualifiers_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'qualifier_id' }); } resetFormState(form); closeForm(); alert("Festival salvo com sucesso!"); if (typeof window.fetchAndRenderFestivals === "function") { window.fetchAndRenderFestivals(); } } catch (err) { console.error("Erro ao salvar festival:", err); alert("Erro ao salvar festival: " + (err.message || "")); } }
+
+    function populateFormForEdit(festivalData) {
+        console.log("Form-Handler: Recebendo dados do cache para popular o formulário.", festivalData);
+        const choicesInstances = window.choicesInstances || {};
+        const form = findForm();
+        if (!form) return;
+        try {
+            resetFormState(form);
+            Object.entries(fieldMap).forEach(([dbField, inputId]) => {
+                if (festivalData[dbField] !== undefined && festivalData[dbField] !== null) {
+                    if (["deadline_early", "deadline_late", "result_date"].includes(dbField)) {
+                        const dateParts = festivalData[dbField].split('-');
+                        if (dateParts.length === 3) {
+                           const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                           setValueById(inputId, formattedDate);
+                        }
+                    } else {
+                        setValueById(inputId, festivalData[dbField]);
+                    }
+                }
+            });
+            if (festivalData.film_types && festivalData.film_types.length > 0) {
+                setValueById('type', festivalData.film_types[0].id);
+            }
+            const multiSelectMappings = {
+                'qualifying': festivalData.qualifiers,
+                'categories': festivalData.categories,
+                'genres': festivalData.genres
+            };
+            Object.entries(multiSelectMappings).forEach(([elementId, items]) => {
+                const choicesInstance = choicesInstances[elementId];
+                if (!choicesInstance) return;
+                
+                // A função resetFormState já limpou a seleção,
+                // então não precisamos mais do clearStore() aqui.
+                if (items && items.length > 0) {
+                    const ids = items.map(item => String(item.id));
+                    choicesInstance.setChoiceByValue(ids);
+                }
+            });
+            form.dataset.editingId = String(festivalData.id);
+            openForm();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+            console.error("Erro ao popular formulário para edição com dados do cache:", err);
+            alert("Erro ao popular formulário: " + err.message);
+        }
+    }
+
+    function initUI() {
+        const form = findForm();
+        if (form && !form.__hasSubmitHandler) { form.addEventListener("submit", handleSubmit); form.__hasSubmitHandler = true; }
+        const cancelBtn = document.querySelector(CANCEL_SELECTOR);
+        if (cancelBtn && !cancelBtn.__hasHandler) { cancelBtn.addEventListener("click", (ev) => { ev.preventDefault(); const form = findForm(); resetFormState(form); closeForm(); }); cancelBtn.__hasHandler = true; }
+        window.populateFormForEdit = populateFormForEdit;
+        window.openFestivalForm = openForm;
+        window.closeFestivalForm = closeForm;
+    }
+    
+    async function populateSelectWithOptions(selectId, tableName, valueColumn, textColumn, orderByColumn = null) {
+        const selectElement = document.getElementById(selectId);
+        if (!selectElement || !supabaseClient) return;
+        try {
+            const orderBy = orderByColumn || textColumn;
+            const { data, error } = await supabaseClient.from(tableName).select(`${valueColumn}, ${textColumn}`).order(orderBy);
+            if (error) throw error;
+            const firstOption = selectElement.options[0]?.outerHTML || '<option value="">Selecione</option>';
+            selectElement.innerHTML = firstOption;
+            data.forEach(item => { const option = document.createElement("option"); option.value = item[valueColumn]; option.textContent = item[textColumn]; selectElement.appendChild(option); });
+        } catch (e) { console.error(`Erro ao popular ${selectId}:`, e); }
+    }
+
+    function onSupabaseReady(callback) {
+        const interval = setInterval(() => { if (window.supabase) { clearInterval(interval); supabaseClient = window.supabase; callback(); } }, 50);
+    }
+
+    onSupabaseReady(() => {
+        initUI(); 
+        console.log("Form-Handler: Conexão Supabase pronta. Populando selects...");
+        const populatePromises = [
+            populateSelectWithOptions("edition-number", "festival_edition", "id", "edition", "edition"),
+            populateSelectWithOptions("premiere-status", "premiere", "id", "premiere_status"),
+            populateSelectWithOptions("country", "countries", "id", "country"),
+            populateSelectWithOptions("type", "film_types", "id", "type"),
+            populateSelectWithOptions("realization-month", "months", "id", "months_id", "id"),
+            populateSelectWithOptions("categories", "categories", "id", "category"),
+            populateSelectWithOptions("genres", "genres", "id", "genre"),
+            populateSelectWithOptions("fee-status", "fee_status", "id", "status_name"),
+            populateSelectWithOptions("platform", "platforms", "id", "platform_name"),
+            populateSelectWithOptions("qualifying", "qualifiers", "id", "name"),
+            populateSelectWithOptions("open-month", "months", "id", "months_id", "id"),
+        ];
+
+        Promise.all(populatePromises).then(() => {
+            console.log("Todos os selects foram populados. Inicializando Choices.js...");
+            try {
+                const multiSelectConfig = { removeItemButton: true, placeholder: true, placeholderValue: 'Selecione uma ou mais opções', searchPlaceholderValue: 'Buscar...', };
+                const multiSelectIds = ['qualifying', 'categories', 'genres'];
+                multiSelectIds.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && element.multiple) {
+                        window.choicesInstances = window.choicesInstances || {};
+                        window.choicesInstances[id] = new Choices(element, multiSelectConfig);
+                    }
+                });
+            } catch (error) { console.error("Erro ao inicializar Choices.js:", error); }
+        });
+    });
+
+});

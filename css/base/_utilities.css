@@ -1,0 +1,18 @@
+/* css/base/_utilities.css */
+
+/*
+  Classe para esconder um elemento visualmente, mas mantê-lo
+  acessível para leitores de tela (Screen Readers).
+  Importante para a acessibilidade de labels de formulário.
+*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
