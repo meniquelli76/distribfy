@@ -31,11 +31,117 @@ document.addEventListener('DOMContentLoaded', () => {
     function getValueById(id) { const el = document.getElementById(id); if (!el) return null; if (el.multiple) { return Array.from(el.selectedOptions).map(o => o.value).filter(Boolean); } return el.value && el.value.trim() !== "" ? el.value.trim() : null; }
     function setValueById(id, value) { const el = document.getElementById(id); if (!el) return; if (el.multiple) { const values = Array.isArray(value) ? value.map(String) : [String(value)]; Array.from(el.options).forEach(option => { option.selected = values.includes(option.value); }); } else { el.value = value ?? ""; } }
     function parseCurrency(value) { if (typeof value !== 'string' || value === null || value.trim() === '') { return null; } if (value.includes(',')) { return parseFloat(value.replace(/\./g, '').replace(',', '.')); } else { return parseFloat(value); } }
-    async function handleJunctionTable(festivalId, selectedIds, config) { if (!supabaseClient || !festivalId) return; const { junctionTable, festivalIdColumn, relatedIdColumn } = config; await supabaseClient.from(junctionTable).delete().eq(festivalIdColumn, festivalId); const idsArray = Array.isArray(selectedIds) ? selectedIds : [selectedIds].filter(Boolean); if (idsArray.length > 0) { const newLinks = idsArray.map(id => ({ [festivalIdColumn]: festivalId, [relatedIdColumn]: parseInt(id, 10) })); const { error: insertError } = await supabaseClient.from(junctionTable).insert(newLinks); if (insertError) throw insertError; } }
-    function formToPayload() { const payload = {}; const multiSelectIds = {}; const currencyFields = ['fee-early-min', 'fee-early-max', 'fee-late-min', 'fee-late-max']; Object.entries(fieldMap).forEach(([dbField, inputId]) => { let val = getValueById(inputId); if (currencyFields.includes(inputId)) { val = parseCurrency(val); } if (dbField.endsWith('_id') && val) { const el = document.getElementById(inputId); if (el && !el.multiple) { payload[dbField] = parseInt(val, 10); } } else if (val !== null) { payload[dbField] = val; } }); multiSelectIds.genres = getValueById('genres'); multiSelectIds.categories = getValueById('categories'); multiSelectIds.qualifiers = getValueById('qualifying'); ["deadline_early", "deadline_late", "result_date"].forEach(k => { if (payload[k]) { const p = payload[k].split("/"); if (p.length === 3) payload[k] = `${p[2]}-${p[1]}-${p[0]}`; } }); delete payload.platform_id; return { payload, multiSelectIds }; }
+    async function handleJunctionTable(festivalId, selectedIds, config) {
+    console.log(`--- DEBUG: Dentro de handleJunctionTable para '${config.junctionTable}' ---`);
+    console.log("Recebido festivalId:", festivalId);
+    console.log("Recebido selectedIds:", selectedIds);
+
+    if (!supabaseClient || !festivalId) {
+        console.error("handleJunctionTable parou: supabaseClient ou festivalId ausente.");
+        return;
+    }
+    const { junctionTable, festivalIdColumn, relatedIdColumn } = config;
+
+    // DELETAR
+    const { error: deleteError } = await supabaseClient.from(junctionTable).delete().eq(festivalIdColumn, festivalId);
+    
+    if (deleteError) {
+        console.error(`--- ERRO FATAL no DELETE em '${junctionTable}' ---`, deleteError);
+        throw deleteError;
+    }
+    console.log(`DELETE em '${junctionTable}' bem-sucedido.`);
+
+    // INSERIR
+    const idsArray = Array.isArray(selectedIds) ? selectedIds : [selectedIds].filter(Boolean);
+    if (idsArray.length > 0) {
+        const newLinks = idsArray.map(id => ({ [festivalIdColumn]: festivalId, [relatedIdColumn]: parseInt(id, 10) }));
+        console.log(`Preparando para INSERIR em '${junctionTable}':`, newLinks);
+        
+        const { error: insertError } = await supabaseClient.from(junctionTable).insert(newLinks);
+        if (insertError) {
+            console.error(`--- ERRO FATAL no INSERT em '${junctionTable}' ---`, insertError);
+            throw insertError;
+        }
+        console.log(`INSERT em '${junctionTable}' bem-sucedido.`);
+    }
+}
+    function formToPayload() {
+    const payload = {};
+    const multiSelectIds = {};
+    const currencyFields = ['fee-early-min', 'fee-early-max', 'fee-late-min', 'fee-late-max'];
+
+    Object.entries(fieldMap).forEach(([dbField, inputId]) => {
+        let val = getValueById(inputId);
+        if (currencyFields.includes(inputId)) {
+            val = parseCurrency(val);
+        }
+        if (dbField.endsWith('_id') && val) {
+            const el = document.getElementById(inputId);
+            if (el && !el.multiple) {
+                payload[dbField] = parseInt(val, 10);
+            }
+        } else if (val !== null) {
+            payload[dbField] = val;
+        }
+    });
+    
+    // Captura os verdadeiros multi-selects
+    multiSelectIds.genres = getValueById('genres');
+    multiSelectIds.categories = getValueById('categories');
+    multiSelectIds.qualifiers = getValueById('qualifying');
+
+    // Captura o select simples 'Tipo' separadamente
+    const typeId = getValueById('type');
+
+    ["deadline_early", "deadline_late", "result_date"].forEach(k => {
+        if (payload[k]) {
+            const p = payload[k].split("/");
+            if (p.length === 3) payload[k] = `${p[2]}-${p[1]}-${p[0]}`;
+        }
+    });
+    
+   
+    return { payload, multiSelectIds, typeId };
+}
     async function insertFestival(payload) { const { data, error } = await supabaseClient.from("festivals").insert([payload]).select(); if (error) throw error; return data?.[0]; }
     async function updateFestival(id, payload) { const { data, error } = await supabaseClient.from("festivals").update(payload).eq("id", id).select(); if (error) throw error; return data?.[0]; }
-    async function handleSubmit(e) { e.preventDefault(); const form = findForm(); if (!form) return; const { payload, multiSelectIds } = formToPayload(); console.log("Payload sendo enviado ao Supabase:", payload); try { let savedFestival; if (form.dataset.editingId) { savedFestival = await updateFestival(parseInt(form.dataset.editingId, 10), payload); } else { savedFestival = await insertFestival(payload); } if (savedFestival?.id) { await handleJunctionTable(savedFestival.id, multiSelectIds.genres, { junctionTable: 'festival_genres_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'genre_id' }); await handleJunctionTable(savedFestival.id, multiSelectIds.categories, { junctionTable: 'festival_categories_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'category_id' }); await handleJunctionTable(savedFestival.id, multiSelectIds.qualifiers, { junctionTable: 'festival_qualifiers_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'qualifier_id' }); } resetFormState(form); closeForm(); alert("Festival salvo com sucesso!"); if (typeof window.fetchAndRenderFestivals === "function") { window.fetchAndRenderFestivals(); } } catch (err) { console.error("Erro ao salvar festival:", err); alert("Erro ao salvar festival: " + (err.message || "")); } }
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const form = findForm();
+        if (!form) return;
+        
+        
+        const { payload, multiSelectIds, typeId } = formToPayload();
+        
+        console.log("Payload sendo enviado ao Supabase:", payload);
+        try {
+            let savedFestival;
+            if (form.dataset.editingId) {
+                savedFestival = await updateFestival(parseInt(form.dataset.editingId, 10), payload);
+            } else {
+                savedFestival = await insertFestival(payload);
+            }
+            if (savedFestival?.id) {
+                
+                await handleJunctionTable(savedFestival.id, multiSelectIds.genres, { junctionTable: 'festival_genres_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'genre_id' });
+                await handleJunctionTable(savedFestival.id, multiSelectIds.categories, { junctionTable: 'festival_categories_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'category_id' });
+                await handleJunctionTable(savedFestival.id, multiSelectIds.qualifiers, { junctionTable: 'festival_qualifiers_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'qualifier_id' });
+             
+
+                
+                await handleJunctionTable(savedFestival.id, typeId, { junctionTable: 'festival_film_types', festivalIdColumn: 'festival_id', relatedIdColumn: 'film_type_id' });
+            }
+            resetFormState(form);
+            closeForm();
+            alert("Festival salvo com sucesso!");
+            if (typeof window.fetchAndRenderFestivals === "function") {
+                window.fetchAndRenderFestivals();
+            }
+        } catch (err) {
+            console.error("Erro ao salvar festival:", err);
+            alert("Erro ao salvar festival: " + (err.message || ""));
+        }
+    }
 
     function populateFormForEdit(festivalData) {
         console.log("Form-Handler: Recebendo dados do cache para popular o formulário.", festivalData);

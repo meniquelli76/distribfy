@@ -1,9 +1,33 @@
-/* ==========================================================================
-   FESTMUNDI - RENDERIZAÇÃO DINÂMICA DE FESTIVAIS (VERSÃO FINAL COM CACHE)
-   ========================================================================== */
+
 
 (function () {
     let supabaseClient = null;
+
+    async function updateFestivalCounter() {
+    const counterElement = document.querySelector('.festival-count');
+    if (!counterElement) {
+        console.warn('Elemento do contador .festival-count não encontrado.');
+        return;
+    }
+
+    try {
+        // Query eficiente que apenas conta as linhas da tabela 'festivals'
+        const { count, error } = await supabaseClient
+            .from('festivals')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) throw error;
+
+        if (count !== null) {
+            counterElement.textContent = `${count} festivais`;
+        } else {
+            counterElement.textContent = '0 festivais';
+        }
+    } catch (err) {
+        console.error('Erro ao buscar a contagem de festivais:', err);
+        counterElement.textContent = 'Erro ao contar';
+    }
+}
     
     // =================================================================
     // CORREÇÃO APLICADA AQUI:
@@ -48,9 +72,40 @@
     const feeStatus = escapeHtml(f.fee_status?.status_name || 'N/A');
     const filmTypes = f.film_types && f.film_types.length > 0 ? f.film_types.map(ft => escapeHtml(ft.type)).join(' e ') : 'N/A';
     
-    // Prepara as variáveis dos links
     const websiteUrl = f.official_website;
     const socialUrl = f.festival_social_link;
+
+    // --- LÓGICA PARA O PAINEL DE DETALHES ---
+    
+    // Lista de Premieres (baseado na estrutura do seu DB e HTML)
+    const premiereTypes = [
+        { id: 1, text: 'World Premiere' },
+        { id: 2, text: 'International Premiere' },
+        { id: 3, text: 'Continental Premiere' },
+        { id: 4, text: 'National Premiere' },
+        { id: 5, text: 'Regional Premiere' },
+        { id: 6, text: 'No Premiere Requirement' }
+    ];
+    const premiereListHtml = premiereTypes.map(p => 
+        `<li class="${f.premiere_id === p.id ? 'active' : 'inactive'}">${p.text}</li>`
+    ).join('');
+
+    // Formatação das taxas (Fee)
+    const formatFeeRange = (min, max) => {
+        if (!min && !max) return 'N/A';
+        if (min && !max) return `A partir de ${min}`;
+        if (!min && max) return `Até ${max}`;
+        if (min === max) return `${min}`;
+        return `${min}-${max}`;
+    };
+    const feeEarlyRange = formatFeeRange(f.fee_early_min, f.fee_early_max);
+    const feeLateRange = formatFeeRange(f.fee_late_min, f.fee_late_max);
+
+    // Lista de "Mais Informações"
+    const moreInfoHtml = f.additional_info 
+        ? f.additional_info.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('')
+        : '<li>Nenhuma informação adicional.</li>';
+
 
     let html = '';
     html += '<details class="festival-accordion">';
@@ -106,18 +161,38 @@
     html += '<aside class="festival-actions">';
     html += '<button class="action-btn action-btn--favorite" title="Favoritar"><img src="public/icons/icon-heart.svg" alt="Favoritar"/></button>';
     html += `<button class="action-btn" data-action="edit" data-id="${f.id}" title="Editar"><img src="public/icons/icon-edit.svg" alt="Editar" /></button>`;
-    
-    // Lógica correta para os links, sem duplicatas
     html += websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="action-btn" title="Link Externo"><img src="public/icons/icon-external-link.svg" alt="Link Externo"/></a>` : `<button class="action-btn" title="Link Externo indisponível" disabled><img src="public/icons/icon-external-link.svg" alt="Link Externo"/></button>`;
     html += socialUrl ? `<a href="${socialUrl}" target="_blank" rel="noopener noreferrer" class="action-btn" title="Social Media"><img src="public/icons/icon-instagram.svg" alt="Instagram"/></a>` : `<button class="action-btn" title="Social Media indisponível" disabled><img src="public/icons/icon-instagram.svg" alt="Instagram"/></button>`;
-    
     html += '<button class="add-button" title="Adicionar ao meu filme"><img src="public/icons/icon-plus.svg" alt="Adicionar"/></button>';
     html += '</aside>';
     html += '</div>';
     html += '</summary>';
+    
+    // =================================================================
+    // ##### CÓDIGO DO PAINEL EXPANDIDO ADICIONADO AQUI #####
+    // =================================================================
     html += '<div class="card-expanded-content">';
-    html += `<p class="description">${synopsis || 'Sinopse não disponível.'}</p>`;
+    html += `   <p class="description">${synopsis || 'Sinopse não disponível.'}</p>`;
+    html += '   <div class="more-details-panel">';
+    html += '       <div class="detail-section detail-premiere">';
+    html += '           <div class="detail-header"><img src="public/icons/icon-premiere.svg" alt="" /><h4>Premiere</h4></div>';
+    html += `           <ul class="premiere-list">${premiereListHtml}</ul>`;
+    html += '       </div>';
+    html += '       <div class="detail-section detail-fee">';
+    html += '           <div class="detail-header"><img src="public/icons/icon_fest_currency.svg" alt=""/><h4>Fee</h4></div>';
+    html += '           <div class="fee-table">';
+    html += `               <div class="fee-row"><span class="fee-label">Early</span><span class="fee-value">${feeEarlyRange}</span></div>`;
+    html += `               <div class="fee-row"><span class="fee-label">Late</span><span class="fee-value">${feeLateRange}</span></div>`;
+    html += '           </div>';
+    html += '           <p class="fee-note">Verifique todas as categorias na página do festival.</p>';
+    html += '       </div>';
+    html += '       <div class="detail-section detail-more">';
+    html += '           <div class="detail-header"><img src="public/icons/icon_fest_more.svg" alt="" /><h4>Mais</h4></div>';
+    html += `           <ul class="more-list">${moreInfoHtml}</ul>`;
+    html += '       </div>';
+    html += '   </div>';
     html += '</div>';
+
     html += '</details>';
     return html;
 }

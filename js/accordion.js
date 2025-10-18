@@ -1,51 +1,75 @@
 /**
  * Controla a animação de abrir/fechar dos acordeões de festival.
- * A lógica é ativada pelo clique no botão chevron, não na área inteira do card.
- * Esta função deve ser chamada DEPOIS que os cards forem renderizados no DOM.
+ * A lógica é ativada SOMENTE pelo clique no botão chevron.
+ * Impede o comportamento padrão de clique no <summary>, mas permite que links e outros botões funcionem.
  */
 function initializeAccordions() {
-  console.log("▶️  Inicializando Acordeões...");
+  console.log("▶️  Inicializando Acordeões (versão com links corrigidos)...");
 
   const accordions = document.querySelectorAll('.festival-accordion');
 
   accordions.forEach(accordion => {
-    // Evita adicionar múltiplos listeners se a função for chamada novamente
     if (accordion.dataset.accordionInitialized) return;
     accordion.dataset.accordionInitialized = 'true';
 
-    // O alvo do clique é o botão, não o summary
-    const chevronButton = accordion.querySelector('.festival-chevron-btn');
+    const summary = accordion.querySelector('summary');
     const content = accordion.querySelector('.card-expanded-content');
 
-    if (!chevronButton || !content) {
-      console.warn('Acordeão mal formado, botão ou conteúdo não encontrado.', accordion);
+    if (!summary || !content) {
+      console.warn('Acordeão mal formado, summary ou conteúdo não encontrado.', accordion);
       return;
     }
 
-    chevronButton.addEventListener('click', (e) => {
-      // Impede que o clique no botão se propague para outros elementos
+    // Adiciona o listener de clique ao <summary> para ter controle total.
+    summary.addEventListener('click', (e) => {
+      const target = e.target;
+
+      // =================================================================
+      // ##### LÓGICA DE CLIQUE REFINADA #####
+      // =================================================================
+
+      // Se o clique foi em um link <a> ou em um botão <button> que NÃO seja o botão do acordeão,
+      // não fazemos nada e deixamos a ação padrão acontecer (ex: seguir o link).
+      if (target.closest('a') || (target.closest('button') && !target.closest('.festival-chevron-btn'))) {
+        return;
+      }
+
+      // Para qualquer outro clique, prevenimos a ação padrão de abrir/fechar.
       e.preventDefault();
-      e.stopPropagation();
 
-      // Verifica se o acordeão está aberto ou fechando
-      if (accordion.open) {
-        // Se já está aberto, inicia a animação de fechamento
-        // Adicionando uma classe para controlar a animação de saída no CSS
-        accordion.classList.add('closing');
-
-        // Escuta pelo final da animação para de fato fechar o <details>
-        accordion.addEventListener('animationend', () => {
-          accordion.open = false;
-          accordion.classList.remove('closing');
-        }, { once: true });
-
-      } else {
-        // Se está fechado, simplesmente abre
-        accordion.open = true;
+      // Se o clique foi especificamente no botão do acordeão, executa nossa animação.
+      if (target.closest('.festival-chevron-btn')) {
+        toggleAccordion(accordion);
       }
     });
   });
 }
 
-// Expõe a função de inicialização globalmente para que outros scripts possam chamá-la.
+/**
+ * Função que gerencia a animação de abrir e fechar.
+ * (Esta função permanece a mesma).
+ */
+function toggleAccordion(accordion) {
+  const content = accordion.querySelector('.card-expanded-content');
+  
+  if (accordion.open) {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    
+    requestAnimationFrame(() => {
+        content.style.maxHeight = '0px';
+        content.style.opacity = '0';
+    });
+
+    content.addEventListener('transitionend', () => {
+      accordion.open = false;
+      content.style.maxHeight = null;
+      content.style.opacity = null;
+    }, { once: true });
+
+  } else {
+    accordion.open = true;
+  }
+}
+
+// Expõe a função de inicialização globalmente
 window.initializeAccordions = initializeAccordions;
