@@ -194,3 +194,113 @@
 .filter-item:hover {
   background-color: var(--color-background);
 }
+
+
+
+/* Estilos para o Acordeão de Filtros */
+.filter-category {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.filter-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--spacing-1) 0;
+  padding: var(--spacing-2) 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.filter-toggle img {
+  transition: transform 0.3s ease;
+}
+
+.filter-category.open .filter-toggle img {
+  transform: rotate(180deg);
+}
+
+.filter-options-panel {
+  max-height: 0;
+  overflow-y: auto;
+  visibility: hidden;
+  transition: max-height 0.4s ease-out, visibility 0.4s ease-out;
+}
+
+.filter-category.open .filter-options-panel {
+  max-height: 200px; /* Altura máxima do painel aberto */
+  visibility: visible;
+  padding-bottom: var(--spacing-4);
+}
+
+/* Estilo para cada item de checkbox */
+.filter-option {
+  display: block;
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: var(--spacing-3);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Esconde o checkbox padrão do navegador */
+.filter-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Cria a caixinha customizada */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  transition: background-color 0.2s ease;
+}
+
+.filter-option:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.filter-option input:checked ~ .checkmark {
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+/* Cria o símbolo de 'check' (escondido por padrão) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.filter-option input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.filter-option .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

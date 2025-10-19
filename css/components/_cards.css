@@ -814,3 +814,16 @@ border-radius: 10px; /* Ajuste o valor conforme desejado */
   color: white;
 
 }
+
+/* Estilo para a mensagem de 'nenhum resultado' */
+.no-results-message {
+  background-color: #dee2e6; /* Mesmo fundo do cabeçalho do card */
+  border: 1px solid var(--color-border); /* Mesma borda do card */
+  border-radius: var(--border-radius-large); /* Mesmos cantos arredondados */
+  padding: var(--spacing-6); /* Um bom espaçamento interno */
+  text-align: center;
+  color: #495057; /* Mesma cor de texto que definimos para os cards */
+  font-weight: var(--font-weight-medium);
+  margin: 0 auto; /* Centraliza a caixa se o container for mais largo */
+  max-width: 80%; /* Evita que a caixa fique excessivamente larga */
+}

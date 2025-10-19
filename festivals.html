@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
     <link rel="stylesheet" href="css/flatpickr-theme.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css" />
 </head>
   <body>
@@ -441,7 +442,7 @@
                       width="15"
                       height="15"
                     />
-                    <input type="text" placeholder="Buscar festival..." />
+                    <input type="text" placeholder="Digite um termo para a busca" />
                   </div>
                 </div>
 
@@ -547,30 +548,30 @@
     </main>
 
     <!-- Scripts -->
-<script src="js/supabase.min.js"></script>
-<script src="js/flatpickr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script src="js/supabase.min.js"></script>
+    <script src="js/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-<script src="js/supabase-client.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/main.js"></script>
 
-<script src="js/main.js"></script>
-<script src="js/form-handler.js"></script>
-<script src="js/festivals-render.js"></script>
-<script src="js/accordion.js"></script>
-<script src="js/card-actions.js"></script>
-<script src="js/tags-tooltip.js"></script>
-<script src="js/static-ui-handlers.js"></script> 
-<script src="js/card-actions.js"></script>
-<script src="js/tags-tooltip.js"></script>
-<script src="js/status-handler.js"></script>
- <script src="js/static-ui-handlers.js"></script>
+    <script src="js/accordion.js"></script>
+    <script src="js/card-actions.js"></script>
+    <script src="js/tags-tooltip.js"></script>
+    <script src="js/status-handler.js"></script>
+    <script src="js/form-handler.js"></script>
+    <script src="js/static-ui-handlers.js"></script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Inicializa o seletor de datas
-    flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
-  });
-</script>
+    <script src="js/festivals-render.js"></script>
+    <script src="js/filters.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Inicializa o seletor de datas
+        flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
+      });
+    </script>
 
   </body>
 </html>

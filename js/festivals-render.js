@@ -36,6 +36,21 @@
     // =================================================================
     let festivalDataCache = new Map();
 
+    window.fullQueryString = `
+    *,
+    festival_status(*),
+    festival_edition!inner(*),
+    countries!inner(*),
+    month_held:months!festivals_month_held_id_fkey(*),
+    month_opening:months!festivals_month_opening_id_fkey(*),
+    platforms(*), 
+    fee_status!inner(*),
+    qualifiers:festival_qualifiers_assignments(qualifiers(*)),
+    categories:festival_categories_assignments(categories(*)),
+    genres:festival_genres_assignments(genres(*)),
+    film_types:festival_film_types(film_types(*))
+`;
+
     function onSupabaseReady(callback) {
         const interval = setInterval(() => {
             if (window.supabase) {
@@ -202,50 +217,70 @@ html += '<button class="festival-chevron-btn" type="button">';
     return html;
 }
 
-    async function fetchAndRenderFestivals() {
-        const root = document.querySelector(".board-content");
-        if (!root) { console.error("Render: Elemento '.board-content' não encontrado."); return; }
-        if (!supabaseClient) { console.error("Render: Cliente Supabase não está pronto."); root.innerHTML = "<p>Erro de conexão.</p>"; return; }
-
-        console.log("Render: Buscando festivais no Supabase...");
-        
-        try {
-            const { data, error } = await supabaseClient
-                .from("festivals")
-                .select(`*, festival_status(*), festival_edition!festivals_edition_id_fkey(id, edition), countries!festivals_country_id_fkey(id, country, flag_icon_url), month_held:months!festivals_month_held_id_fkey(id, months_id), month_opening:months!festivals_month_opening_id_fkey(id, months_id), platforms!festivals_platform_id_fkey(id, platform_name), fee_status!festivals_fee_status_id_fkey(id, status_name), qualifiers:festival_qualifiers_assignments(qualifiers(id, code)), categories:festival_categories_assignments(categories(id, category)), genres:festival_genres_assignments(genres(id, genre)), film_types:festival_film_types(film_types(id, type))`)
-                .order("deadline_early", { ascending: true });
-
-            if (error) throw error;
-            if (data.length === 0) { root.innerHTML = "<p>Nenhum festival encontrado.</p>"; return; }
-
-            console.log(`Render: ${data.length} festivais encontrados. Renderizando e guardando no cache...`);
-            
-            festivalDataCache.clear();
-            root.innerHTML = ""; 
-
-            data.forEach(f => {
-                const wrapper = document.createElement("div");
-                wrapper.className = "festival-item-wrapper";
-                wrapper.dataset.festivalId = f.id;
-                
-                const festivalData = { ...f, qualifiers: f.qualifiers.map(q => q.qualifiers).filter(Boolean), categories: f.categories.map(c => c.categories).filter(Boolean), genres: f.genres.map(g => g.genres).filter(Boolean), film_types: f.film_types.map(ft => ft.film_types).filter(Boolean) };
-
-                festivalDataCache.set(festivalData.id, festivalData);
-
-                wrapper.innerHTML = createFestivalCardHTML(festivalData);
-                root.appendChild(wrapper);
-});
-
-            if (typeof window.initializeTooltips === 'function') window.initializeTooltips();
-            if (typeof window.initializeCardActions === 'function') window.initializeCardActions();
-            if (typeof window.initializeAccordions === 'function') window.initializeAccordions();
-            if (typeof window.initializeStatusButtons === 'function') window.initializeStatusButtons();
-            
-        } catch (err) {
-            console.error("Erro ao buscar e renderizar festivais:", err);
-            if(root) root.innerHTML = "<p>Ocorreu um erro ao carregar os festivais.</p>";
-        }
+    async function fetchAndRenderFestivals(queryOrData) {
+    const root = document.querySelector(".board-content");
+    if (!root) { return; }
+    
+    // A mensagem de "Buscando" é controlada pelo 'filters.js' ou pelo carregamento inicial
+    if (queryOrData === undefined) {
+        root.innerHTML = "<p style='text-align:center; padding: 2rem;'>Carregando festivais...</p>";
     }
+
+    try {
+        let data, error;
+
+        // Lógica robusta para lidar com os 3 cenários de entrada
+        if (queryOrData === undefined) {
+            // 1. Carregamento inicial (nenhum parâmetro)
+            console.log("Render: Nenhum dado recebido, buscando dados iniciais...");
+            ({ data, error } = await supabaseClient
+                .from("festivals")
+                .select(window.fullQueryString)
+                .order("deadline_late", { ascending: true })
+                .order("deadline_early", { ascending: true }));
+
+        } else if (Array.isArray(queryOrData)) {
+            // 2. Recebeu um array de dados pronto (ex: busca sem resultados -> [])
+            data = queryOrData;
+            error = null;
+
+        } else {
+            // 3. Recebeu um construtor de query do filters.js
+            ({ data, error } = await queryOrData);
+        }
+
+        if (error) throw error;
+        
+        // Agora 'data' está garantido de ser um array (pode ser vazio)
+        if (data.length === 0) {
+            root.innerHTML = "<div class='no-results-message'>Nenhum festival encontrado com os filtros atuais.</div>";
+            return;
+        }
+        
+        console.log(`Render: ${data.length} festivais para renderizar...`);
+        festivalDataCache.clear();
+        root.innerHTML = ""; 
+
+        data.forEach(f => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "festival-item-wrapper";
+            wrapper.dataset.festivalId = f.id;
+            const festivalData = { ...f, qualifiers: f.qualifiers.map(q => q.qualifiers).filter(Boolean), categories: f.categories.map(c => c.categories).filter(Boolean), genres: f.genres.map(g => g.genres).filter(Boolean), film_types: f.film_types.map(ft => ft.film_types).filter(Boolean) };
+            festivalDataCache.set(festivalData.id, festivalData);
+            wrapper.innerHTML = createFestivalCardHTML(festivalData);
+            root.appendChild(wrapper);
+        });
+
+        if (typeof window.initializeTooltips === 'function') window.initializeTooltips();
+        if (typeof window.initializeCardActions === 'function') window.initializeCardActions();
+        if (typeof window.initializeAccordions === 'function') window.initializeAccordions();
+        if (typeof window.initializeStatusButtons === 'function') window.initializeStatusButtons();
+
+    } catch (err) {
+        console.error("Erro ao buscar e renderizar festivais:", err);
+        if(root) root.innerHTML = "<p style='text-align:center; padding: 2rem;'>Ocorreu um erro ao carregar os festivais.</p>";
+    }
+}
     
     function handleActionClick(e) {
         const btn = e.target.closest('button[data-action="edit"]');
