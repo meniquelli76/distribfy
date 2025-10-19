@@ -304,3 +304,54 @@
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
+/* Estilos para o Range Slider de Taxa */
+filter-slider {
+  padding-bottom: var(--spacing-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+#fee-range-slider {
+  margin: 20px 5px 10px 5px;
+}
+
+.slider-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+/* Estilos customizados para o noUiSlider */
+.noUi-target {
+  background: #E9ECEF;
+  border-radius: 6px; /* ALTERADO: Aumenta o arredondamento */
+  border: 1px solid #DEE2E6;
+  box-shadow: none;
+  height: 6px; /* ALTERADO: Deixa a barra mais fina */
+}
+
+.noUi-connect {
+  background: var(--color-primary-accent, #343a40);
+}
+
+.noUi-handle {
+  border: 1px solid var(--color-primary-accent, #343a40); /* ALTERADO: Borda mais fina */
+  border-radius: 50%;
+  background: #FFF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Opcional: Sombra sutil */
+  width: 16px !important;   /* ALTERADO: Levemente menor */
+  height: 16px !important;  /* ALTERADO: Levemente menor */
+  right: -8px !important;
+  top: -5px !important;
+  cursor: grab;
+}
+
+.noUi-handle:active {
+  cursor: grabbing;
+}
+
+.noUi-handle:after, .noUi-handle:before {
+  display: none;
+}

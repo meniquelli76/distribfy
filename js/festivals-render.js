@@ -36,20 +36,21 @@
     // =================================================================
     let festivalDataCache = new Map();
 
-    window.fullQueryString = `
+   window.fullQueryString = `
     *,
-    festival_status(*),
-    festival_edition!inner(*),
-    countries!inner(*),
-    month_held:months!festivals_month_held_id_fkey(*),
-    month_opening:months!festivals_month_opening_id_fkey(*),
-    platforms(*), 
-    fee_status!inner(*),
-    qualifiers:festival_qualifiers_assignments(qualifiers(*)),
-    categories:festival_categories_assignments(categories(*)),
-    genres:festival_genres_assignments(genres(*)),
-    film_types:festival_film_types(film_types(*))
+    festival_status!left(*),
+    festival_edition!left(*),
+    countries!left(*),
+    month_held:months!festivals_month_held_id_fkey!left(*),
+    month_opening:months!festivals_month_opening_id_fkey!left(*),
+    platforms!left(*),
+    fee_status!left(*),
+    qualifiers:festival_qualifiers_assignments!left(qualifiers(*)),
+    categories:festival_categories_assignments!left(categories(*)),
+    genres:festival_genres_assignments!left(genres(*)),
+    film_types:festival_film_types!left(film_types(*))
 `;
+
 
     function onSupabaseReady(callback) {
         const interval = setInterval(() => {
@@ -136,7 +137,6 @@
 const statusId = f.festival_status ? f.festival_status.id : 1; // Assumindo 1 como padrão
 html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-status-id="${statusId}">${statusName}</button>`;
 
-html += '<button class="festival-chevron-btn" type="button">';
     html += '<button class="festival-chevron-btn" type="button">';
     html += '<img src="public/icons/btn-chevron-down.svg" alt="Expandir" />';
     html += '</button>';
@@ -157,7 +157,7 @@ html += '<button class="festival-chevron-btn" type="button">';
     html += '<div class="festival-col festival-col-info">';
     html += `<div class="festival-info-item"><img src="public/icons/icon-calendar-period.svg" alt="" /><span>${monthHeld}</span></div>`;
     html += `<div class="festival-info-item"><img src="public/icons/icon-calendar-openentries.svg" alt="" /><span>${monthOpening}</span></div>`;
-    html += `<div class="festival-info-item"><img src="public/icons/icon-type.svg" alt="" /><span>${filmTypes}</span></div>`;
+    html += `<div class="festival-info-item"><img src="public/icons/timer-film.svg" alt="" /><span>${filmTypes}</span></div>`;
     html += `<div class="festival-info-item"><img src="public/icons/icon-globe.svg" alt="" /><a href="${platformLink || '#'}" target="_blank" rel="noopener noreferrer">${platformName}</a></div>`;
     html += '</div>';
     html += '<div class="divider-vertical"></div>';

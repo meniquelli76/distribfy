@@ -19,14 +19,18 @@
   text-transform: lowercase;
 }
 
+/* Coluna principal */
+.board-main {
+  display: flex;
+  flex-direction: column;
+  grid-column: 2 / -1;
+}
+
 .board-container {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: var(--spacing-6); /* 32px */
-  padding: 0 var(--spacing-7); /* 48px */
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  align-items: start;
+ display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: flex-start;
 }
 
 .board-content {

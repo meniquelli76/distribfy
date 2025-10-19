@@ -194,13 +194,17 @@
 }
 
 .festival-age {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   margin-top: var(--spacing-3);
+  padding: 5px;
+   border-radius: var(--border-radius-medium);
+   background-color: #f1f3f5;
+
   /* A propriedade 'color' foi removida para herdar do pai */
 }
 
 .festival-col-info {
-  gap: var(--spacing-3);
+  gap: var(--spacing-4);
 }
 
 .festival-info-item {
