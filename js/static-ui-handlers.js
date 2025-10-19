@@ -33,3 +33,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("✅ Handlers da UI estática carregados.");
 });
+
+// js/feedback-handler.js
+(function() {
+  const modalOverlay = document.getElementById('feedback-modal-overlay');
+  const modalMessage = document.getElementById('feedback-modal-message');
+  const closeButton = document.getElementById('feedback-modal-close');
+
+  // Função para MOSTRAR o modal com uma mensagem customizada
+  function showFeedbackModal(message) {
+    if (!modalOverlay || !modalMessage) return;
+
+    modalMessage.textContent = message;
+    modalOverlay.style.display = 'flex';
+  }
+
+  // Função para ESCONDER o modal
+  function hideFeedbackModal() {
+    if (!modalOverlay) return;
+    modalOverlay.style.display = 'none';
+  }
+
+  // Adiciona os eventos para fechar o modal
+  if (closeButton) {
+    closeButton.addEventListener('click', hideFeedbackModal);
+  }
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', (event) => {
+      // Fecha só se clicar no fundo, não no conteúdo do modal
+      if (event.target === modalOverlay) {
+        hideFeedbackModal();
+      }
+    });
+  }
+
+  // Expõe a função de mostrar para ser usada por outros scripts
+  window.showFeedbackModal = showFeedbackModal;
+
+})();

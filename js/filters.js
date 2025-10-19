@@ -127,35 +127,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         async function applyFilters() {
-            // ... (código original sem alterações)
-            if (!window.supabase || !window.fetchAndRenderFestivals) { return; }
-            try {
-                const params = {
-                    search_term: activeFilters.searchTerm || null, country_ids: activeFilters.countries.length > 0 ? activeFilters.countries : null,
-                    genre_ids: activeFilters.genres.length > 0 ? activeFilters.genres : null, category_ids: activeFilters.categories.length > 0 ? activeFilters.categories : null,
-                    qualifier_ids: activeFilters.qualifiers.length > 0 ? activeFilters.qualifiers : null, platform_ids: activeFilters.platforms.length > 0 ? activeFilters.platforms : null,
-                    fee_status_ids: activeFilters.fee_status.length > 0 ? activeFilters.fee_status : null, month_opening_ids: activeFilters.month_opening.length > 0 ? activeFilters.month_opening : null,
-                    status_ids: activeFilters.status.length > 0 ? activeFilters.status : null, min_fee: activeFilters.minFee, max_fee: activeFilters.maxFee,
-                };
-                const { data: idData, error: rpcError } = await window.supabase.rpc('filter_festivals', params);
-                if (rpcError) throw rpcError;
-                const festivalIds = idData.map(item => item.id);
-                if (festivalIds.length === 0 && (activeFilters.searchTerm || params.country_ids || params.genre_ids || params.category_ids || params.qualifier_ids || params.platform_ids || params.fee_status_ids || params.month_opening_ids || params.status_ids)) {
-                    window.fetchAndRenderFestivals([]);
-                    return;
-                }
-                let query = window.supabase.from('festivals').select(window.fullQueryString);
-                if(festivalIds.length > 0) { query = query.in('id', festivalIds); }
-                if (activeFilters.sortBy === 'deadline') { query = query.order('deadline_late', { ascending: true }).order('deadline_early', { ascending: true });
-                } else { query = query.order('result_date', { ascending: activeFilters.sortAsc }); }
-                const { data, error } = await query;
-                if (error) throw error;
-                window.fetchAndRenderFestivals(data);
-            } catch (err) {
-                console.error("Erro no processo de filtro:", err);
-                window.fetchAndRenderFestivals(null, err);
-            }
-        }
+    if (!window.supabase || typeof window.triggerFestivalSearch !== 'function') { 
+        console.warn("Módulo de renderização ainda não está pronto.");
+        return; 
+    }
+    try {
+        const params = {
+            search_term: activeFilters.searchTerm || null, country_ids: activeFilters.countries.length > 0 ? activeFilters.countries : null,
+            genre_ids: activeFilters.genres.length > 0 ? activeFilters.genres : null, category_ids: activeFilters.categories.length > 0 ? activeFilters.categories : null,
+            qualifier_ids: activeFilters.qualifiers.length > 0 ? activeFilters.qualifiers : null, platform_ids: activeFilters.platforms.length > 0 ? activeFilters.platforms : null,
+            fee_status_ids: activeFilters.fee_status.length > 0 ? activeFilters.fee_status : null, month_opening_ids: activeFilters.month_opening.length > 0 ? activeFilters.month_opening : null,
+            status_ids: activeFilters.status.length > 0 ? activeFilters.status : null, min_fee: activeFilters.minFee, max_fee: activeFilters.maxFee,
+        };
+
+        const { data: idData, error: rpcError } = await window.supabase.rpc('filter_festivals', params);
+        if (rpcError) throw rpcError;
+
+        const festivalIds = idData.map(item => item.id);
+
+        // A mágica acontece aqui: em vez de fazer outra query,
+        // apenas passamos os IDs para o nosso motor de busca.
+        window.triggerFestivalSearch(festivalIds);
+
+    } catch (err) {
+        console.error("Erro no processo de filtro:", err);
+        // Em caso de erro, reseta para uma busca geral
+        window.triggerFestivalSearch(null); 
+    }
+}
         
         function resetFilters() {
             // [ALTERADO] para lidar com o slider dinâmico

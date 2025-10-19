@@ -36,6 +36,15 @@
     // =================================================================
     let festivalDataCache = new Map();
 
+    const PAGE_SIZE = 12; // Quantos festivais carregar por vez
+let currentPage = 0;
+let isLoading = false; // Para evitar cliques múltiplos no botão
+let currentFilterIds = null; // Armazena os IDs de uma busca filtrada
+let noMoreResults = false; // Indica se chegamos ao fim dos resultados
+
+const root = document.querySelector(".board-content");
+const loadMoreBtn = document.getElementById('load-more-btn');
+
    window.fullQueryString = `
     *,
     festival_status!left(*),
@@ -217,69 +226,86 @@ html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-sta
     return html;
 }
 
-    async function fetchAndRenderFestivals(queryOrData) {
-    const root = document.querySelector(".board-content");
-    if (!root) { return; }
-    
-    // A mensagem de "Buscando" é controlada pelo 'filters.js' ou pelo carregamento inicial
-    if (queryOrData === undefined) {
-        root.innerHTML = "<p style='text-align:center; padding: 2rem;'>Carregando festivais...</p>";
-    }
+    async function fetchAndRenderFestivals(isLoadMore = false) {
+    if (isLoading) return;
+    isLoading = true;
+    if (loadMoreBtn) loadMoreBtn.textContent = 'Buscando...';
 
     try {
-        let data, error;
+        if (!isLoadMore) {
+            currentPage = 0;
+            noMoreResults = false;
+            if (root) root.innerHTML = "<p style='text-align:center; padding: 2rem;'>Carregando festivais...</p>";
+        }
 
-        // Lógica robusta para lidar com os 3 cenários de entrada
-        if (queryOrData === undefined) {
-            // 1. Carregamento inicial (nenhum parâmetro)
-            console.log("Render: Nenhum dado recebido, buscando dados iniciais...");
-            ({ data, error } = await supabaseClient
-                .from("festivals")
-                .select(window.fullQueryString)
-                .order("deadline_late", { ascending: true })
-                .order("deadline_early", { ascending: true }));
+        const from = currentPage * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
 
-        } else if (Array.isArray(queryOrData)) {
-            // 2. Recebeu um array de dados pronto (ex: busca sem resultados -> [])
-            data = queryOrData;
-            error = null;
+        let query = supabaseClient.from('festivals').select(window.fullQueryString);
 
+        if (currentFilterIds !== null) {
+            if (currentFilterIds.length === 0) {
+                noMoreResults = true;
+                if(root) root.innerHTML = "<div class='no-results-message'>Nenhum festival encontrado com os filtros atuais.</div>";
+            } else {
+                query = query.in('id', currentFilterIds);
+            }
+        }
+
+        if(noMoreResults) {
+             if (currentFilterIds && currentFilterIds.length === 0) {}
+             else if(root && !isLoadMore) root.innerHTML = "";
         } else {
-            // 3. Recebeu um construtor de query do filters.js
-            ({ data, error } = await queryOrData);
+            const { data, error } = await query
+                .order("deadline_late", { ascending: true })
+                .order("deadline_early", { ascending: true })
+                .range(from, to);
+
+            if (error) throw error;
+            
+            if (currentPage === 0) {
+                root.innerHTML = ''; 
+                festivalDataCache.clear();
+            }
+
+            if (data.length === 0 && currentPage === 0) {
+                 root.innerHTML = "<div class='no-results-message'>Nenhum festival encontrado.</div>";
+            }
+
+            data.forEach(f => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "festival-item-wrapper";
+                const festivalData = { ...f, qualifiers: f.qualifiers.map(q => q.qualifiers).filter(Boolean), categories: f.categories.map(c => c.categories).filter(Boolean), genres: f.genres.map(g => g.genres).filter(Boolean), film_types: f.film_types.map(ft => ft.film_types).filter(Boolean) };
+                festivalDataCache.set(f.id, festivalData);
+                wrapper.innerHTML = createFestivalCardHTML(festivalData);
+                root.appendChild(wrapper);
+            });
+
+            if (data.length < PAGE_SIZE) {
+                noMoreResults = true;
+            }
+            
+            if (typeof window.initializeTooltips === 'function') window.initializeTooltips();
+            if (typeof window.initializeCardActions === 'function') window.initializeCardActions();
+            if (typeof window.initializeAccordions === 'function') window.initializeAccordions();
+            if (typeof window.initializeStatusButtons === 'function') window.initializeStatusButtons();
         }
-
-        if (error) throw error;
-        
-        // Agora 'data' está garantido de ser um array (pode ser vazio)
-        if (data.length === 0) {
-            root.innerHTML = "<div class='no-results-message'>Nenhum festival encontrado com os filtros atuais.</div>";
-            return;
-        }
-        
-        console.log(`Render: ${data.length} festivais para renderizar...`);
-        festivalDataCache.clear();
-        root.innerHTML = ""; 
-
-        data.forEach(f => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "festival-item-wrapper";
-            wrapper.dataset.festivalId = f.id;
-            const festivalData = { ...f, qualifiers: f.qualifiers.map(q => q.qualifiers).filter(Boolean), categories: f.categories.map(c => c.categories).filter(Boolean), genres: f.genres.map(g => g.genres).filter(Boolean), film_types: f.film_types.map(ft => ft.film_types).filter(Boolean) };
-            festivalDataCache.set(festivalData.id, festivalData);
-            wrapper.innerHTML = createFestivalCardHTML(festivalData);
-            root.appendChild(wrapper);
-        });
-
-        if (typeof window.initializeTooltips === 'function') window.initializeTooltips();
-        if (typeof window.initializeCardActions === 'function') window.initializeCardActions();
-        if (typeof window.initializeAccordions === 'function') window.initializeAccordions();
-        if (typeof window.initializeStatusButtons === 'function') window.initializeStatusButtons();
 
     } catch (err) {
         console.error("Erro ao buscar e renderizar festivais:", err);
         if(root) root.innerHTML = "<p style='text-align:center; padding: 2rem;'>Ocorreu um erro ao carregar os festivais.</p>";
+    } finally {
+        isLoading = false;
+        if (loadMoreBtn) {
+            loadMoreBtn.textContent = 'Ver mais festivais';
+            loadMoreBtn.style.display = noMoreResults ? 'none' : 'block';
+        }
     }
+}
+
+window.triggerFestivalSearch = function(ids = null) {
+    currentFilterIds = ids; // Armazena os IDs do filtro (ou null se limpou)
+    fetchAndRenderFestivals(false); // Inicia uma nova busca do zero
 }
     
     function handleActionClick(e) {
@@ -303,15 +329,29 @@ html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-sta
     window.fetchAndRenderFestivals = fetchAndRenderFestivals;
 
     onSupabaseReady(() => {
-        console.log("Render: Conexão Supabase pronta. Adicionando listeners e buscando festivais...");
-        
-        const root = document.querySelector(".board-content");
-        if (root && !root.dataset.delegateAttached) {
-            root.addEventListener("click", handleActionClick);
-            root.dataset.delegateAttached = "true";
-        }
-        
-        fetchAndRenderFestivals();
-    });
+    supabaseClient = window.supabase;
+    updateFestivalCounter();
+    
+    // ▼▼▼ CÓDIGO FALTANTE RESTAURADO AQUI ▼▼▼
+    // Este bloco ativa o listener para os botões de ação (como 'Editar')
+    // Ele garante que cliques dentro da área dos cards sejam monitorados.
+    const root = document.querySelector(".board-content");
+    if (root && !root.dataset.delegateAttached) {
+        root.addEventListener("click", handleActionClick);
+        root.dataset.delegateAttached = "true";
+    }
+    // ▲▲▲ FIM DO BLOCO RESTAURADO ▲▲▲
+
+    // Listener para o botão de carregar mais (continua igual)
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            currentPage++; // Incrementa a página
+            fetchAndRenderFestivals(true); // Busca a próxima página
+        });
+    }
+
+    // Busca inicial ao carregar a página (continua igual)
+    fetchAndRenderFestivals(false);
+});
 
 })();

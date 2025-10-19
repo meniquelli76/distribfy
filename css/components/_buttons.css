@@ -114,3 +114,8 @@
 }
 
 
+.load-more-container {
+  display: flex;
+  justify-content: right;
+  padding: 32px 0;
+}

@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Captura os verdadeiros multi-selects
+    // Captura multi-selects
     multiSelectIds.genres = getValueById('genres');
     multiSelectIds.categories = getValueById('categories');
     multiSelectIds.qualifiers = getValueById('qualifying');
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             resetFormState(form);
             closeForm();
-            alert("Festival salvo com sucesso!");
+            window.showFeedbackModal('Festival salvo com sucesso!');
             if (typeof window.fetchAndRenderFestivals === "function") {
                 window.fetchAndRenderFestivals();
             }
