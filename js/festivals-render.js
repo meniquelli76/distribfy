@@ -275,6 +275,7 @@ html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-sta
             data.forEach(f => {
                 const wrapper = document.createElement("div");
                 wrapper.className = "festival-item-wrapper";
+                wrapper.dataset.festivalId = f.id;
                 const festivalData = { ...f, qualifiers: f.qualifiers.map(q => q.qualifiers).filter(Boolean), categories: f.categories.map(c => c.categories).filter(Boolean), genres: f.genres.map(g => g.genres).filter(Boolean), film_types: f.film_types.map(ft => ft.film_types).filter(Boolean) };
                 festivalDataCache.set(f.id, festivalData);
                 wrapper.innerHTML = createFestivalCardHTML(festivalData);

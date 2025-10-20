@@ -126,34 +126,51 @@ document.addEventListener('DOMContentLoaded', () => {
             if(btnClear) { btnClear.addEventListener('click', () => { resetFilters(); }); }
         }
 
-        async function applyFilters() {
+       function getFilterParams() {
+    const params = {
+        search_term: activeFilters.searchTerm || null,
+        country_ids: activeFilters.countries.length > 0 ? activeFilters.countries : null,
+        genre_ids: activeFilters.genres.length > 0 ? activeFilters.genres : null,
+        category_ids: activeFilters.categories.length > 0 ? activeFilters.categories : null,
+        qualifier_ids: activeFilters.qualifiers.length > 0 ? activeFilters.qualifiers : null,
+        platform_ids: activeFilters.platforms.length > 0 ? activeFilters.platforms : null,
+        fee_status_ids: activeFilters.fee_status.length > 0 ? activeFilters.fee_status : null,
+        month_opening_ids: activeFilters.month_opening.length > 0 ? activeFilters.month_opening : null,
+        status_ids: activeFilters.status.length > 0 ? activeFilters.status : null,
+        min_fee: activeFilters.minFee,
+        max_fee: activeFilters.maxFee
+    };
+    return params;
+}
+
+// 2. Função 'applyFilters' com o bloco try...catch completo
+async function applyFilters() {
     if (!window.supabase || typeof window.triggerFestivalSearch !== 'function') { 
         console.warn("Módulo de renderização ainda não está pronto.");
         return; 
     }
     try {
-        const params = {
-            search_term: activeFilters.searchTerm || null, country_ids: activeFilters.countries.length > 0 ? activeFilters.countries : null,
-            genre_ids: activeFilters.genres.length > 0 ? activeFilters.genres : null, category_ids: activeFilters.categories.length > 0 ? activeFilters.categories : null,
-            qualifier_ids: activeFilters.qualifiers.length > 0 ? activeFilters.qualifiers : null, platform_ids: activeFilters.platforms.length > 0 ? activeFilters.platforms : null,
-            fee_status_ids: activeFilters.fee_status.length > 0 ? activeFilters.fee_status : null, month_opening_ids: activeFilters.month_opening.length > 0 ? activeFilters.month_opening : null,
-            status_ids: activeFilters.status.length > 0 ? activeFilters.status : null, min_fee: activeFilters.minFee, max_fee: activeFilters.maxFee,
-        };
+        const params = getFilterParams(); // Usa a função auxiliar para pegar os parâmetros
 
+        // Chama a função no Supabase
         const { data: idData, error: rpcError } = await window.supabase.rpc('filter_festivals', params);
         if (rpcError) throw rpcError;
 
         const festivalIds = idData.map(item => item.id);
-
-        // A mágica acontece aqui: em vez de fazer outra query,
-        // apenas passamos os IDs para o nosso motor de busca.
+        
+        // Dispara a renderização com os IDs encontrados
         window.triggerFestivalSearch(festivalIds);
 
-    } catch (err) {
+    } catch (err) { // <<< Este bloco estava faltando, agora está corrigido.
         console.error("Erro no processo de filtro:", err);
-        // Em caso de erro, reseta para uma busca geral
+        // Em caso de erro, dispara a renderização com uma lista vazia ou nula
         window.triggerFestivalSearch(null); 
     }
+}
+
+// 3. Linha que expõe a função getParams para ser usada em outras páginas (como a de favoritos)
+if (window.applyFilters) {
+    window.applyFilters.getParams = getFilterParams;
 }
         
         function resetFilters() {
@@ -180,4 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicia todo o processo
     initializeFilters();
+
+    window.applyFilters.getParams = getFilterParams;
 });

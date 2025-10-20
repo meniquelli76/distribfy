@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/main.css" />
 
     </head>
-  <body id="page-festivals">
+  <body id="page-favorites">
       <header class="header">
     <div class="logo">
         <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
@@ -274,12 +274,11 @@
         <section class="festivals-board">
           <div class="board-header">
             <h2 class="board-title">
-              <img src="public/icons/icon-ticket-festivals.svg" alt="">
-              festivais
+              <img src="public/icons/icon-heart.svg" alt="">
+              favoritos
             </h2>
             <div class="header-controls">
-              <span class="festival-count">festivais</span>
-              <button class="btn-gst-fest" id="btn-suggest-festival" aria-label="Sugerir novo festival" data-tooltip="Sugerir festival">
+              <span class="festival-count">favoritos</span>
                 <img src="public/icons/icon-plus-white.svg" alt="" />
               </button>
             </div>
@@ -288,10 +287,6 @@
             <aside class="board-sidebar">
               <div class="favorites-box">
                 <h3 class="favorites-title">festmatch</h3>
-                <a href="favorites.html" class="favorites-badge">
-  <img src="public/icons/icon-heart-fav.svg" alt="" width="16" height="14"/>
-  <span>FAV</span>
-</a>
               </div>
               <div class="film-selector">
                 <select id="film-select" name="film-select">
@@ -363,6 +358,7 @@
     <script src="js/feedback-handler.js"></script>
     <script src="js/festivals-render.js"></script>
     <script src="js/filters.js"></script>
+    <script src="js/favoritos-logic.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });

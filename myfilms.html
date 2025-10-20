@@ -32,56 +32,40 @@
 
     <body>
     <!-- HEADER -->
-    <header class="header">
-      <div class="logo">
-        <img
-          src="public/logos/logo_distribfy.svg"
-          alt="Festmundi Logo"
-          class="logo-image"
-        />
+   <header class="header">
+    <div class="logo">
+        <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
         <span class="tagline">simplify your film distribution</span>
-      </div>
-
-      <nav class="menu">
-        <a href="#home">Home</a>
+    </div>
+    <nav class="menu">
+        <a href="#">Home</a>
         <a href="/festivals.html" data-protected>Festivais</a>
     <a href="/myfilms.html" data-protected>Meus Filmes</a>
-        <a href="#contato">Contato</a>
-      </nav>
-
-      <div class="user-area">
-        <button class="notification-btn" aria-label="Notificações">
-          <img
-            src="public/icons/notification-icon.svg"
-            alt="Notificações"
-            width="18"
-            height="20"
-          />
+        <a href="#">Contato</a>
+    </nav>
+    <div class="user-area">
+        <button class="notification-btn">
+            <img src="public/icons/notification-icon.svg" alt="Notificações">
         </button>
 
-        <div class="user-profile">
-          <img
-            src="public/images/user-avatar.jpg"
-            alt="Foto do usuário"
-            class="user-avatar"
-          />
-          <img
-            src="public/icons/icon-chevrondown-header.svg"
-            alt=""
-            class="chevron"
-            width="20"
-            height="11"
-          />
+        <div class="user-menu-container" id="user-menu" style="display: none;">
+            <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+                <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header">
+                <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
+            </button>
+            <div class="dropdown-menu" id="user-dropdown">
+                <ul>
+                    <li><a href="/userpage.html">Minha Conta</a></li>
+                    <li><a href="#" id="logout-button">Sair</a></li>
+                </ul>
+            </div>
         </div>
-      </div>
 
-      <!-- Menu Mobile -->
-      <button class="menu-toggle" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </header>
+        <div id="login-container">
+            <a href="/login.html" class="header-login-link">Entrar</a>
+        </div>
+    </div>
+</header>
 
     <main class="main-container">
       <div class="content-wrapper">

@@ -140,3 +140,47 @@ document.addEventListener("DOMContentLoaded", () => {
   
   console.log("✅ Main.js carregado com sucesso!");
 });
+
+// js/main.js
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // (setupAuthUI() e outras lógicas continuam aqui...)
+    setupAuthUI();
+    
+    // ==========================================================
+    // ##### LÓGICA DO MENU DROPDOWN (VERSÃO CORRIGIDA) #####
+    // ==========================================================
+    const userMenuContainer = document.getElementById('user-menu');
+    const triggerButton = document.getElementById('user-menu-trigger');
+
+    // Só executa se os elementos do menu existirem na página
+    if (userMenuContainer && triggerButton) {
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            // CORREÇÃO: Adiciona/remove a classe 'active' no CONTAINER, não no dropdown
+            userMenuContainer.classList.toggle('active');
+            
+            // Atualiza o atributo para acessibilidade
+            const isExpanded = userMenuContainer.classList.contains('active');
+            triggerButton.setAttribute('aria-expanded', isExpanded);
+        }
+
+        // Adiciona o evento de clique ao botão
+        triggerButton.addEventListener('click', toggleDropdown);
+
+        // Listener para fechar o menu ao clicar fora
+        document.addEventListener('click', (event) => {
+            // Se o clique foi fora do container E o menu está ativo
+            if (!userMenuContainer.contains(event.target) && userMenuContainer.classList.contains('active')) {
+                userMenuContainer.classList.remove('active');
+                triggerButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+    // --- FIM DA LÓGICA DO MENU ---
+
+    // (O resto do seu código de menu mobile, etc. continua aqui...)
+
+});
