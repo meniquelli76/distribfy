@@ -34,9 +34,9 @@
     margin: 0 auto var(--spacing-5);
 }
 .form-title {
-    font-size: 1.25rem;
+    font-size: 1.7rem;
     font-weight: var(--font-weight-regular);
-    color: var(--color-text-primary);
+    color: #495057;
     margin-bottom: var(--spacing-6);
     text-transform: lowercase;
 }
@@ -316,5 +316,36 @@
   opacity: 1;
   background-color: transparent;
 }
-  
+
+** Para inputs de texto normais e textareas */
+.form-group.error .input-wrapper input,
+.form-group.error input[type="text"],
+.form-group.error input[type="url"],
+.form-group.error textarea {
+  border-color: #dc3545 !important; /* !important força a prioridade */
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Para selects customizados (criados pela biblioteca Choices.js) */
+.form-group.error .choices .choices__inner {
+  border-color: #dc3545 !important;
+}
+
+/* Para selects normais (com a setinha padrão) */
+.form-group.error .select-wrapper select {
+  border-color: #dc3545 !important;
+}
+
+/* Regras para a mensagem de erro (permanecem as mesmas) */
+.validation-message {
+  display: none;
+  font-size: 0.75rem;
+  color: #dc3545;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.validation-message.visible {
+  display: block;
+}
 

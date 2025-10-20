@@ -57,13 +57,6 @@
   border-color: var(--color-text-secondary);
 }
 
-/* --- Estilo de Foco para Acessibilidade --- */
-.btn-primary:focus,
-.btn-secondary:focus {
-  outline: 2px solid var(--color-link);
-  outline-offset: 2px;
-}
-
 /* css/components/_buttons.css */
 
 .actions {
@@ -118,4 +111,79 @@
   display: flex;
   justify-content: right;
   padding: 32px 0;
+}
+
+
+/* --- 1. Layout do Cabeçalho do Board --- */
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.board-title {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espaço entre o ícone e o texto */
+}
+
+.board-title img {
+  width: 28px; /* Tamanho do novo ícone */
+  height: 28px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Espaço entre o contador e o botão '+' */
+}
+
+
+/* --- 2. Botão de Sugerir Festival (+) --- */
+.btn-gst-fest {
+  position: relative; /* Necessário para o tooltip */
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #495057);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-gst-fest:hover {
+  background-color: #495057; 
+}
+
+.btn-gst-fest img {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* --- 3. Tooltip para o Botão --- */
+.btn-gst-fest::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #212529;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.btn-gst-fest:hover::after {
+  opacity: 1;
+  visibility: visible;
 }

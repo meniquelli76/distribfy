@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    const debounce = (func, delay) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
     console.log("Form-Handler: DOM carregado. Iniciando lógica do formulário.");
 
     let supabaseClient = null;
@@ -106,42 +115,49 @@ document.addEventListener('DOMContentLoaded', () => {
     async function insertFestival(payload) { const { data, error } = await supabaseClient.from("festivals").insert([payload]).select(); if (error) throw error; return data?.[0]; }
     async function updateFestival(id, payload) { const { data, error } = await supabaseClient.from("festivals").update(payload).eq("id", id).select(); if (error) throw error; return data?.[0]; }
     async function handleSubmit(e) {
-        e.preventDefault();
-        const form = findForm();
-        if (!form) return;
-        
-        
-        const { payload, multiSelectIds, typeId } = formToPayload();
-        
-        console.log("Payload sendo enviado ao Supabase:", payload);
-        try {
-            let savedFestival;
-            if (form.dataset.editingId) {
-                savedFestival = await updateFestival(parseInt(form.dataset.editingId, 10), payload);
-            } else {
-                savedFestival = await insertFestival(payload);
-            }
-            if (savedFestival?.id) {
-                
-                await handleJunctionTable(savedFestival.id, multiSelectIds.genres, { junctionTable: 'festival_genres_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'genre_id' });
-                await handleJunctionTable(savedFestival.id, multiSelectIds.categories, { junctionTable: 'festival_categories_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'category_id' });
-                await handleJunctionTable(savedFestival.id, multiSelectIds.qualifiers, { junctionTable: 'festival_qualifiers_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'qualifier_id' });
-             
+    e.preventDefault();
 
-                
-                await handleJunctionTable(savedFestival.id, typeId, { junctionTable: 'festival_film_types', festivalIdColumn: 'festival_id', relatedIdColumn: 'film_type_id' });
-            }
-            resetFormState(form);
-            closeForm();
-            window.showFeedbackModal('Festival salvo com sucesso!');
-            if (typeof window.fetchAndRenderFestivals === "function") {
-                window.fetchAndRenderFestivals();
-            }
-        } catch (err) {
-            console.error("Erro ao salvar festival:", err);
-            alert("Erro ao salvar festival: " + (err.message || ""));
+    // BLOCO DE VALIDAÇÃO DOS CAMPOS OBRIGATÓRIOS
+    const { isValid, firstErrorField } = validateForm();
+    if (!isValid) {
+        console.warn("Validação falhou. Envio interrompido.");
+        if (firstErrorField) {
+            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        return; // Interrompe a execução aqui
     }
+
+    // Se a validação passou, o código abaixo é executado.
+    const form = findForm();
+    if (!form) return;
+    
+    const { payload, multiSelectIds, typeId } = formToPayload();
+    
+    console.log("Payload sendo enviado ao Supabase:", payload);
+    try {
+        let savedFestival;
+        if (form.dataset.editingId) {
+            savedFestival = await updateFestival(parseInt(form.dataset.editingId, 10), payload);
+        } else {
+            savedFestival = await insertFestival(payload);
+        }
+        if (savedFestival?.id) {
+            await handleJunctionTable(savedFestival.id, multiSelectIds.genres, { junctionTable: 'festival_genres_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'genre_id' });
+            await handleJunctionTable(savedFestival.id, multiSelectIds.categories, { junctionTable: 'festival_categories_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'category_id' });
+            await handleJunctionTable(savedFestival.id, multiSelectIds.qualifiers, { junctionTable: 'festival_qualifiers_assignments', festivalIdColumn: 'festival_id', relatedIdColumn: 'qualifier_id' });
+            await handleJunctionTable(savedFestival.id, typeId, { junctionTable: 'festival_film_types', festivalIdColumn: 'festival_id', relatedIdColumn: 'film_type_id' });
+        }
+        resetFormState(form);
+        closeForm();
+        window.showFeedbackModal('Festival salvo com sucesso!');
+        if (typeof window.triggerFestivalSearch === "function") {
+            window.triggerFestivalSearch(null);
+        }
+    } catch (err) {
+        console.error("Erro ao salvar festival:", err);
+        window.showFeedbackModal('Ocorreu um erro ao salvar o festival.', 'error');
+    }
+}
 
     function populateFormForEdit(festivalData) {
         console.log("Form-Handler: Recebendo dados do cache para popular o formulário.", festivalData);
@@ -218,8 +234,119 @@ document.addEventListener('DOMContentLoaded', () => {
         const interval = setInterval(() => { if (window.supabase) { clearInterval(interval); supabaseClient = window.supabase; callback(); } }, 50);
     }
 
+function initFestivalNameValidation() {
+    const festivalNameInput = document.getElementById('festival-name');
+    const errorSpan = document.getElementById('festival-name-error');
+    const formGroup = festivalNameInput.closest('.form-group');
+
+    const checkFestivalName = async (name) => {
+        // Limpa o erro se o campo estiver vazio
+        if (!name.trim()) {
+            formGroup.classList.remove('error');
+            errorSpan.classList.remove('visible');
+            return;
+        }
+
+        try {
+            // Consulta o Supabase de forma eficiente, apenas para contar
+            const { count, error } = await supabaseClient
+                .from('festivals')
+                .select('*', { count: 'exact', head: true })
+                .ilike('festival_name', name.trim());
+
+            if (error) throw error;
+
+            if (count > 0) {
+                // Duplicata encontrada: mostra o erro
+                errorSpan.textContent = 'Este festival já existe';
+                formGroup.classList.add('error');
+                errorSpan.classList.add('visible');
+            } else {
+                // Sem duplicata: limpa o erro
+                formGroup.classList.remove('error');
+                errorSpan.classList.remove('visible');
+            }
+
+        } catch (err) {
+            console.error("Erro na validação do nome do festival:", err);
+        }
+    };
+
+    // Cria a versão "debounced" da nossa função de verificação
+    const debouncedCheck = debounce(checkFestivalName, 500); // Aguarda 500ms após o usuário parar de digitar
+
+    // Adiciona o "ouvinte" ao campo de input
+    if (festivalNameInput) {
+        festivalNameInput.addEventListener('input', (e) => {
+            debouncedCheck(e.target.value);
+        });
+    }
+}
+
+function validateForm() {
+    const form = findForm();
+    if (!form) return { isValid: false, firstErrorField: null };
+
+    // Limpa todos os erros de validação anteriores
+    form.querySelectorAll('.form-group.error').forEach(el => el.classList.remove('error'));
+    
+    // Lista dos IDs dos campos que NÃO são obrigatórios
+    const nonRequiredFields = [
+        'deadline-early', 
+        'deadline-late', 
+        'results',
+        'fee-early-min', 
+        'fee-early-max', 
+        'fee-late-min', 
+        'fee-late-max',
+        'additional-info' // Adicionando "Mais informações" como não obrigatório também
+    ];
+
+    // Lista de todos os IDs de campos que devem ser validados
+    const fieldsToValidate = [
+        // Campos do fieldMap
+        ...Object.values(fieldMap),
+        // Adicione aqui outros campos que não estão no fieldMap mas são obrigatórios
+        'qualifying', 'categories', 'genres', 'type'
+    ];
+
+    let firstErrorField = null;
+    let isValid = true;
+
+    fieldsToValidate.forEach(fieldId => {
+        // Pula a validação para campos não obrigatórios
+        if (nonRequiredFields.includes(fieldId)) {
+            return;
+        }
+
+        const value = getValueById(fieldId);
+        const isEmpty = !value || (Array.isArray(value) && value.length === 0);
+
+        if (isEmpty) {
+            isValid = false;
+            const fieldElement = document.getElementById(fieldId);
+            if (fieldElement) {
+                const formGroup = fieldElement.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.add('error');
+                    // Guarda a referência do primeiro campo com erro para poder rolar a tela até ele
+                    if (!firstErrorField) {
+                        firstErrorField = formGroup;
+                    }
+                }
+            }
+        }
+    });
+
+    return { isValid, firstErrorField };
+}
+
     onSupabaseReady(() => {
         initUI(); 
+
+        initFestivalNameValidation();
+    console.log("Form-Handler: Conexão Supabase pronta. Populando selects...");
+
         console.log("Form-Handler: Conexão Supabase pronta. Populando selects...");
         const populatePromises = [
             populateSelectWithOptions("edition-number", "festival_edition", "id", "edition", "edition"),

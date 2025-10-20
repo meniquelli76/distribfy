@@ -2,7 +2,7 @@
 
 .festivals-board {
   width: 100%;
-  margin-top: 0; /* 48px */
+  margin-top: -30px; /* 48px */
 }
 
 .board-header {
@@ -14,7 +14,7 @@
 .board-title {
   font-size: 2rem; /* 32px */
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  color: #495057;
   margin: 0;
   text-transform: lowercase;
 }
