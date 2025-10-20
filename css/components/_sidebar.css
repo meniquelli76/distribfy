@@ -23,6 +23,17 @@
   padding: var(--spacing-5) var(--spacing-6);
 }
 
+.festmatch-fav {
+  display: flex;
+  justify-content: center; /* <-- Centraliza o item restante */
+  align-items: center;
+  padding: var(--spacing-5) var(--spacing-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-5);
+}
+
 .favorites-title {
   font-size: 1.125rem;
   font-weight: var(--font-weight-bold);
@@ -354,4 +365,11 @@ filter-slider {
 
 .noUi-handle:after, .noUi-handle:before {
   display: none;
+}
+
+.favorites-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  text-decoration: none; /* <-- ADICIONE ESTA LINHA */
 }
