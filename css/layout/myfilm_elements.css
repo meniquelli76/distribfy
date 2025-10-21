@@ -411,3 +411,55 @@
 .film-form .form-group.full-width + .form-group.full-width {
   margin-top: var(--spacing-5);
 }
+
+#page-myfilms .choices__inner {
+  min-width: 300px;
+  align-items: flex-start;
+  padding: 6px 7.5px 2px;
+}
+
+/* 2. RESTAURA O ESTILO DAS TAGS SELECIONADAS */
+#page-myfilms .choices__list--multiple .choices__item {
+  /* Cores e Fundo: Sinta-se à vontade para alterar estas cores */
+  background-color: var(--color-background-panel); /* Um cinza escuro do seu tema */
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+
+  /* Espaçamento e Borda */
+  padding: 4px 10px;
+  margin: 4px;
+  border-radius: 20px; /* Bordas arredondadas */
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* 3. Garante que o botão de remover (o 'X') na tag seja visível */
+#page-myfilms .choices__item--selectable .choices__button--remove {
+  border-left: 1px solid var(--color-border);
+  padding-left: 8px;
+  margin-left: 5px;
+  /* Inverte a cor do ícone 'X' para que ele fique branco e visível */
+  filter: brightness(0) invert(1);
+}
+
+#page-myfilms #poster-preview {
+  display: block; /* Garante que o contêiner seja visível */
+  width: auto; /* A largura se ajusta ao conteúdo */
+  align-self: center; /* Evita que o flexbox estique o item */
+}
+
+/* Controleimagem de preview do cartaz */
+#page-myfilms #poster-preview img {
+  height: 185px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: var(--border-radius-medium);
+}
+
+
+#page-myfilms #credit_role_id optgroup {
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
