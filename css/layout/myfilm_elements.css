@@ -5,7 +5,7 @@
         }
 
         .conteiner.estatisticas {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: inter;
             background-color: #f5f5f5;
             display: flex;
             justify-content: center;
@@ -174,4 +174,240 @@
   .film-card-container .board-content {
     padding-left: 0;
   }
+}
+
+.duration {
+    font-size: 1rem;
+}
+
+
+.film-stats-panel {
+  /* --- Posicionamento --- */
+  position: absolute; 
+  top: 70px;        /* Distância do topo do card pai */
+  right: 170px;      /* Distância da direita do card pai */
+
+  /* --- Layout Flexbox para as 4 colunas --- */
+  display: flex;
+  justify-content: space-around; 
+  gap: 35px;                     
+  
+  /* --- Dimensionamento --- */
+  width: 320px; /* Largura fixa para o painel. Ajuste se necessário. */
+  padding: 16px;
+  box-sizing: border-box; /* Garante que padding não afete a largura total */
+}
+
+.stat-item {
+  /* --- Layout Flexbox para alinhar ícone/número/texto verticalmente --- */
+  display: flex;
+  flex-direction: column; /* Organiza os itens em uma coluna */
+  align-items: center;    /* Centraliza os itens horizontalmente */
+  text-align: center;
+  flex-basis: 0; /* Permite que os itens cresçam igualmente */
+  flex-grow: 1;  /* Garante que ocupem o espaço disponível */
+}
+
+.stat-icon {
+  width: 32px;  /* Tamanho do ícone */
+  height: 32px;
+  margin-bottom: 12px; /* Espaço entre o ícone e o número */
+}
+
+.stat-value {
+  font-size: 1.5rem; /* 28px - Tamanho grande para o número */
+  font-weight: 700;   /* Negrito */
+  line-height: 1.1;   /* Altura da linha para evitar espaçamento extra */
+  color: #495057;     /* Cor escura para o número */
+  margin-bottom: 4px; /* Pequeno espaço entre o número e o texto */
+}
+
+.stat-label {
+  font-size: 0.8rem; /* 12.8px - Tamanho menor para a descrição */
+  color: #6b7280;      /* Tom de cinza para a descrição */
+  text-transform: lowercase; /* Transforma o texto em minúsculas */
+}
+
+
+.film-col { display: flex; flex-direction: column; gap: var(--spacing-3); padding: 0 var(--spacing-2); width: 230px; }
+.film-col-info { gap: var(--spacing-2); }
+.film-info-item { display: flex; align-items: center; gap: var(--spacing-2); font-size: 0.85rem; color: var(--color-text-secondary); line-height: 26px; }
+.film-info-item a { color: var(--color-link); text-decoration: none; }
+.film-info-item a:hover { text-decoration: underline; }
+
+/* BUDGET PANEL MY FILMS */
+.account-board {
+  background: #f6f6f6;
+  border-radius: 10px;
+  width: 220px;
+  
+  padding: 10px 10px;
+  box-shadow: 0 0 4px #eee;
+}
+.account-board-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.account-board-section {
+  text-align: center;
+  line-height: 15px;
+}
+.account-board-label-green {
+  color: #2bb69b;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+.account-board-label-yellow {
+  color: #ffa640;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+.account-board-desc {
+  font-size: 0.7em;
+  color: #757575;
+}
+.account-board-divider {
+  height: 2px;
+  background: #ced4da;
+  margin: 8px 0;
+}
+.account-board-values {
+  margin-top: 12px;
+  text-align: center;
+}
+.account-board-value-red {
+  color: #fa5555;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+.account-board-value-green {
+  color: #2bb69b;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+
+.film-actions {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 220px;
+}
+
+.btn-upload-poster {
+  padding: 15px 10px; 
+  border: none;
+  border-radius: var(--border-radius-medium); 
+  font-size: 0.8rem; 
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  background-color: #212529; 
+  color: var(--color-primary-accent-text);
+}
+.btn-upload-poster:hover {
+  background-color: #495057; 
+  box-shadow: var(--shadow-panel);
+}
+
+.btn-new-film {
+  padding: 15px 10px; 
+  border: none;
+  border-radius: var(--border-radius-medium); /* 8px */
+  font-size: 0.8rem; /* 14px */
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  background-color: #212529; 
+  color: var(--color-primary-accent-text);
+}
+.btn-new-film:hover {
+  background-color: #495057; /* Um preto mais puro para o hover */
+  box-shadow: var(--shadow-panel);
+}
+
+.form-film-title {
+    width: 100%;
+    font-size: 1.7rem;
+    text-align: left;
+    font-weight: var(--font-weight-regular);
+    color: #495057;
+    margin-bottom: var(--spacing-6);
+    text-transform: lowercase;
+}
+
+.form-row-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  width: 100%;
+}
+
+.form-row-inline input[type="url"],
+.form-row-inline input[type="text"],
+.form-row-inline input[type="email"] {
+  flex: 1;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-surface);
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.form-row-inline .btn-gst-fest {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-medium);
+  background-color: #212529;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.form-row-inline .btn-gst-fest:hover {
+  background-color: #495057;
+  transform: translateY(-1px);
+}
+
+.form-row-inline .btn-gst-fest img {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+}
+
+.film-form .form-row {
+  margin-top: var(--spacing-5);
+}
+.film-form .form-row:first-child {
+  margin-top: 0;
+}
+
+/* 2) Captura linhas .form-row aninhadas dentro de .form-group
+      (caso de "Moeda" e "Data de finalização") */
+.film-form .form-group > .form-row {
+  margin-top: var(--spacing-5);
+}
+
+/* 3) Segurança extra: aplica margem à linha que contém #currency ou #completion-date */
+.film-form .form-row:has(#currency),
+.film-form .form-row:has(#completion-date) {
+  margin-top: var(--spacing-5);
+}
+
+/* 4) Espaçamento específico entre blocos full-width empilhados
+      (caso de "Bio da Direção" e "Declaração da Direção") */
+.film-form .form-group.full-width + .form-group.full-width {
+  margin-top: var(--spacing-5);
 }

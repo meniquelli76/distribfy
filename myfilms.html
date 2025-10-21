@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Festmundi</title>
+    <title>Distribfy</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,7 +71,7 @@
       <div class="content-wrapper">
         <section class="festival-form-section">
           <div class="form-header">
-            <button class="btn-gst-fest" id="btn-suggest-festival">novo filme</button>
+            <button class="btn-new-film" id="btn-suggest-festival">novo filme</button>
           </div>
 
     <main class="main-container">
@@ -83,7 +83,7 @@
             <div class="form-panel">
               <form class="film-form">
                 <div class="form-header">
-            <h1 class="form-title">cadastro de filme</h1>
+            <h1 class="form-film-title">cadastro de filme</h1>
           </div>
                 <!-- SEÇÃO: INFORMAÇÕES BÁSICAS -->
                 <div class="form-section">
@@ -99,61 +99,61 @@
                     </div>
                   </div>
                   
-                  <div class="form-row three-cols">
-                    <div class="form-group">
-                      <label for="film-budget">Orçamento do filme *</label>
-                      <div class="select-wrapper">
-                        <select id="film-budget" name="film-budget" required>
-                          <option value="">Até 5000</option>
-                          <!-- opções preenchidas pelo JS -->
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="distribution-budget">Orçamento de distribuição *</label>
-                      <input
-                        type="text"
-                        id="distribution-budget"
-                        name="distribution-budget"
-                        placeholder="5000"
-                        required
-                      />
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="currency">Moeda *</label>
-                      <div class="select-wrapper">
-                        <select id="currency" name="currency" required>
-                          <option value="USD">USD</option>
-                          <option value="EUR">EUR</option>
-                          <option value="BRL">BRL</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                  </div>
                   
-                  <div class="form-row">
+                    <div class="form-row two-cols">
+  <div class="form-group">
+    <label for="film-budget">Orçamento do filme *</label>
+    <div class="select-wrapper">
+      <select id="film-budget" name="film-budget" required>
+        <option value="">Até 5000</option>
+        </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="distribution-budget">Orçamento de distribuição *</label>
+    <input type="text" id="distribution-budget" name="distribution-budget" placeholder="5000" required
+    />
+  </div>
+
+</div>
+                  
                     <div class="form-group">
-                      <label for="completion-date">Data de finalização *</label>
-                      <div class="input-icon">
-                        <input
-                          type="text"
-                          id="completion-date"
-                          name="completion-date"
-                          placeholder="dd/mm/aaaa"
-                          required
-                        />
-                        <img
-                          src="public/icons/icon-calendar.svg"
-                          alt=""
-                          class="input-icon-img"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                 <div class="form-row two-cols">
+
+  <div class="form-group">
+    <label for="currency">Moeda *</label>
+    <div class="select-wrapper">
+      <select id="currency" name="currency" required>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="BRL">BRL</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="completion-date">Data de finalização *</label>
+    <div class="input-icon">
+      <input
+        type="text"
+        id="completion-date"
+        name="completion-date"
+        placeholder="dd/mm/aaaa"
+        required
+      />
+      <img
+        src="public/icons/icon-calendar.svg"
+        alt=""
+        class="input-icon-img"
+      />
+    </div>
+  </div>
+
+</div>
+                 
                   
                   <!-- Módulo: Sinopse + Upload de Cartaz -->
 <div class="form-row two-cols" id="synopsis-poster-row" style="align-items: stretch;">
@@ -166,7 +166,7 @@
       name="synopsis"
       placeholder="Digite aqui a sinopse do filme..."
       rows="10"
-      style="height: 260px;"
+      style="height: 260px; font-family: inter;"
     ></textarea>
   </div>
 
@@ -177,7 +177,7 @@
     <!-- Botão preto de upload -->
     <button
       type="button"
-      class="btn-gst-fest"
+      class="btn-upload-poster"
       id="poster-upload-btn"
       aria-label="Adicionar cartaz"
       style="width: 100%; justify-content: center; display: flex; align-items: center;"
@@ -219,7 +219,7 @@
 </div>
 
 
-                <hr class="form-divider" />
+                <hr class="form-film-divider" />
 
                 <!-- SEÇÃO: DETALHES DO FILME -->
                 <div class="form-section">
@@ -277,144 +277,150 @@
                     </div>
                   </div>
                   
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="categories">Categorias *</label>
-                      <div class="select-wrapper">
-                        <select id="categories" name="categories" required>
-                          <option value="">Selecione as categorias do seu filme</option>
-                          <option value="ficcao">Ficção</option>
-                          <option value="documentario">Documentário</option>
-                          <option value="experimental">Experimental</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="genres">Gêneros *</label>
-                      <div class="select-wrapper">
-                        <select id="genres" name="genres" required>
-                          <option value="">Selecione os gêneros do seu filme</option>
-                          <option value="drama">Drama</option>
-                          <option value="comedia">Comédia</option>
-                          <option value="acao">Ação</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="form-row four-cols">
-                    <div class="form-group">
-                      <label for="first-film">Primeiro Filme *</label>
-                      <div class="select-wrapper">
-                        <select id="first-film" name="first-film" required>
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="student-project">Proj. Estudantil *</label>
-                      <div class="select-wrapper">
-                        <select id="student-project" name="student-project" required>
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="aspect-ratio">Aspect Ratio *</label>
-                      <div class="select-wrapper">
-                        <select id="aspect-ratio" name="aspect-ratio" required>
-                          <option value="16:9">1,78:1 (16:9)</option>
-                          <option value="4:3">4:3</option>
-                          <option value="2.35:1">2.35:1</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="color-type">Cor do Filme *</label>
-                      <div class="select-wrapper">
-                        <select id="color-type" name="color-type" required>
-                          <option value="color">Cor</option>
-                          <option value="bw">Preto e Branco</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="recording-format">Formato de Gravação *</label>
-                    <input
-                      type="text"
-                      id="recording-format"
-                      name="recording-format"
-                      placeholder="Black Magic 4k"
-                      required
-                    />
-                  </div>
-                </div>
+                  <div class="form-row two-cols">
 
-                <hr class="form-divider" />
-
-                <!-- SEÇÃO: CRÉDITOS -->
-                <div class="form-panel" id="film-credits-panel" aria-labelledby="film-credits-title">
-  <h2 class="form-title" id="film-credits-title">créditos do filme</h2>
-
-  <!-- Linha de entrada: adicionar novo crédito -->
-  <div class="form-row-multi" id="credit-input-row">
-    <div class="form-group">
-      <label for="credit-name">Nome</label>
-      <input
-        type="text"
-        id="credit-name"
-        name="credit_name"
-        placeholder="Nome completo"
-        required
-        aria-required="true"
-      >
-    </div>
-
-    <div class="form-group">
-      <label for="credit-role">Função</label>
-      <input
-        type="text"
-        id="credit-role"
-        name="credit_role"
-        placeholder="Ex: Diretor, Roteirista, Fotografia..."
-        required
-        aria-required="true"
-      >
-    </div>
-
-    <div class="actions">
-      <button
-        type="button"
-        class="btn-gst-fest"
-        id="add-credit-btn"
-        title="Adicionar crédito"
-        aria-label="Adicionar novo crédito"
-      >
-        +
-      </button>
+  <div class="form-group">
+    <label for="categories">Categorias *</label>
+    <div class="select-wrapper">
+      <select id="categories" name="categories" required>
+        <option value="">Selecione as categorias do seu filme</option>
+        <option value="ficcao">Ficção</option>
+        <option value="documentario">Documentário</option>
+        <option value="experimental">Experimental</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
     </div>
   </div>
+
+  <div class="form-group">
+    <label for="genres">Gêneros *</label>
+    <div class="select-wrapper">
+      <select id="genres" name="genres" required>
+        <option value="">Selecione os gêneros do seu filme</option>
+        <option value="drama">Drama</option>
+        <option value="comedia">Comédia</option>
+        <option value="acao">Ação</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+</div>
+                  
+                  <div class="form-row two-cols">
+
+  <div class="form-group">
+    <label for="first-film">Primeiro Filme *</label>
+    <div class="select-wrapper">
+      <select id="first-film" name="first-film" required>
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="student-project">Proj. Estudantil *</label>
+    <div class="select-wrapper">
+      <select id="student-project" name="student-project" required>
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+</div>
+                    
+                    <div class="form-row three-cols">
+
+  <div class="form-group">
+    <label for="aspect-ratio">Aspect Ratio *</label>
+    <div class="select-wrapper">
+      <select id="aspect-ratio" name="aspect-ratio" required>
+        <option value="16:9">1,78:1 (16:9)</option>
+        <option value="4:3">4:3</option>
+        <option value="2.35:1">2.35:1</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="color-type">Cor do Filme *</label>
+    <div class="select-wrapper">
+      <select id="color-type" name="color-type" required>
+        <option value="color">Cor</option>
+        <option value="bw">Preto e Branco</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="recording-format">Formato de Gravação *</label>
+    <input
+      type="text"
+      id="recording-format"
+      name="recording-format"
+      placeholder="Black Magic 4k"
+      required
+    />
+  </div>
+
+</div>
+
+                <hr class="form-film-divider" />
+
+                <!-- SEÇÃO: CRÉDITOS -->
+                <div class="form-pane" id="film-credits-panel" aria-labelledby="film-credits-title">
+  <h2 class="form-section-title" id="film-credits-title">Créditos do filme</h2>
+
+  <!-- Linha de entrada: adicionar novo crédito -->
+  <div class="form-row-inline-three" id="credit-input-row">
+  <div class="form-group">
+    <label for="credit-name">Nome</label>
+    <input
+      type="text"
+      id="credit-name"
+      name="credit_name"
+      placeholder="Nome completo"
+      required
+      aria-required="true"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="credit-role">Função</label>
+    <div class="select-wrapper">
+      <select id="aspect-ratio" name="aspect-ratio" required>
+        <option value="Direção">Direção</option>
+        <option value="Fotografia">Fotografia</option>
+        <option value="Roteiro">Roteiro</option>
+      </select>
+      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+    </div>
+  </div>
+
+  <button
+    type="button"
+    class="btn-gst-fest"
+    id="add-credit-btn"
+    title="Adicionar crédito"
+    aria-label="Adicionar crédito"
+  >
+    <img src="public/icons/icon-plus-white.svg" alt="Adicionar crédito" />
+  </button>
+</div>
+
 
   <hr class="form-divider" aria-hidden="true">
 
   <!-- Lista de créditos adicionados -->
   <div class="form-row" id="credits-list">
     <div class="form-group full-width">
-      <label class="form-section-title">créditos adicionados</label>
+      <label class="form-section-title">Créditos adicionados</label>
       <ul class="credits-list" style="list-style:none; padding:0; margin:0;">
         <!-- Exemplo de item -->
         <li class="credit-item" style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--color-border);">
@@ -422,12 +428,10 @@
             <strong>Maria Silva</strong> — Direção
           </span>
           <div class="actions">
-            <button type="button" class="btn-gst-fest" title="Editar crédito" aria-label="Editar crédito">
-              ✎
-            </button>
-            <button type="button" class="btn-gst-fest" title="Excluir crédito" aria-label="Excluir crédito">
-              ×
-            </button>
+            <div class="actions">
+            <button type="button" class="btn-gst-film" title="Editar link" aria-label="Editar link"><img src="public/icons/icon-film-edit.svg" alt="Editar"  /></button>
+            <button type="button" class="btn-gst-film" title="Excluir link" aria-label="Excluir link"><img src="public/icons/icon-film-x.svg" alt="Excluir"  /></button>
+          </div>
           </div>
         </li>
 
@@ -446,6 +450,8 @@
     </button>
   </div>
 </div>
+
+ <hr class="form-film-divider" />
                   
                   <div class="form-group full-width">
                     <label for="director-bio">Bio Direção *</label>
@@ -455,6 +461,7 @@
                       rows="4"
                       placeholder="Até 800 caracteres."
                       required
+                      style="height: 200px; font-family: inter;"
                     ></textarea>
                   </div>
                   
@@ -465,15 +472,16 @@
                       name="director-statement"
                       rows="4"
                       placeholder="Até 800 caracteres."
+                      style="height: 200px; font-family: inter;"
                     ></textarea>
                   </div>
                 </div>
 
-                <hr class="form-divider" />
+                <hr class="form-film-divider" />
 
                 <!-- SEÇÃO: LINKS -->
                 <div class="form-section">
-                  <h2 class="form-section-title">links</h2>
+                  <h2 class="form-section-title">Links</h2>
                   
                   <div class="form-row two-cols">
                     <div class="form-group">
@@ -552,42 +560,52 @@
 
                 <!-- SEÇÃO: OUTROS LINKS -->
                 <!-- Módulo: Outros Links -->
-<div class="form-panel" id="other-links-panel" aria-labelledby="other-links-title">
-  <h2 class="form-title" id="other-links-title">outros links</h2>
 
   <!-- Linha de entrada: adicionar novo link -->
-  <div class="form-row-multi" id="link-input-row">
-    <div class="form-group full-width" style="flex: 1;">
-      <label for="external-link">Insira o link</label>
-      <input
-        type="url"
-        id="external-link"
-        name="external_link"
-        placeholder="https://exemplo.com"
-        required
-        aria-required="true"
-      >
-    </div>
-
-    <div class="actions">
-      <button
-        type="button"
-        class="btn-gst-fest"
-        id="add-link-btn"
-        title="Adicionar link"
-        aria-label="Adicionar novo link"
-      >
-        +
-      </button>
-    </div>
+  <div class="form-row-inline-links">
+     <h2 class="form-section-maislinks">Mais links</h2>
+  <div class="form-group">
+    <label for="link-name">Nome do link</label>
+    <input
+      type="text"
+      id="link-name"
+      name="link_name"
+      placeholder="Ex: Site Oficial, Vimeo, IMDb..."
+      required
+      aria-required="true"
+    />
   </div>
+
+  <div class="form-group">
+    <label for="external-link">URL</label>
+    <input
+      type="url"
+      id="external-link"
+      name="external_link"
+      placeholder="https://exemplo.com"
+      required
+      aria-required="true"
+    />
+  </div>
+
+  <button
+    type="button"
+    class="btn-gst-fest"
+    id="add-link-btn"
+    title="Adicionar link"
+    aria-label="Adicionar novo link"
+  >
+    <img src="public/icons/icon-plus-white.svg" alt="Adicionar link" />
+  </button>
+</div>
+
 
   <hr class="form-divider" aria-hidden="true">
 
   <!-- Lista de links adicionados -->
   <div class="form-row" id="links-list">
     <div class="form-group full-width">
-      <label class="form-section-title">links adicionados</label>
+      <label class="form-section-title">Links adicionados</label>
       <ul class="links-list" style="list-style:none; padding:0; margin:0;">
         <!-- Exemplo de item -->
         <li class="link-item" style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--color-border);">
@@ -597,11 +615,11 @@
             rel="noopener noreferrer"
             style="text-decoration:none; color:var(--color-text-primary); font-size:0.85rem;"
           >
-            https://exemplo.com
+            Nome do link - https://exemplo.com
           </a>
           <div class="actions">
-            <button type="button" class="btn-gst-fest" title="Editar link" aria-label="Editar link">✎</button>
-            <button type="button" class="btn-gst-fest" title="Excluir link" aria-label="Excluir link">×</button>
+            <button type="button" class="btn-gst-film" title="Editar link" aria-label="Editar link"><img src="public/icons/icon-film-edit.svg" alt="Editar"  /></button>
+            <button type="button" class="btn-gst-film" title="Excluir link" aria-label="Excluir link"><img src="public/icons/icon-film-x.svg" alt="Excluir"  /></button>
           </div>
         </li>
         <!-- Itens seguintes serão adicionados dinamicamente -->
@@ -620,7 +638,7 @@
       carregar mais
     </button>
   </div>
-</div>
+
 
 
                 <!-- AÇÕES DO FORMULÁRIO -->
@@ -637,7 +655,10 @@
 
 <section class="festivals-board">
   <div class="board-header">
-    <h2 class="board-title">Meus Filmes</h2>
+    <h2 class="board-title">
+              <img src="public/icons/icon-myfilm-title.svg" alt="">
+              meus filmes
+            </h2>
   </div>
 
   <div class="board-container-films single-column">
@@ -676,7 +697,7 @@
                     <div class="film-col film-col-info">
                       <div class="film-info-item">
                         <img src="public/icons/timer-film.svg" alt="Ícone de duração" />
-                        <span>15'</span>
+                        <span class="duration" >15'</span>
                       </div>
                       <div class="film-info-item">
                         <img src="public/icons/rocket.svg" alt="Ícone de inscrições abertas" />
@@ -711,6 +732,33 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- Painel de Indicadores -->
+<div class="film-stats-panel">
+  <div class="stat-item">
+    <img src="public/icons/icon-film-ticket.svg" alt="Visualizações" class="stat-icon">
+    <span class="stat-value">290</span>
+    <span class="stat-label">inscrições</span>
+  </div>
+
+  <div class="stat-item">
+    <img src="public/icons/icon-film-selected.svg" alt="Festivais" class="stat-icon">
+    <span class="stat-value">83</span>
+    <span class="stat-label">seleções</span>
+  </div>
+
+  <div class="stat-item">
+    <img src="public/icons/icon-film-indicated.svg" alt="Prêmios" class="stat-icon">
+    <span class="stat-value">18</span>
+    <span class="stat-label">indicações</span>
+  </div>
+
+  <div class="stat-item">
+    <img src="public/icons/icon-film-awards.svg" alt="Avaliação" class="stat-icon">
+    <span class="stat-value">6</span>
+    <span class="stat-label">premiações</span>
+  </div>
+</div>
 
                 <aside class="film-actions">
                   <div class="btn-control">

@@ -150,7 +150,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #495057);
+  background-color: #495057;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -187,3 +187,64 @@
   opacity: 1;
   visibility: visible;
 }
+
+
+
+/* ======================================================
+   BOTÕES DE AÇÃO PEQUENOS
+   ====================================================== */
+
+/* --- BOTÃO GENÉRICO (FUNÇÃO +) --- */
+.btn-gst-fest {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #495057; /* Corrigido: parêntese removido */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-gst-fest:hover {
+  background-color: #212529;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-panel);
+}
+
+.btn-gst-fest img {
+  width: 14px;
+  height: 14px;
+  filter: none !important; /* 🔧 garante que não afete outros botões */
+}
+
+.btn-gst-film img {
+  filter: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+}
+
+/* Garante que o botão esteja sempre renderizado */
+.btn-gst-film {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.btn-gst-film:hover {
+  transform: translateY(-1px);
+}
+
+
