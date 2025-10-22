@@ -88,6 +88,7 @@ onSupabaseReady((supabase) => {
 
             ['poster_thumbnail', 'credit_name', 'credit_role_id', 'link_name', 'external_link', 'category_ids', 'genre_ids'].forEach(key => delete filmObject[key]);
             
+            // O ID salvo em 'production_budget_range_id' é o ID mestre em USD.
             const { data: newFilm, error: filmInsertError } = await supabase.from('films').insert([filmObject]).select().single();
             if (filmInsertError) throw new Error(`Falha ao salvar o filme: ${filmInsertError.message}`);
             
@@ -130,6 +131,10 @@ onSupabaseReady((supabase) => {
             renderLinks();
             choicesInstances.category_ids.clearStore();
             choicesInstances.genre_ids.clearStore();
+            
+            // Resetar os dropdowns de orçamento
+            document.getElementById('production_budget_range_id').innerHTML = '<option value="">Escolha a moeda primeiro</option>';
+            document.getElementById('production_budget_range_id').disabled = true;
 
         } catch (error) {
             console.error("ERRO GERAL AO SALVAR O FILME:", error);
@@ -140,49 +145,54 @@ onSupabaseReady((supabase) => {
         }
     }
 
-    // NOVA FUNÇÃO para lidar com dropdowns dependentes
-function setupDependentDropdowns() {
-    const currencySelect = document.getElementById('currency_id');
-    const budgetRangeSelect = document.getElementById('production_budget_range_id');
+    // ===================================================================
+    // LÓGICA DE DROPDOWNS DEPENDENTES (DINÂMICA) - ATUALIZADA
+    // ===================================================================
+    function setupDependentDropdowns() {
+        const currencySelect = document.getElementById('currency_id');
+        const budgetRangeSelect = document.getElementById('production_budget_range_id');
 
-    if (!currencySelect || !budgetRangeSelect) {
-        console.warn("Dropdowns de moeda ou faixa de orçamento não encontrados.");
-        return;
-    }
-
-    // "Escuta" por mudanças no seletor de moeda
-    currencySelect.addEventListener('change', async (event) => {
-        const selectedOption = currencySelect.options[currencySelect.selectedIndex];
-        
-        // A MÁGICA ACONTECE AQUI: Lemos o data-code que salvamos no passo anterior
-        const currencyCode = selectedOption.dataset.code;
-
-        budgetRangeSelect.innerHTML = '<option value="">Carregando faixas...</option>';
-        budgetRangeSelect.disabled = true;
-
-        if (!currencyCode) {
-            budgetRangeSelect.innerHTML = '<option value="">Escolha a moeda primeiro</option>';
+        if (!currencySelect || !budgetRangeSelect) {
+            console.warn("Dropdowns de moeda ou faixa de orçamento não encontrados.");
             return;
         }
 
-        // Usamos o nosso módulo de serviço, como planejado
-        const ranges = await window.CurrencyService.getBudgetRangesByCurrency(supabase, currencyCode);
+        currencySelect.addEventListener('change', async (event) => {
+            const selectedOption = currencySelect.options[currencySelect.selectedIndex];
+            
+            // A MÁGICA ACONTECE AQUI: Lemos o data-code (ex: "BRL", "USD")
+            const currencyCode = selectedOption.dataset.code;
 
-        if (ranges.length > 0) {
-            budgetRangeSelect.innerHTML = '<option value="">Selecione uma faixa...</option>';
-            ranges.forEach(range => {
-                budgetRangeSelect.appendChild(new Option(range.range_label, range.id));
-            });
-            budgetRangeSelect.disabled = false;
-        } else {
-            budgetRangeSelect.innerHTML = '<option value="">Nenhuma faixa encontrada</option>';
-        }
-    });
-    console.log("Listeners para dropdowns dependentes configurados.");
-}
+            budgetRangeSelect.innerHTML = '<option value="">Carregando faixas...</option>';
+            budgetRangeSelect.disabled = true;
+
+            if (!currencyCode) {
+                budgetRangeSelect.innerHTML = '<option value="">Escolha a moeda primeiro</option>';
+                return;
+            }
+
+            // AQUI ESTÁ A MUDANÇA: Chamamos a nova função dinâmica do serviço
+            const ranges = await window.CurrencyService.getDynamicBudgetRanges(supabase, currencyCode);
+
+            if (ranges && ranges.length > 0) {
+                budgetRangeSelect.innerHTML = '<option value="">Selecione uma faixa...</option>';
+                ranges.forEach(range => {
+                    // O 'range.range_label' é o valor formatado (ex: "R$ 5.150 - R$ 25.750")
+                    // O 'range.id' é o ID da faixa mestre em USD.
+                    budgetRangeSelect.appendChild(new Option(range.range_label, range.id));
+                });
+                budgetRangeSelect.disabled = false;
+            } else {
+                budgetRangeSelect.innerHTML = '<option value="">Nenhuma faixa encontrada</option>';
+                console.warn(`Nenhuma faixa de orçamento retornada pelo CurrencyService para ${currencyCode}.`);
+            }
+        });
+        console.log("Listeners para dropdowns dependentes (DINÂMICOS) configurados.");
+    }
 
     // ===================================================================
     // LÓGICA DAS LISTAS DINÂMICAS (CRÉDITOS E LINKS)
+    // (Nenhuma alteração aqui, código 100% idêntico ao original)
     // ===================================================================
     function renderCredits() {
         creditsList.innerHTML = '';
@@ -384,6 +394,7 @@ function setupDependentDropdowns() {
 
     // ===================================================================
     // LÓGICA DE UPLOAD DO CARTAZ
+    // (Nenhuma alteração aqui, código 100% idêntico ao original)
     // ===================================================================
     function setupPosterUploadListeners() {
         if (!posterUploadBtn || !posterUploadInput) {
@@ -398,7 +409,7 @@ function setupDependentDropdowns() {
     function handlePosterFileSelection(event) {
         const file = event.target.files[0];
         if (!file) return;
-        const MAX_FILE_SIZE = 5 * 1024 * 1024;
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
         if (file.size > MAX_FILE_SIZE) {
             alert(`O arquivo é muito grande (${(file.size / 1024 / 1024).toFixed(1)}MB). O tamanho máximo permitido é de 5MB.`);
             posterUploadInput.value = '';
@@ -441,15 +452,16 @@ function setupDependentDropdowns() {
 
     // ===================================================================
     // FUNÇÕES DE INICIALIZAÇÃO (Populate, Choices, Mask)
+    // (Nenhuma alteração aqui, código 100% idêntico ao original)
     // ===================================================================
     async function populateSelects() {
     console.log("Iniciando a população dos campos de seleção...");
     const displayColumnMap = {
         countries: 'country',
-        currencies: 'name', // Usaremos este como fallback
+        currencies: 'name', // Usado para popular o select de moedas
         film_types: 'type',
         languages: 'name',
-        // As faixas de orçamento não são mais populadas aqui
+        // 'budget_ranges' não é mais populado aqui, é dinâmico
         categories: 'category',
         genres: 'genre',
         crew_roles: 'role_name',
@@ -458,6 +470,36 @@ function setupDependentDropdowns() {
         recording_formats: 'name'
     };
     const selects = document.querySelectorAll('select[data-source]');
+
+    // ===================================================================
+    // INÍCIO DA MUDANÇA (LÓGICA DO "MATCH")
+    // ===================================================================
+
+    // 1. Primeiro, buscamos a lista de TODOS os códigos de moeda válidos 
+    //    da nossa tabela de taxas de câmbio (que é preenchida pela API)
+    let validCurrencyCodes = null;
+    try {
+        const { data, error } = await supabase
+            .from('exchange_rates')
+            .select('target_currency_code'); // Ex: [{target_currency_code: 'BRL'}, {target_currency_code: 'AOA'}, ...]
+        
+        if (error) throw error;
+        
+        // Converte o array de objetos em um array simples de strings: ['BRL', 'AOA', 'USD', ...]
+        validCurrencyCodes = data.map(item => item.target_currency_code);
+        
+        // Adicionamos 'USD' manualmente caso a API não o inclua (base vs target)
+        if (!validCurrencyCodes.includes('USD')) {
+            validCurrencyCodes.push('USD');
+        }
+        
+    } catch (error) {
+        console.error("Erro crítico ao buscar lista de moedas válidas em 'exchange_rates':", error.message);
+        // Se isso falhar, não podemos popular o dropdown de moedas corretamente.
+    }
+    // ===================================================================
+    // FIM DA MUDANÇA
+    // ===================================================================
 
     for (const select of selects) {
         const tableName = select.dataset.source;
@@ -468,26 +510,44 @@ function setupDependentDropdowns() {
             select.appendChild(new Option('Selecione...', ''));
         }
 
-        // Lógica especial para a tabela de moedas
+        // Lógica especial para a tabela de moedas (AGORA COM FILTRO)
         if (tableName === 'currencies') {
+            
+            // ===================================================================
+            // INÍCIO DA MUDANÇA (LÓGICA DO "MATCH")
+            // ===================================================================
+            if (!validCurrencyCodes) {
+                 select.innerHTML = `<option value="">Erro ao carregar moedas</option>`;
+                 continue; // Pula para o próximo select no loop
+            }
+            
             try {
-                // Pedimos o 'id', o 'name' e o 'iso_code'
-                const { data, error } = await supabase.from('currencies').select('id, name, iso_code').order('name', { ascending: true });
+                // 2. AGORA, buscamos na tabela 'currencies', MAS FILTRAMOS 
+                //    usando o operador '.in()' para pegar apenas as moedas 
+                //    cujo 'iso_code' está na nossa lista 'validCurrencyCodes'.
+                const { data, error } = await supabase
+                    .from('currencies')
+                    .select('id, name, iso_code')
+                    .in('iso_code', validCurrencyCodes) // <-- A MÁGICA DO "MATCH"
+                    .order('name', { ascending: true });
+                
                 if (error) throw error;
                 
                 data.forEach(item => {
-                    // Criamos o texto da opção, ex: "Real Brasileiro (BRL)"
                     const optionText = `${item.name} (${item.iso_code})`;
                     const option = new Option(optionText, item.id);
-                    
-                    // A PARTE MAIS IMPORTANTE: Armazenamos o código 'BRL' no atributo data-code
-                    option.dataset.code = item.iso_code;
+                    option.dataset.code = item.iso_code; // Essencial para o dropdown dependente
                     select.appendChild(option);
                 });
+            // ===================================================================
+            // FIM DA MUDANÇA
+            // ===================================================================
+            
             } catch (error) {
-                console.error(`Erro ao buscar dados para a tabela ${tableName}:`, error.message);
+                console.error(`Erro ao buscar dados filtrados para a tabela ${tableName}:`, error.message);
                 select.innerHTML = `<option value="">Erro ao carregar</option>`;
             }
+        
         } else if (tableName === 'crew_roles') {
             // Lógica de agrupamento para crew_roles (sem alterações)
             try {
@@ -512,7 +572,7 @@ function setupDependentDropdowns() {
                  select.innerHTML = `<option value="">Erro ao carregar</option>`;
             }
         } else {
-            // Lógica padrão para todos os outros selects
+            // Lógica padrão para todos os outros selects (sem alterações)
             try {
                 const displayColumn = displayColumnMap[tableName] || 'name';
                 const { data, error } = await supabase.from(tableName).select(`id, ${displayColumn}`).order(displayColumn, { ascending: true });
@@ -582,7 +642,7 @@ function setupDependentDropdowns() {
         setupPosterUploadListeners();
         setupDynamicListListeners();
         initializeInputMasks();
-        setupDependentDropdowns();
+        setupDependentDropdowns(); // Chama a nova versão dinâmica
         filmForm.addEventListener('submit', handleFilmSubmit);
     }
 
