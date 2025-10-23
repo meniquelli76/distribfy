@@ -22,7 +22,119 @@
     <link rel="stylesheet" href="css/flatpickr-theme.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
 
-  </head>
+    <style>
+      /* ======================================================
+         ESTRUTURA DO WIZARD (FORMULÁRIO MULTI-STEP)
+         ====================================================== */
+      
+      .form-wizard {
+          width: 100%;
+      }
+      
+      /* --- 1. Barra de Progresso --- */
+      .progress-bar {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: var(--spacing-6);
+          padding: 0 var(--spacing-2);
+      }
+      
+      .progress-bar-step {
+          flex: 1;
+          text-align: center;
+          position: relative;
+          padding-top: 25px; /* Espaço para o "ponto" */
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: var(--color-text-placeholder);
+          transition: color 0.3s ease;
+      }
+      
+      /* O "ponto" */
+      .progress-bar-step::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--color-surface);
+          border: 3px solid var(--color-border);
+          transition: all 0.3s ease;
+          z-index: 2;
+      }
+      
+      /* A "linha" de conexão */
+      .progress-bar-step:not(:first-child)::after {
+          content: '';
+          position: absolute;
+          top: 8px; /* Alinha com o centro do "ponto" */
+          right: 50%;
+          width: 100%;
+          height: 4px;
+          background-color: var(--color-border);
+          z-index: 1;
+      }
+      
+      /* --- Estados da Barra --- */
+      .progress-bar-step.active {
+          color: var(--color-text-primary);
+      }
+      .progress-bar-step.active::before {
+          border-color: #212529; /* Preto */
+          background-color: #212529;
+      }
+      
+      .progress-bar-step.completed {
+          color: var(--color-text-secondary);
+      }
+      .progress-bar-step.completed::before {
+          border-color: #2bb69b; /* Verde (sucesso) */
+          background-color: #2bb69b;
+      }
+      .progress-bar-step.completed::after {
+          background-color: #2bb69b; /* Verde (sucesso) */
+      }
+      
+      
+      /* --- 2. Passos do Formulário --- */
+      .form-steps-container {
+          overflow: hidden; 
+      }
+      
+      .form-step {
+          display: none; /* Oculto por padrão */
+          animation: fadeIn 0.5s ease;
+      }
+      
+      .form-step.active {
+          display: block; /* Visível */
+      }
+      
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      
+      
+      /* --- 3. Navegação --- */
+      .form-navigation {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: var(--spacing-6);
+          border-top: 1px solid var(--color-border);
+          padding-top: var(--spacing-5);
+      }
+      
+      /* Esconde o botão se ele não for necessário */
+      .form-navigation [style*="display: none"] {
+          display: none !important;
+      }
+    </style>
+    </head>
   <body id="page-myfilms">
     <header class="header">
         <div class="logo">
@@ -73,306 +185,360 @@
                   <h1 class="form-film-title">cadastro de filme</h1>
                 </div>
                 
-                <div class="form-section">
-                  <div class="form-section">
-    <div class="form-row two-cols">
-        <div class="form-group">
-            <label for="title">Título do filme *</label>
-            <input type="text" id="title" name="title" required />
-        </div>
-        <div class="form-group">
-            <label for="completion_date">Data de finalização *</label>
-            <div class="input-icon">
-                <input type="text" id="completion_date" name="completion_date" placeholder="dd/mm/aaaa" required />
-                <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img" />
-            </div>
-        </div>
-    </div>
-                  
-               <div class="form-row three-cols">
-        <div class="form-group">
-            <label for="currency_id">Moeda *</label>
-            <div class="select-wrapper">
-                <select id="currency_id" name="currency_id" data-source="currencies" required>
-                    <option value="">Carregando...</option>
-                </select>
-                <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="production_budget_range_id">Faixa de Orçamento (Produção) *</label>
-            <div class="select-wrapper">
-                <select id="production_budget_range_id" name="production_budget_range_id" required disabled>
-                    <option value="">Escolha a moeda primeiro</option>
-                </select>
-                <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="distribution_budget_amount">Orçamento de distribuição *</label>
-            <input type="number" id="distribution_budget_amount" name="distribution_budget_amount" placeholder="5000" required />
-        </div>
-    </div>
-                   
-                  </div>
-                  
-                  <div class="form-row two-cols" id="synopsis-poster-row" style="align-items: stretch;">
-                    <div class="form-group" style="flex: 0 0 70%;">
-                      <label for="synopsis">Sinopse</label>
-                      <textarea id="synopsis" name="synopsis" placeholder="Digite aqui a sinopse do filme..." rows="10" style="height: 260px; font-family: inter;"></textarea>
-                    </div>
-                    <div class="form-group" style="flex: 0 0 30%; display: flex; flex-direction: column; justify-content: flex-start;">
-                      <label for="poster-upload">Cartaz</label>
-                      <button type="button" class="btn-upload-poster" id="poster-upload-btn" aria-label="Adicionar cartaz" style="width: 100%; justify-content: center; display: flex; align-items: center;">
-                        <img src="/public/icons/icon-upload.svg" alt="" style="width:14px; height:14px; margin-right:6px; vertical-align:middle;">
-                        adicionar cartaz
-                      </button>
-                      <input type="file" id="poster-upload" name="poster_thumbnail" accept="image/png, image/jpeg" style="display:none;">
-                      <div id="poster-preview" style="background-color: #fff; border-radius: var(--border-radius-medium); margin-top: var(--spacing-3); display: none;">
-                        <img src="" alt="Pré-visualização do cartaz">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr class="form-film-divider" />
-
-                <div class="form-section">
-                  <h2 class="form-section-title">Detalhes do Filme</h2>
-                  <div class="form-row four-cols">
-                    <div class="form-group">
-                      <label for="country_id">País *</label>
-                      <div class="select-wrapper">
-                        <select id="country_id" name="country_id" data-source="countries" required>
-                          <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="film_type_id">Tipo *</label>
-                      <div class="select-wrapper">
-                        <select id="film_type_id" name="film_type_id" data-source="film_types" required>
-                          <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="language_id">Idioma *</label>
-                      <div class="select-wrapper">
-                        <select id="language_id" name="language_id" data-source="languages" required>
-                          <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-  <label for="duration_in_seconds">Duração (MM:SS) *</label>
-  <input type="text" id="duration_in_seconds" name="duration_in_seconds" placeholder="Ex: 120:30" required />
-</div>
-                  </div>
-                  
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="category_ids">Categorias *</label>
-                      <div class="select-wrapper">
-                        <select id="category_ids" name="category_ids" data-source="categories" required multiple></select>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="genre_ids">Gêneros *</label>
-                      <div class="select-wrapper">
-                        <select id="genre_ids" name="genre_ids" data-source="genres" required multiple></select>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="is_debut">Primeiro Filme *</label>
-                      <div class="select-wrapper">
-                        <select id="is_debut" name="is_debut" required>
-                          <option value="true">Sim</option>
-                          <option value="false" selected>Não</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="is_student_project">Proj. Estudantil *</label>
-                      <div class="select-wrapper">
-                        <select id="is_student_project" name="is_student_project" required>
-                          <option value="true">Sim</option>
-                          <option value="false" selected>Não</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="form-row three-cols">
-                    <div class="form-group">
-                      <label for="aspect_ratio_id">Aspect Ratio *</label>
-                      <div class="select-wrapper">
-                        <select id="aspect_ratio_id" name="aspect_ratio_id" data-source="aspect_ratios" required>
-                           <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="color_mode_id">Cor do Filme *</label>
-                      <div class="select-wrapper">
-                        <select id="color_mode_id" name="color_mode_id" data-source="color_modes" required>
-                           <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="recording_format_id">Formato de Gravação *</label>
-                      <div class="select-wrapper">
-                        <select id="recording_format_id" name="recording_format_id" data-source="recording_formats" required>
-                           <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr class="form-film-divider" />
-
-                <div class="form-pane" id="film-credits-panel" aria-labelledby="film-credits-title">
-                  <h2 class="form-section-title" id="film-credits-title">Créditos do filme</h2>
-                  <div class="form-row-inline-three" id="credit-input-row">
-                    <div class="form-group">
-                      <label for="credit-name">Nome</label>
-                      <input type="text" id="credit-name" name="credit_name" placeholder="Nome completo" aria-required="true"/>
-                    </div>
-                    <div class="form-group">
-                      <label for="credit_role_id">Função</label>
-                      <div class="select-wrapper">
-                        <select id="credit_role_id" name="credit_role_id" data-source="crew_roles" required>
-                          <option value="">Carregando...</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                    </div>
-                    <button type="button" class="btn-gst-fest" id="add-credit-btn" title="Adicionar crédito" aria-label="Adicionar crédito">
-                      <img src="public/icons/icon-plus-white.svg" alt="Adicionar crédito" />
-                    </button>
-                  </div>
-                  <hr class="form-divider" aria-hidden="true">
-                  <div class="form-row" id="credits-list-container">
-                    <div class="form-group full-width">
-                      <label class="form-section-title">Créditos adicionados</label>
-                      <ul class="credits-list" id="credits-list" style="list-style:none; padding:0; margin:0;">
-                        <li class="credit-item" style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--color-border);">
-                          <span class="credit-text" style="font-size:0.85rem; color:var(--color-text-primary);">
-                            <strong>Maria Silva</strong> — Direção
-                          </span>
-                          <div class="actions">
-                            <button type="button" class="btn-gst-film" title="Editar link" aria-label="Editar link"><img src="public/icons/icon-film-edit.svg" alt="Editar"  /></button>
-                            <button type="button" class="btn-gst-film" title="Excluir link" aria-label="Excluir link"><img src="public/icons/icon-film-x.svg" alt="Excluir"  /></button>
-                          </div>
-                        </li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <hr class="form-film-divider" />
+                <div class="form-wizard">
                 
-                <div class="form-section">
-                  <div class="form-group full-width">
-                    <label for="director_bio">Bio Direção *</label>
-                    <textarea id="director_bio" name="director_bio" rows="4" placeholder="Até 800 caracteres." required style="height: 200px; font-family: inter;"></textarea>
-                  </div>
-                  <div class="form-group full-width">
-                    <label for="director_statement">Declaração da Direção</label>
-                    <textarea id="director_statement" name="director_statement" rows="4" placeholder="Até 800 caracteres." style="height: 200px; font-family: inter;"></textarea>
-                  </div>
-                </div>
-
-                <hr class="form-film-divider" />
-
-                <div class="form-section">
-                  <h2 class="form-section-title">Links</h2>
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="media_link">Link do Filme *</label>
-                      <input type="url" id="media_link" name="media_link" required />
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress-bar-step active" data-step="1"><span>Básico</span></div>
+                        <div class="progress-bar-step" data-step="2"><span>Detalhes</span></div>
+                        <div class="progress-bar-step" data-step="3"><span>Equipe</span></div>
+                        <div class="progress-bar-step" data-step="4"><span>Distribuição</span></div>
+                        <div class="progress-bar-step" data-step="5"><span>Mídia</span></div>
                     </div>
-                    <div class="form-group">
-                      <label for="trailer_link">Link do Trailer</label>
-                      <input type="url" id="trailer_link" name="trailer_link" />
+                
+                    <div class="form-steps-container">
+                
+                        <div class="form-step active" id="form-step-1">
+                            <div class="form-section">
+                                <div class="form-row two-cols">
+                                    <div class="form-group">
+                                        <label for="title">Título do filme *</label>
+                                        <input type="text" id="title" name="title" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="completion_date">Data de finalização *</label>
+                                        <div class="input-icon">
+                                            <input type="text" id="completion_date" name="completion_date" placeholder="dd/mm/aaaa" required />
+                                            <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img" />
+                                        </div>
+                                    </div>
+                                </div>
+                                          
+                               <div class="form-row three-cols">
+                                    <div class="form-group">
+                                        <label for="currency_id">Moeda *</label>
+                                        <div class="select-wrapper">
+                                            <select id="currency_id" name="currency_id" data-source="currencies" required>
+                                                <option value="">Carregando...</option>
+                                            </select>
+                                            <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="production_budget_range_id">Faixa de Orçamento (Produção) *</label>
+                                        <div class="select-wrapper">
+                                            <select id="production_budget_range_id" name="production_budget_range_id" required disabled>
+                                                <option value="">Escolha a moeda primeiro</option>
+                                            </select>
+                                            <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="distribution_budget_amount">Orçamento de distribuição *</label>
+                                        <input type="number" id="distribution_budget_amount" name="distribution_budget_amount" placeholder="5000" required />
+                                    </div>
+                                </div>
+                               
+                               <div class="form-row two-cols" id="synopsis-poster-row" style="align-items: stretch;">
+                                 <div class="form-group" style="flex: 0 0 70%;">
+                                   <label for="synopsis">Sinopse</label>
+                                   <textarea id="synopsis" name="synopsis" placeholder="Digite aqui a sinopse do filme..." rows="10" style="height: 260px; font-family: inter;"></textarea>
+                                 </div>
+                                 <div class="form-group" style="flex: 0 0 30%; display: flex; flex-direction: column; justify-content: flex-start;">
+                                   <label for="poster-upload">Cartaz</label>
+                                   <button type="button" class="btn-upload-poster" id="poster-upload-btn" aria-label="Adicionar cartaz" style="width: 100%; justify-content: center; display: flex; align-items: center;">
+                                     <img src="/public/icons/icon-upload.svg" alt="" style="width:14px; height:14px; margin-right:6px; vertical-align:middle;">
+                                     adicionar cartaz
+                                   </button>
+                                   <input type="file" id="poster-upload" name="poster_thumbnail" accept="image/png, image/jpeg" style="display:none;">
+                                   <div id="poster-preview" style="background-color: #fff; border-radius: var(--border-radius-medium); margin-top: var(--spacing-3); display: none;">
+                                     <img src="" alt="Pré-visualização do cartaz">
+                                   </div>
+                                 </div>
+                               </div>
+                            </div>
+                        </div> <div class="form-step" id="form-step-2">
+                            <div class="form-section">
+                              <h2 class="form-section-title">Detalhes do Filme</h2>
+                              <div class="form-row four-cols">
+                                <div class="form-group">
+                                  <label for="country_id">País *</label>
+                                  <div class="select-wrapper">
+                                    <select id="country_id" name="country_id" data-source="countries" required>
+                                      <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="film_type_id">Tipo *</label>
+                                  <div class="select-wrapper">
+                                    <select id="film_type_id" name="film_type_id" data-source="film_types" required>
+                                      <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="language_id">Idioma *</label>
+                                  <div class="select-wrapper">
+                                    <select id="language_id" name="language_id" data-source="languages" required>
+                                      <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="duration_in_seconds">Duração (MM:SS) *</label>
+                                  <input type="text" id="duration_in_seconds" name="duration_in_seconds" placeholder="Ex: 120:30" required />
+                                </div>
+                              </div>
+                              
+                              <div class="form-row two-cols">
+                                <div class="form-group">
+                                  <label for="category_ids">Categorias *</label>
+                                  <div class="select-wrapper">
+                                    <select id="category_ids" name="category_ids" data-source="categories" required multiple></select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="genre_ids">Gêneros *</label>
+                                  <div class="select-wrapper">
+                                    <select id="genre_ids" name="genre_ids" data-source="genres" required multiple></select>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div class="form-row two-cols">
+                                <div class="form-group">
+                                  <label for="is_debut">Primeiro Filme *</label>
+                                  <div class="select-wrapper">
+                                    <select id="is_debut" name="is_debut" required>
+                                      <option value="true">Sim</option>
+                                      <option value="false" selected>Não</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="is_student_project">Proj. Estudantil *</label>
+                                  <div class="select-wrapper">
+                                    <select id="is_student_project" name="is_student_project" required>
+                                      <option value="true">Sim</option>
+                                      <option value="false" selected>Não</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div class="form-row three-cols">
+                                <div class="form-group">
+                                  <label for="aspect_ratio_id">Aspect Ratio *</label>
+                                  <div class="select-wrapper">
+                                    <select id="aspect_ratio_id" name="aspect_ratio_id" data-source="aspect_ratios" required>
+                                       <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="color_mode_id">Cor do Filme *</label>
+                                  <div class="select-wrapper">
+                                    <select id="color_mode_id" name="color_mode_id" data-source="color_modes" required>
+                                       <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="recording_format_id">Formato de Gravação *</label>
+                                  <div class="select-wrapper">
+                                    <select id="recording_format_id" name="recording_format_id" data-source="recording_formats" required>
+                                       <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div> <div class="form-step" id="form-step-3">
+                            <div class="form-pane" id="film-credits-panel" aria-labelledby="film-credits-title">
+                              <h2 class="form-section-title" id="film-credits-title">Créditos do filme</h2>
+                              <div class="form-row-inline-three" id="credit-input-row">
+                                <div class="form-group">
+                                  <label for="credit-name">Nome</label>
+                                  <input type="text" id="credit-name" name="credit_name" placeholder="Nome completo" aria-required="true"/>
+                                </div>
+                                <div class="form-group">
+                                  <label for="credit_role_id">Função</label>
+                                  <div class="select-wrapper">
+                                    <select id="credit_role_id" name="credit_role_id" data-source="crew_roles" >
+                                      <option value="">Carregando...</option>
+                                    </select>
+                                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                  </div>
+                                </div>
+                                <button type="button" class="btn-gst-fest" id="add-credit-btn" title="Adicionar crédito" aria-label="Adicionar crédito">
+                                  <img src="public/icons/icon-plus-white.svg" alt="Adicionar crédito" />
+                                </button>
+                              </div>
+                              <hr class="form-divider" aria-hidden="true">
+                              <div class="form-row" id="credits-list-container">
+                                <div class="form-group full-width">
+                                  <label class="form-section-title" id="credits-list-title" style="display: none;">Créditos adicionados</label>
+                                  <ul class="credits-list" id="credits-list" style="list-style:none; padding:0; margin:0;">
+                                    </ul>
+                                </div>
+                              </div>
+                            </div>
+            
+                             <hr class="form-film-divider" />
+            
+                            <div class="form-section">
+                              <div class="form-group full-width">
+                                <label for="director_bio">Bio Direção *</label>
+                                <textarea id="director_bio" name="director_bio" rows="4" placeholder="Até 800 caracteres." required style="height: 200px; font-family: inter;"></textarea>
+                              </div>
+                              <div class="form-group full-width">
+                                <label for="director_statement">Declaração da Direção</label>
+                                <textarea id="director_statement" name="director_statement" rows="4" placeholder="Até 800 caracteres." style="height: 200px; font-family: inter;"></textarea>
+                              </div>
+                            </div>
+                        </div> <div class="form-step" id="form-step-4">
+                            <div class="form-section" id="distributor-fields-wrapper" style="display: none;"> <h2 class="form-section-title">Funções Principais</h2>
+                                <p class="form-description">
+                                    Selecione o Produtor e o Responsável pela Inscrição a partir dos créditos adicionados acima.
+                                </p>
+            
+                                <div id="distributor-display-group" style="display: none;">
+                                    <div class="distributor-tag">
+                                        <span id="distributor_name_display">Distribuidora Logada</span> 
+                                    </div>
+                                    <input type="hidden" id="distributor_profile_id" name="distributor_profile_id" />
+                                </div>
+            
+                                <div class="form-row two-cols">
+                                    <div class="form-group">
+                                        <label for="producer_person_id">Produtor Principal *</label>
+                                        <div class="select-wrapper">
+                                            <select id="producer_person_id" name="producer_person_id" required>
+                                                <option value="">Adicione créditos primeiro</option>
+                                            </select>
+                                            <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="distribution_lead_person_id">Responsável pela Inscrição *</label>
+                                        <div class="select-wrapper">
+                                            <select id="distribution_lead_person_id" name="distribution_lead_person_id" required>
+                                                <option value="">Adicione créditos primeiro</option>
+                                            </select>
+                                            <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <hr class="form-film-divider" />
+            
+                            <div class="form-pane" id="invites-wrapper" id="film-collaborators-panel">
+                                <h2 class="form-section-title">Convidar Colaboradores</h2>
+                                <p class="form-description" style="margin-bottom: var(--spacing-4);">
+                                    Adicione membros da equipe para ajudar a gerenciar as inscrições deste filme.
+                                </p>
+                                
+                                <div class="form-row-inline-three" id="invite-input-row">
+                                    <div class="form-group">
+                                        <label for="invite-name">Nome</label>
+                                        <input type="text" id="invite-name" name="invite_name" placeholder="Nome do colaborador" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="invite-email">Email *</label>
+                                        <input type="email" id="invite-email" name="invite_email" placeholder="email@exemplo.com" />
+                                    </div>
+                                    <button type="button" class="btn-gst-fest" id="add-invite-btn" title="Convidar colaborador" aria-label="Convidar colaborador">
+                                        <img src="public/icons/icon-plus-white.svg" alt="Adicionar" />
+                                    </button>
+                                </div>
+                                <hr class="form-divider" aria-hidden="true">
+                                <div class="form-row" id="invites-list-container">
+                                                <div class="form-group full-width">
+                                                  <label class="form-section-title" id="invites-list-title" style="display: none;">Colaboradores convidados</label>
+                                                  <ul class="invites-list" id="invites-list" style="list-style:none; padding:0; margin:0;">
+                                                    </ul>
+                                                </div>
+                                              </div>
+                            </div>
+                        </div> <div class="form-step" id="form-step-5">
+                            <div class="form-section">
+                              <h2 class="form-section-title">Links</h2>
+                              <div class="form-row two-cols">
+                                <div class="form-group">
+                                  <label for="media_link">Link do Filme *</label>
+                                  <input type="url" id="media_link" name="media_link" required />
+                                </div>
+                                <div class="form-group">
+                                  <label for="trailer_link">Link do Trailer</label>
+                                  <input type="url" id="trailer_link" name="trailer_link" />
+                                </div>
+                              </div>
+                              <div class="form-row two-cols">
+                                <div class="form-group">
+                                  <label for="official_site_link">Site do Filme</label>
+                                  <input type="url" id="official_site_link" name="official_site_link" />
+                                </div>
+                                <div class="form-group">
+                                  <label for="social_media_link">Rede Social</label>
+                                  <input type="url" id="social_media_link" name="social_media_link" />
+                                </div>
+                              </div>
+                              <div class="form-row two-cols">
+                                <div class="form-group">
+                                  <label for="poster_profile_url">Link do Cartaz (URL)</label>
+                                  <input type="url" id="poster_profile_url" name="poster_profile_url" />
+                                </div>
+                                <div class="form-group">
+                                  <label for="still_images_link">Fotos Still (Pasta)</label>
+                                  <input type="url" id="still_images_link" name="still_images_link" />
+                                </div>
+                              </div>
+                            </div>
+            
+                            <hr class="form-divider" />
+            
+                            <div class="form-section" id="more-links-section">
+                              <div class="form-row-inline-links">
+                                <h2 class="form-section-maislinks">Mais links</h2>
+                                <div class="form-group">
+                                  <label for="link-name">Nome do link</label>
+                                  <input type="text" id="link-name" name="link_name" placeholder="Ex: Site Oficial, Vimeo, IMDb..."/>
+                                </div>
+                                <div class="form-group">
+                                  <label for="external-link">URL</label>
+                                  <input type="url" id="external-link" name="external_link" placeholder="https://exemplo.com"/>
+                                </div>
+                                <button type="button" class="btn-gst-fest" id="add-link-btn" title="Adicionar link" aria-label="Adicionar novo link">
+                                  <img src="public/icons/icon-plus-white.svg" alt="Adicionar link" />
+                                </button>
+                              </div>
+                              <hr class="form-divider" aria-hidden="true">
+                              <div class="form-row" id="links-list-container">
+                                <div class="form-group full-width">
+                                  <label class="form-section-title" id="links-list-title" style="display: none;">Links adicionados</label>
+                                  <ul id="links-list" class="links-list" style="list-style:none; padding:0; margin:0;">
+                                    </ul>
+                                </div>
+                              </div>
+                            </div>
+                        </div> </div> <div class="form-navigation">
+                        <button type="button" class="btn-secondary" id="btn-prev-step" style="display: none;">Voltar</button>
+                        
+                        <button type="button" class="btn-primary" id="btn-next-step">Avançar</button>
+                        
+                        <button type="submit" class="btn-primary" id="btn-submit-film" style="display: none;">Salvar Filme</button>
                     </div>
-                  </div>
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="official_site_link">Site do Filme</label>
-                      <input type="url" id="official_site_link" name="official_site_link" />
-                    </div>
-                    <div class="form-group">
-                      <label for="social_media_link">Rede Social</label>
-                      <input type="url" id="social_media_link" name="social_media_link" />
-                    </div>
-                  </div>
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="poster_profile_url">Link do Cartaz (URL)</label>
-                      <input type="url" id="poster_profile_url" name="poster_profile_url" />
-                    </div>
-                    <div class="form-group">
-                      <label for="still_images_link">Fotos Still (Pasta)</label>
-                      <input type="url" id="still_images_link" name="still_images_link" />
-                    </div>
-                  </div>
-                </div>
-
-                <hr class="form-divider" />
-
-                <div class="form-section" id="more-links-section">
-                  <div class="form-row-inline-links">
-                    <h2 class="form-section-maislinks">Mais links</h2>
-                    <div class="form-group">
-                      <label for="link-name">Nome do link</label>
-                      <input type="text" id="link-name" name="link_name" placeholder="Ex: Site Oficial, Vimeo, IMDb..."/>
-                    </div>
-                    <div class="form-group">
-                      <label for="external-link">URL</label>
-                      <input type="url" id="external-link" name="external_link" placeholder="https://exemplo.com"/>
-                    </div>
-                    <button type="button" class="btn-gst-fest" id="add-link-btn" title="Adicionar link" aria-label="Adicionar novo link">
-                      <img src="public/icons/icon-plus-white.svg" alt="Adicionar link" />
-                    </button>
-                  </div>
-                  <hr class="form-divider" aria-hidden="true">
-                  <div class="form-row" id="links-list-container">
-                    <div class="form-group full-width">
-                      <label class="form-section-title">Links adicionados</label>
-                      <ul id="links-list" class="links-list" style="list-style:none; padding:0; margin:0;">
-                        <li class="link-item" style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--color-border);">
-                          <a href="https://exemplo.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:var(--color-text-primary); font-size:0.85rem;">
-                            Nome do link - https://exemplo.com
-                          </a>
-                          <div class="actions">
-                            <button type="button" class="btn-gst-film" title="Editar link" aria-label="Editar link"><img src="public/icons/icon-film-edit.svg" alt="Editar"  /></button>
-                            <button type="button" class="btn-gst-film" title="Excluir link" aria-label="Excluir link"><img src="public/icons/icon-film-x.svg" alt="Excluir"  /></button>
-                          </div>
-                        </li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button type="button" class="btn-secondary" id="cancel-film-form">cancelar</button>
-                  <button type="submit" class="btn-primary">salvar filme</button>
-                </div>
-              </form>
+                
+                </div> </form>
             </div>
           </div>
         </section>

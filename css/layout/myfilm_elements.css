@@ -463,3 +463,142 @@
   color: white;
   text-transform: uppercase;
 }
+
+/* ======================================================
+   REFINAMENTOS DO FORMULÁRIO (Solicitação 23/10)
+   ====================================================== */
+
+/* Task 1: Estilo para a descrição da seção (menor e reposicionada) */
+.form-section .form-description {
+    font-size: 0.8rem; /* "bem menor" */
+    color: var(--color-text-secondary);
+    margin-top: -12px; /* "bem posicionada" (puxa para perto do título) */
+    margin-bottom: var(--spacing-4); /* Mantém o espaço para o conteúdo abaixo */
+}
+
+/* Task 2: Estilo para a Tag de Distribuidora */
+.distributor-tag {
+    display: inline-block; /* Para se comportar como uma tag */
+    background-color: #f0f0f0; /* fundo cinza */
+    border-radius: var(--border-radius-medium); /* cantos arredondados */
+    padding: 8px 12px;
+    border: none; /* sem borda */
+    margin-top: -10px; /* Puxa para perto do título */
+}
+
+.distributor-tag span {
+    font-size: 0.85rem; /* pequena */
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+/* ======================================================
+   ESTRUTURA DO WIZARD (FORMULÁRIO MULTI-STEP)
+   ====================================================== */
+
+.form-wizard {
+    width: 100%;
+}
+
+/* --- 1. Barra de Progresso --- */
+.progress-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-7);
+    padding: 0 var(--spacing-2);
+}
+
+.progress-bar-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding-top: 25px; /* Espaço para o "ponto" */
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-placeholder);
+    transition: color 0.3s ease;
+}
+
+/* O "ponto" */
+.progress-bar-step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    border: 3px solid var(--color-border);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+/* A "linha" de conexão */
+.progress-bar-step:not(:first-child)::after {
+    content: '';
+    position: absolute;
+    top: 8px; /* Alinha com o centro do "ponto" */
+    right: 50%;
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-border);
+    z-index: 1;
+}
+
+/* --- Estados da Barra --- */
+.progress-bar-step.active {
+    color: var(--color-text-primary);
+}
+.progress-bar-step.active::before {
+    border-color: #212529; /* Preto */
+    background-color: #212529;
+}
+
+.progress-bar-step.completed {
+    color: var(--color-text-secondary);
+}
+.progress-bar-step.completed::before {
+    border-color: #2bb69b; /* Verde (sucesso) */
+    background-color: #2bb69b;
+}
+.progress-bar-step.completed::after {
+    background-color: #2bb69b; /* Verde (sucesso) */
+}
+
+
+/* --- 2. Passos do Formulário --- */
+.form-steps-container {
+    overflow: hidden; /* Ajuda na transição (embora não implementada aqui) */
+}
+
+.form-step {
+    display: none; /* Oculto por padrão */
+    animation: fadeIn 0.5s ease;
+}
+
+.form-step.active {
+    display: block; /* Visível */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- 3. Navegação --- */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-6);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--spacing-5);
+}
+
+/* Esconde o botão se ele não for necessário */
+.form-navigation [style*="display: none"] {
+    display: none !important;
+}
