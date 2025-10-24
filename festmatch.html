@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distribfy - Festmatch</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <link rel="stylesheet" href="css/flatpickr-theme.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
+
+</head>
+
+<body id="page-festmatch">
+  <header class="header">
+  </header>
+
+  <main class="main-container">
+    <div class="content-wrapper">
+
+      <section class="festivals-board">
+        <div class="board-header">
+          <h2 class="board-title">
+            festmatch
+          </h2>
+        </div>
+        <div class="board-container">
+          <aside class="board-sidebar">
+            <div class="favorites-box">
+              <a href="favorites.html" class="favorites-badge">
+                <img src="public/icons/icon-heart-fav.svg" alt="" width="16" height="14" />
+                <span>FAV</span>
+              </a>
+            </div>
+
+            <div class="film-selector">
+              <select id="film-select" name="film-select">
+                <option value="">Selecione um filme...</option>
+              </select>
+            </div>
+
+            <div class="filter-panel">
+              <div class="filter-header">
+                <button class="btn-clear">limpar</button>
+                <div class="search-field">
+                  <img src="public/icons/icon-search.svg" alt="" width="15" height="15" />
+                  <input type="text" placeholder="Digite um termo para a busca" />
+                </div>
+              </div>
+              <div class="sort-options">
+                <span class="sort-label">Ordenar por:</span>
+                <button class="sort-btn active">Deadline</button>
+                <button class="sort-btn">Resultados</button>
+              </div>
+              <div class="filters-list"></div>
+              <div class="filter-category filter-slider">
+                <div class="filter-toggle" style="cursor: default;">
+                  <span>Taxa de Inscrição</span>
+                </div>
+                <div id="fee-range-slider"></div>
+                <div class="slider-values">
+                  <span id="slider-min-value"></span>
+                  <span id="slider-max-value"></span>
+                </div>
+              </div>
+            </div>
+
+          </aside>
+          <div class="content-column">
+            <div class="board-content">
+              <div id="festmatch-empty-state" class="no-results-message" style="margin-top: 2rem;">
+                <img src="public/icons/icon-film-reel.svg" alt="Filme"
+                  style="width: 50px; opacity: 0.5; margin-bottom: 1rem;">
+                <p>Selecione um dos seus filmes na barra lateral para encontrar festivais compatíveis.</p>
+              </div>
+            </div>
+            <div class="load-more-container">
+              <button id="load-more-btn" class="btn-primary" style="display: none;">Ver mais festivais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="feedback-modal-overlay" class="modal-overlay" style="display: none;">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <script src="js/supabase.min.js"></script>
+  <script src="js/flatpickr.min.js"></script>
+  <script src="https.cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/accordion.js"></script>
+  <script src="js/card-actions.js"></script>
+  <script src="js/tags-tooltip.js"></script>
+  <script src="js/status-handler.js"></script>
+  <script src="js/form-handler.js"></script>
+  <script src="js/static-ui-handlers.js"></script>
+  <script src="js/feedback-handler.js"></script>
+
+  <script src="js/filters.js"></script>
+
+  <script src="js/festmatch-render.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Flatpickr (datas) pode ser necessário para os filtros, então restauramos.
+      // Assumindo que seu filters.js os procure.
+      flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
+    });
+  </script>
+</body>
+
+</html>
