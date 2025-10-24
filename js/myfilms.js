@@ -157,20 +157,29 @@ onSupabaseReady((supabase) => {
         const localAmount = parseFloat(filmObject.distribution_budget_amount);
 
         if (localCurrencyCode === 'USD') {
-          filmObject.distribution_budget_amount = localAmount;
+          // Se a moeda é USD, o valor local É o valor USD.
+          filmObject.distribution_budget_amount = localAmount; // (ex: 100)
+          filmObject.distribution_budget_usd = localAmount; // (ex: 100)
         } else {
+          // Se for BRL (ex: 100)
           const rate = await window.CurrencyService.getExchangeRate(supabase, localCurrencyCode);
           if (rate && rate > 0) {
             const usdAmount = localAmount / rate;
-            filmObject.distribution_budget_amount = Math.round(usdAmount);
+
+            // CORREÇÃO: Atribui os valores às colunas corretas
+            filmObject.distribution_budget_amount = localAmount; // Mantém 100 (local)
+            filmObject.distribution_budget_usd = Math.round(usdAmount); // Salva 19 (USD)
+
             console.log(
-              `Conversão de Orçamento: ${localAmount} ${localCurrencyCode} -> ${filmObject.distribution_budget_amount} USD (Taxa: ${rate})`
+              `Conversão de Orçamento: ${localAmount} ${localCurrencyCode} (Salvo em '..._amount') -> ${filmObject.distribution_budget_usd} USD (Salvo em '..._usd') (Taxa: ${rate})`
             );
           } else {
+            // Fallback (salva o valor local e nulo no USD)
             console.warn(
               `Não foi possível converter o orçamento para USD. Taxa para ${localCurrencyCode} não encontrada. Salvando valor local.`
             );
             filmObject.distribution_budget_amount = localAmount;
+            filmObject.distribution_budget_usd = null;
           }
         }
       }
@@ -412,7 +421,7 @@ onSupabaseReady((supabase) => {
     // Não precisa mais de fallback aqui, pois loadAndRenderFilms já garante rate=1 e code='USD'
 
     // --- Orçamento de Distribuição (Convertido para moeda do filme) ---
-    const distBudget = formatCurrency(film.distribution_budget_usd * rate, currencyCode);
+    const distBudget = formatCurrency(film.distribution_budget_amount, currencyCode);
 
     // --- Placeholders (Formatados na moeda do filme) ---
     const investedAmount = formatCurrency(0 * rate, currencyCode);
@@ -704,15 +713,9 @@ onSupabaseReady((supabase) => {
         // Agora seta a faixa de orçamento
         budgetRangeSelect.value = fullFilmData.production_budget_range_id || '';
 
-        // Popula o orçamento de distribuição (convertido)
-        const selectedOption = currencySelect.options[currencySelect.selectedIndex];
-        const rate = await window.CurrencyService.getExchangeRate(
-          supabase,
-          selectedOption.dataset.code || 'USD'
-        );
-        const localDistBudget = Math.round(
-          (fullFilmData.distribution_budget_amount || 0) * (rate || 1)
-        );
+        // CORREÇÃO: Popula o orçamento de distribuição (agora usa o valor local direto)
+        // Não precisamos mais de 'rate' ou 'selectedOption' aqui.
+        const localDistBudget = fullFilmData.distribution_budget_amount || '';
         filmForm.querySelector('#distribution_budget_amount').value = localDistBudget;
       } else {
         console.warn(`ID de moeda não encontrado em 'fullFilmData'.`);
