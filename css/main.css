@@ -8,6 +8,7 @@
 @import url('./layout/_header.css');
 @import url('./layout/_main-container.css');
 @import url('./layout/_board.css');
+@import url('/css/layout/film-distrib-elements.css');
 
 
 /* 3. Componentes (Os blocos reutilizáveis) */

@@ -1,372 +1,371 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Distribfy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distribfy</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
-    <link rel="stylesheet" href="css/flatpickr-theme.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <link rel="stylesheet" href="css/flatpickr-theme.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
 
-    </head>
-  <body id="page-festivals">
-      <header class="header">
+</head>
+
+<body id="page-festivals">
+  <header class="header">
     <div class="logo">
-        <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
-        <span class="tagline">simplify your film distribution</span>
+      <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
+      <span class="tagline">simplify your film distribution</span>
     </div>
     <nav class="menu">
-        <a href="#">Home</a>
-        <a href="/festivals.html" data-protected>Festivais</a>
-    <a href="/myfilms.html" data-protected>Meus Filmes</a>
-        <a href="#">Contato</a>
+      <a href="#">Home</a>
+      <a href="/festivals.html" data-protected>Festivais</a>
+      <a href="/myfilms.html" data-protected>Meus Filmes</a>
+      <a href="#">Contato</a>
     </nav>
     <div class="user-area">
-        <button class="notification-btn">
-            <img src="public/icons/notification-icon.svg" alt="Notificações">
+      <button class="notification-btn">
+        <img src="public/icons/notification-icon.svg" alt="Notificações">
+      </button>
+
+      <div class="user-menu-container" id="user-menu" style="display: none;">
+        <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+          <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário"
+            class="user-avatar-header">
+          <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
         </button>
-
-        <div class="user-menu-container" id="user-menu" style="display: none;">
-            <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
-                <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header">
-                <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
-            </button>
-            <div class="dropdown-menu" id="user-dropdown">
-                <ul>
-                    <li><a href="/userpage.html">Minha Conta</a></li>
-                    <li><a href="#" id="logout-button">Sair</a></li>
-                </ul>
-            </div>
+        <div class="dropdown-menu" id="user-dropdown">
+          <ul>
+            <li><a href="/userpage.html">Minha Conta</a></li>
+            <li><a href="#" id="logout-button">Sair</a></li>
+          </ul>
         </div>
+      </div>
 
-        <div id="login-container">
-            <a href="/login.html" class="header-login-link">Entrar</a>
-        </div>
+      <div id="login-container">
+        <a href="/login.html" class="header-login-link">Entrar</a>
+      </div>
     </div>
-</header>
+  </header>
 
-    <main class="main-container">
-      <div class="content-wrapper">
-        <section class="festival-form-section">
-          <div class="form-panel-wrapper collapsed">
-            <div class="form-panel">
-              <h2 class="form-title">cadastro de festivais</h2>
+  <main class="main-container">
+    <div class="content-wrapper">
+      <section class="festival-form-section">
+        <div class="form-panel-wrapper collapsed">
+          <div class="form-panel">
+            <h2 class="form-title">cadastro de festivais</h2>
 
-              <form class="festival-form" id="festival-form" method="POST">
-                <div class="form-row">
-                  <div class="form-group large">
-  <label for="festival-name">Nome do Festival</label>
-  <div class="input-wrapper"> <input type="text" id="festival-name" name="festival-name" required />
-    <span class="validation-message" id="festival-name-error"></span>
-  </div>
-</div>
-                  <div class="form-row two-cols">
-                    <div class="form-group">
-                      <label for="first-edition">Número da Edição</label>
-                      <div class="select-wrapper">
-                        <select id="edition-number" name="first-edition">
-                          <option value="">Selecione</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
+            <form class="festival-form" id="festival-form" method="POST">
+              <div class="form-row">
+                <div class="form-group large">
+                  <label for="festival-name">Nome do Festival</label>
+                  <div class="input-wrapper"> <input type="text" id="festival-name" name="festival-name" required />
+                    <span class="validation-message" id="festival-name-error"></span>
+                  </div>
+                </div>
+                <div class="form-row two-cols">
+                  <div class="form-group">
+                    <label for="first-edition">Número da Edição</label>
+                    <div class="select-wrapper">
+                      <select id="edition-number" name="first-edition">
+                        <option value="">Selecione</option>
+                      </select>
+                      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                     </div>
-                    <div class="form-group">
-                      <label for="premiere-status">Premiere</label>
-                      <div class="select-wrapper">
-                        <select id="premiere-status" name="premiere-status">
-                          <option value="">Selecione</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="premiere-status">Premiere</label>
+                    <div class="select-wrapper">
+                      <select id="premiere-status" name="premiere-status">
+                        <option value="">Selecione</option>
+                      </select>
+                      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="form-row four-cols">
-                  <div class="form-group">
-                    <label for="country">País</label>
-                    <div class="select-wrapper">
-                      <select id="country" name="country">
-                        <option value="">Selecione</option>
-                        <option value="br">Brasil</option>
-                        <option value="us">Estados Unidos</option>
-                      </select>
-                      <img
-                        src="public/icons/icon-chevron-down.svg"
-                        alt=""
-                        class="select-icon"
-                      />
-                    </div>
+              <div class="form-row four-cols">
+                <div class="form-group">
+                  <label for="country">País</label>
+                  <div class="select-wrapper">
+                    <select id="country" name="country">
+                      <option value="">Selecione</option>
+                      <option value="br">Brasil</option>
+                      <option value="us">Estados Unidos</option>
+                    </select>
+                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                   </div>
-                  <div class="form-group">
-                    <label for="type">Tipo</label>
-                    <div class="select-wrapper">
-                      <select id="type" name="type">
-                        <option value="">Selecione</option>
-                        <option value="online">Online</option>
-                        <option value="presencial">Presencial</option>
-                      </select>
-                      <img
-                        src="public/icons/icon-chevron-down.svg"
-                        alt=""
-                        class="select-icon"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="realization-month">Mês de Realização</label>
-                    <div class="select-wrapper">
-                      <select id="realization-month" name="realization-month">
-                        <option value="">Selecione</option>
-                        <option value="janeiro">Janeiro</option>
-                        <option value="fevereiro">Fevereiro</option>
-                      </select>
-                      <img
-                        src="public/icons/icon-chevron-down.svg"
-                        alt=""
-                        class="select-icon"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-row-multi">
-                    <div class="form-group">
-                        <label for="qualifying">Qualificadores</label>
-                        <select id="qualifying" name="qualifying" multiple>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="categories">Categorias</label>
-                        <select id="categories" name="categories" multiple>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="genres">Gêneros</label>
-                        <select id="genres" name="genres" multiple>
-                        </select>
-                    </div>
-                </div>
-
-                <hr class="form-divider" />
-                <h3 class="form-section-title">Inscrições</h3>
-                <div class="form-row four-cols">
-                  <div class="form-group">
-                      <label for="open-month">Mês de abertura</label>
-                      <div class="select-wrapper">
-                        <select id="open-month" name="open-month">
-                          <option value="">Selecione</option>
-                        </select>
-                        <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
-                      </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="deadline-early">Deadline - Early</label>
-                    <div class="input-icon">
-                      <input type="text" id="deadline-early" name="deadline-early" placeholder="dd/mm/aaaa"/>
-                      <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img"/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="deadline-late">Deadline - Late</label>
-                    <div class="input-icon">
-                      <input type="text" id="deadline-late" name="deadline-late" placeholder="dd/mm/aaaa"/>
-                      <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img"/>
-                    </div>
-                  </div>
-                   <div class="form-group">
-                      <label for="results">Resultado</label>
-                      <div class="input-icon">
-                        <input type="date" id="results" name="results" placeholder="dd/mm/aaaa"/>
-                        <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img"/>
-                      </div>
-                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="fee-status">Taxa - Tipo</label>
-                    <div class="select-wrapper">
-                      <select id="fee-status" name="fee-status">
-                        <option value="">Selecione</option>
-                        </select>
-                      <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon"/>
-                    </div>
-                  </div>
-                <div class="form-row four-cols">
-                  <div class="form-group">
-                    <label for="fee-early-min">Tx. Ant. – Valor Mínimo</label>
-                    <input type="text" id="fee-early-min" name="fee-early-min" placeholder="0,00"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="fee-early-max">Tx. Ant. - Valor Máximo</label>
-                    <input type="text" id="fee-early-max" name="fee-early-max" placeholder="0,00"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="fee-late-min">Tx. Tardia - Valor Mínimo</label>
-                    <input type="text" id="fee-late-min" name="fee-late-min" placeholder="0,00"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="fee-late-max">Tx. Tardia - Valor Máximo</label>
-                    <input type="text" id="fee-late-max" name="fee-late-max" placeholder="0,00"/>
+                  <label for="type">Tipo</label>
+                  <div class="select-wrapper">
+                    <select id="type" name="type">
+                      <option value="">Selecione</option>
+                      <option value="online">Online</option>
+                      <option value="presencial">Presencial</option>
+                    </select>
+                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                   </div>
                 </div>
-                <div class="form-group full-width">
-                  <label for="synopsis">Sinopse</label>
-                  <textarea id="synopsis" name="synopsis" rows="4" placeholder="Até 340 caracteres." style="height: 200px; font-family: inter;"></textarea>
-                </div>
-                <hr class="form-divider" />
-                <div class="section-header">
-                  <img src="public/icons/icon-verified.svg" alt="" width="14" height="14"/>
-                  <h3 class="form-section-title">Links & Verificação</h3>
-                </div>
-                <div class="form-row-with-info">
-                  <div class="verification-info">
-                    <p>Cada festival cadastrado passa por nossa verificação de autenticidade para garantir a segurança e a qualidade da nossa lista.</p>
-                    <a href="#" class="link-learn-more">Saiba mais</a>
-                  </div>
-                  <div class="form-fields-column">
-                    <div class="form-group">
-                        <label for="platform">Plataforma</label>
-                        <select id="platform" name="platform">
-                          <option value="">Selecione</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="platform-link">Link para a Plataforma</label>
-                      <input type="url" id="platform-link" name="platform-link" placeholder="Cole aqui o link da página do festival na plataforma ou link de inscrição"/>
-                    </div>
-                    <div class="form-group">
-                      <label for="festival-site">Site do Festival</label>
-                      <input type="url" id="festival-site" name="festival-site" placeholder="Cole aqui o link do site oficial do festival"/>
-                    </div>
-                    <div class="form-group">
-                      <label for="social-media">Rede Social</label>
-                      <input type="url" id="social-media" name="social-media" placeholder="Cole aqui o link da rede social oficial do festival"/>
-                    </div>
+                <div class="form-group">
+                  <label for="realization-month">Mês de Realização</label>
+                  <div class="select-wrapper">
+                    <select id="realization-month" name="realization-month">
+                      <option value="">Selecione</option>
+                      <option value="janeiro">Janeiro</option>
+                      <option value="fevereiro">Fevereiro</option>
+                    </select>
+                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                   </div>
                 </div>
-                <hr class="form-divider" />
-                <h3 class="form-section-title">Mais informações</h3>
-                <div class="form-row-with-info">
-                  <div class="info-examples">
-                    <p><strong>Exemplo:</strong></p>
-                    <p>- Aceita screener</p>
-                    <p>- Vimeo com senha</p>
-                    <p>- DCP exigido para seleção</p>
-                  </div>
-                  <div class="form-group">
-                    <textarea id="more-info" name="more-info" rows="5" placeholder="Até 150 caracteres" style="height: 200px; font-family: inter;"></textarea>
-                  </div>
-                </div>
-                <div class="form-actions">
-                  <button type="button" class="btn-secondary">cancelar</button>
-                  <button type="submit" class="btn-primary">enviar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </section>
+              </div>
 
-        <section class="festivals-board">
-          <div class="board-header">
-            <h2 class="board-title">
-              <img src="public/icons/icon-ticket-festivals.svg" alt="">
-              festivais
-            </h2>
-            <div class="header-controls">
-              <span class="festival-count">festivais</span>
-              <button class="btn-gst-fest" id="btn-suggest-festival" aria-label="Sugerir novo festival" data-tooltip="Sugerir festival">
-                <img src="public/icons/icon-plus-white.svg" alt="" />
-              </button>
-            </div>
-          </div>
-          <div class="board-container">
-            <aside class="board-sidebar">
-              <div class="favorites-box">
-                <h3 class="favorites-title">festmatch</h3>
-                <a href="favorites.html" class="favorites-badge">
-  <img src="public/icons/icon-heart-fav.svg" alt="" width="16" height="14"/>
-  <span>FAV</span>
-</a>
+              <div class="form-row-multi">
+                <div class="form-group">
+                  <label for="qualifying">Qualificadores</label>
+                  <select id="qualifying" name="qualifying" multiple>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="categories">Categorias</label>
+                  <select id="categories" name="categories" multiple>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="genres">Gêneros</label>
+                  <select id="genres" name="genres" multiple>
+                  </select>
+                </div>
               </div>
-              <div class="film-selector">
-                <select id="film-select" name="film-select">
-                  <option value="">E se a gente se encontrasse</option>
-                  <option value="filme2">Outro Filme</option>
-                </select>
-                <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon"/>
-              </div>
-              <div class="filter-panel">
-                <div class="filter-header">
-                  <button class="btn-clear">limpar</button>
-                  <div class="search-field">
-                    <img src="public/icons/icon-search.svg" alt="" width="15" height="15"/>
-                    <input type="text" placeholder="Digite um termo para a busca" />
+
+              <hr class="form-divider" />
+              <h3 class="form-section-title">Inscrições</h3>
+              <div class="form-row four-cols">
+                <div class="form-group">
+                  <label for="open-month">Mês de abertura</label>
+                  <div class="select-wrapper">
+                    <select id="open-month" name="open-month">
+                      <option value="">Selecione</option>
+                    </select>
+                    <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                   </div>
                 </div>
-                <div class="sort-options">
-                  <span class="sort-label">Ordenar por:</span>
-                  <button class="sort-btn active">Deadline</button>
-                  <button class="sort-btn">Resultados</button>
+                <div class="form-group">
+                  <label for="deadline-early">Deadline - Early</label>
+                  <div class="input-icon">
+                    <input type="text" id="deadline-early" name="deadline-early" placeholder="dd/mm/aaaa" />
+                    <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img" />
+                  </div>
                 </div>
-                <div class="filters-list"></div>
-                <div class="filter-category filter-slider">
-                    <div class="filter-toggle" style="cursor: default;">
-                        <span>Taxa de Inscrição</span>
-                    </div>
-                    <div id="fee-range-slider"></div>
-                    <div class="slider-values">
-                        <span id="slider-min-value"></span>
-                        <span id="slider-max-value"></span>
-                    </div>
+                <div class="form-group">
+                  <label for="deadline-late">Deadline - Late</label>
+                  <div class="input-icon">
+                    <input type="text" id="deadline-late" name="deadline-late" placeholder="dd/mm/aaaa" />
+                    <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="results">Resultado</label>
+                  <div class="input-icon">
+                    <input type="date" id="results" name="results" placeholder="dd/mm/aaaa" />
+                    <img src="public/icons/icon-calendar.svg" alt="" class="input-icon-img" />
+                  </div>
                 </div>
               </div>
-            </aside>
-            <div class="content-column">
-                <div class="board-content"></div>
-                <div class="load-more-container">
-                    <button id="load-more-btn" class="btn-primary">Ver mais festivais</button>
+              <div class="form-group">
+                <label for="fee-status">Taxa - Tipo</label>
+                <div class="select-wrapper">
+                  <select id="fee-status" name="fee-status">
+                    <option value="">Selecione</option>
+                  </select>
+                  <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
                 </div>
-            </div>
+              </div>
+              <div class="form-row four-cols">
+                <div class="form-group">
+                  <label for="fee-early-min">Tx. Ant. – Valor Mínimo</label>
+                  <input type="text" id="fee-early-min" name="fee-early-min" placeholder="0,00" />
+                </div>
+                <div class="form-group">
+                  <label for="fee-early-max">Tx. Ant. - Valor Máximo</label>
+                  <input type="text" id="fee-early-max" name="fee-early-max" placeholder="0,00" />
+                </div>
+                <div class="form-group">
+                  <label for="fee-late-min">Tx. Tardia - Valor Mínimo</label>
+                  <input type="text" id="fee-late-min" name="fee-late-min" placeholder="0,00" />
+                </div>
+                <div class="form-group">
+                  <label for="fee-late-max">Tx. Tardia - Valor Máximo</label>
+                  <input type="text" id="fee-late-max" name="fee-late-max" placeholder="0,00" />
+                </div>
+              </div>
+              <div class="form-group full-width">
+                <label for="synopsis">Sinopse</label>
+                <textarea id="synopsis" name="synopsis" rows="4" placeholder="Até 340 caracteres."
+                  style="height: 200px; font-family: inter;"></textarea>
+              </div>
+              <hr class="form-divider" />
+              <div class="section-header">
+                <img src="public/icons/icon-verified.svg" alt="" width="14" height="14" />
+                <h3 class="form-section-title">Links & Verificação</h3>
+              </div>
+              <div class="form-row-with-info">
+                <div class="verification-info">
+                  <p>Cada festival cadastrado passa por nossa verificação de autenticidade para garantir a segurança e a
+                    qualidade da nossa lista.</p>
+                  <a href="#" class="link-learn-more">Saiba mais</a>
+                </div>
+                <div class="form-fields-column">
+                  <div class="form-group">
+                    <label for="platform">Plataforma</label>
+                    <select id="platform" name="platform">
+                      <option value="">Selecione</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="platform-link">Link para a Plataforma</label>
+                    <input type="url" id="platform-link" name="platform-link"
+                      placeholder="Cole aqui o link da página do festival na plataforma ou link de inscrição" />
+                  </div>
+                  <div class="form-group">
+                    <label for="festival-site">Site do Festival</label>
+                    <input type="url" id="festival-site" name="festival-site"
+                      placeholder="Cole aqui o link do site oficial do festival" />
+                  </div>
+                  <div class="form-group">
+                    <label for="social-media">Rede Social</label>
+                    <input type="url" id="social-media" name="social-media"
+                      placeholder="Cole aqui o link da rede social oficial do festival" />
+                  </div>
+                </div>
+              </div>
+              <hr class="form-divider" />
+              <h3 class="form-section-title">Mais informações</h3>
+              <div class="form-row-with-info">
+                <div class="info-examples">
+                  <p><strong>Exemplo:</strong></p>
+                  <p>- Aceita screener</p>
+                  <p>- Vimeo com senha</p>
+                  <p>- DCP exigido para seleção</p>
+                </div>
+                <div class="form-group">
+                  <textarea id="more-info" name="more-info" rows="5" placeholder="Até 150 caracteres"
+                    style="height: 200px; font-family: inter;"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">cancelar</button>
+                <button type="submit" class="btn-primary">enviar</button>
+              </div>
+            </form>
           </div>
-        </section>
-      </div>
-    </main>
-
-    <div id="feedback-modal-overlay" class="modal-overlay" style="display: none;">
-      <div class="modal-content">
-        <p id="feedback-modal-message" style="margin-top: 0; margin-bottom: 24px; font-size: 1.1rem; text-align: center;">
-          Mensagem padrão.
-        </p>
-        <div class="modal-actions">
-          <button id="feedback-modal-close" class="btn-primary">OK</button>
         </div>
+      </section>
+
+      <section class="festivals-board">
+        <div class="board-header">
+          <h2 class="board-title">
+            <img src="public/icons/icon-ticket-festivals.svg" alt="">
+            festivais
+          </h2>
+          <div class="header-controls">
+            <span class="festival-count">festivais</span>
+            <button class="btn-gst-fest" id="btn-suggest-festival" aria-label="Sugerir novo festival"
+              data-tooltip="Sugerir festival">
+              <img src="public/icons/icon-plus-white.svg" alt="" />
+            </button>
+          </div>
+        </div>
+        <div class="board-container">
+          <aside class="board-sidebar">
+            <div class="favorites-box">
+              <h3 class="favorites-title">festmatch</h3>
+              <a href="favorites.html" class="favorites-badge">
+                <img src="public/icons/icon-heart-fav.svg" alt="" width="16" height="14" />
+                <span>FAV</span>
+              </a>
+            </div>
+            <div class="film-selector">
+              <select id="film-select" name="film-select">
+                <option value="">E se a gente se encontrasse</option>
+                <option value="filme2">Outro Filme</option>
+              </select>
+              <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon" />
+            </div>
+            <div class="filter-panel">
+              <div class="filter-header">
+                <button class="btn-clear">limpar</button>
+                <div class="search-field">
+                  <img src="public/icons/icon-search.svg" alt="" width="15" height="15" />
+                  <input type="text" placeholder="Digite um termo para a busca" />
+                </div>
+              </div>
+              <div class="sort-options">
+                <span class="sort-label">Ordenar por:</span>
+                <button class="sort-btn active">Deadline</button>
+                <button class="sort-btn">Resultados</button>
+              </div>
+              <div class="filters-list"></div>
+              <div class="filter-category filter-slider">
+                <div class="filter-toggle" style="cursor: default;">
+                  <span>Taxa de Inscrição</span>
+                </div>
+                <div id="fee-range-slider"></div>
+                <div class="slider-values">
+                  <span id="slider-min-value"></span>
+                  <span id="slider-max-value"></span>
+                </div>
+              </div>
+            </div>
+          </aside>
+          <div class="content-column">
+            <div class="board-content"></div>
+            <div class="load-more-container">
+              <button id="load-more-btn" class="btn-primary">Ver mais festivais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="feedback-modal-overlay" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <p id="feedback-modal-message" style="margin-top: 0; margin-bottom: 24px; font-size: 1.1rem; text-align: center;">
+        Mensagem padrão.
+      </p>
+      <div class="modal-actions">
+        <button id="feedback-modal-close" class="btn-primary">OK</button>
       </div>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-    <script src="js/supabase.min.js"></script>
-    <script src="js/flatpickr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/accordion.js"></script>
-    <script src="js/card-actions.js"></script>
-    <script src="js/tags-tooltip.js"></script>
-    <script src="js/status-handler.js"></script>
-    <script src="js/form-handler.js"></script>
-    <script src="js/static-ui-handlers.js"></script>
-    <script src="js/feedback-handler.js"></script>
-    <script src="js/festivals-render.js"></script>
-    <script src="js/filters.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
-      });
-    </script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <script src="js/supabase.min.js"></script>
+  <script src="js/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/accordion.js"></script>
+  <script src="js/card-actions.js"></script>
+  <script src="js/tags-tooltip.js"></script>
+  <script src="js/status-handler.js"></script>
+  <script src="js/form-handler.js"></script>
+  <script src="js/static-ui-handlers.js"></script>
+  <script src="js/feedback-handler.js"></script>
+  <script src="js/festivals-render.js"></script>
+  <script src="js/filters.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
+    });
+  </script>
+</body>
+
 </html>

@@ -1,155 +1,525 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Distribfy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distribfy</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
-    <link rel="stylesheet" href="css/flatpickr-theme.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <link rel="stylesheet" href="css/flatpickr-theme.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
 
-    </head>
-  <body id="page-favorites">
-      <header class="header">
+<body id="page-favorites">
+  <header class="header">
     <div class="logo">
-        <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
-        <span class="tagline">simplify your film distribution</span>
+      <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image" />
+      <span class="tagline">simplify your film distribution</span>
     </div>
     <nav class="menu">
-        <a href="#">Home</a>
-        <a href="/festivals.html" data-protected>Festivais</a>
-    <a href="/myfilms.html" data-protected>Meus Filmes</a>
-        <a href="#">Contato</a>
+      <a href="#">Home</a>
+      <a href="/festivals.html" data-protected>Festivais</a>
+      <a href="/myfilms.html" data-protected>Meus Filmes</a>
+      <a href="#">Contato</a>
     </nav>
     <div class="user-area">
-        <button class="notification-btn">
-            <img src="public/icons/notification-icon.svg" alt="Notificações">
+      <button class="notification-btn">
+        <img src="public/icons/notification-icon.svg" alt="Notificações" />
         </button>
 
-        <div class="user-menu-container" id="user-menu" style="display: none;">
-            <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
-                <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header">
-                <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
-            </button>
-            <div class="dropdown-menu" id="user-dropdown">
-                <ul>
-                    <li><a href="/userpage.html">Minha Conta</a></li>
-                    <li><a href="#" id="logout-button">Sair</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="login-container">
-            <a href="/login.html" class="header-login-link">Entrar</a>
-        </div>
-    </div>
-</header>
-
-    <main class="main-container">
-      <div class="content-wrapper">
-
-        <section class="festivals-board">
-          <div class="board-header">
-            <h2 class="board-title">
-              <img src="public/icons/icon-heart.svg" alt="">
-              favoritos
-            </h2>
-            <div class="header-controls">
-              <span class="festival-count">favoritos</span>
-                <img src="public/icons/icon-plus-white.svg" alt="" />
-              </button>
-            </div>
+      <div class="user-menu-container" id="user-menu" style="display: none">
+        <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+          <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header" />
+          <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu" />
+          </button>
+          <div class="dropdown-menu" id="user-dropdown">
+            <ul>
+              <li><a href="/userpage.html">Minha Conta</a></li>
+              <li><a href="#" id="logout-button">Sair</a></li>
+            </ul>
+          </div>
           </div>
 
-              <!-- ASIDE-->
+      <div id="login-container">
+        <a href="/login.html" class="header-login-link">Entrar</a>
+      </div>
+    </div>
+  </header>
 
-          <div class="board-container">
-            <aside class="board-sidebar">
+  <main class="main-container">
+    <div class="content-wrapper">
+      <section class="festivals-board">
+        <!-- ASIDE-->
 
-               
+        <div class="board-container">
+          <aside class="board-sidebar">
+            <div class="film-dis-poster">
+              <img src="public/images/fim-poster-250px.png" alt="Poster do Filme" class="film-poster-image" />
+            </div>
 
+            <div class="film-dis-film-title">
+              <span class="film-tittle-text">Sua Parte de Mim</span>
+            </div>
 
-              <div class="festmatch-fav">
-                <h3 class="favorites-title">festmatch</h3>
-              </div>
-              <div class="film-selector">
-                <select id="film-select" name="film-select">
-                  <option value="">E se a gente se encontrasse</option>
-                  <option value="filme2">Outro Filme</option>
-                </select>
-                <img src="public/icons/icon-chevron-down.svg" alt="" class="select-icon"/>
-              </div>
-              <div class="filter-panel">
-                <div class="filter-header">
-                  <button class="btn-clear">limpar</button>
-                  <div class="search-field">
-                    <img src="public/icons/icon-search.svg" alt="" width="15" height="15"/>
-                    <input type="text" placeholder="Digite um termo para a busca" />
+            <div class="film-dis-role-buttons">
+              <button class="btn-primary role-btn">Distribuidor</button>
+              <button class="btn-primary role-btn">Organizador</button>
+            </div>
+
+            <div class="film-dis-details">
+              <div class="film-info-grid">
+                <div class="film-info-item">
+                  <img src="public/icons/timer-film.svg" alt="Duração" class="film-info-icon" />
+                  <span>15'</span>
+                </div>
+                <div class="film-info-item">
+                  <img src="public/icons/rocket.svg" alt="Ano" class="film-info-icon" />
+                  <span>Mai, 2024</span>
+                </div>
+
+                <div class="film-info-item">
+                  <img src="public/icons/flag.svg" alt="País" class="film-info-icon" />
+                  <span>Brasil</span>
+                </div>
+                <div class="film-info-item">
+                  <span class="film-lang">PORT-BR</span>
+                </div>
+                <div class="film-info-group">
+                  <div class="film-info-item">
+                    <img src="public/icons/tag-film.svg" alt="Gênero" class="film-info-icon" />
+                    <span>Ficção / LGBTQIAPN+</span>
+                  </div>
+                  <div class="film-info-item sub-info">
+                    <img src="public/icons/type-film.svg" alt="Formato" class="film-info-icon" />
+                    <span>Curta-metragem</span>
                   </div>
                 </div>
-                <div class="sort-options">
-                  <span class="sort-label">Ordenar por:</span>
-                  <button class="sort-btn active">Deadline</button>
-                  <button class="sort-btn">Resultados</button>
                 </div>
-                <div class="filters-list"></div>
-                <div class="filter-category filter-slider">
-                    <div class="filter-toggle" style="cursor: default;">
-                        <span>Taxa de Inscrição</span>
-                    </div>
-                    <div id="fee-range-slider"></div>
-                    <div class="slider-values">
-                        <span id="slider-min-value"></span>
-                        <span id="slider-max-value"></span>
-                    </div>
+                
+                <hr class="film-info-divider" />
+                
+                <div class="film-credits">
+                  <div class="credit-block">
+                    <p class="credit-title">Direção</p>
+                    <p class="credit-name">Marcelo Meniquelli</p>
+                    <p class="credit-name">Alícia Abe</p>
+                  </div>
+                
+                  <div class="credit-block">
+                    <p class="credit-title">Produção</p>
+                    <p class="credit-name">Dell Moraes</p>
+                  </div>
+                
+                  <div class="credit-block">
+                    <p class="credit-title">Distribuição</p>
+                    <p class="credit-name">Dora Morato</p>
+                  </div>
+                </div>
+                </div>
+
+            <div class="filter-panel">
+              <div class="filter-header">
+                <button class="btn-clear">limpar</button>
+                <div class="search-field">
+                  <img src="public/icons/icon-search.svg" alt="" width="15" height="15" />
+                  <input type="text" placeholder="Digite um termo para a busca" />
+                  </div>
+                  </div>
+                  <div class="sort-options">
+                    <span class="sort-label">Ordenar por:</span>
+                    <button class="sort-btn active">Deadline</button>
+                    <button class="sort-btn">Resultados</button>
+                  </div>
+                  <div class="filters-list"></div>
+                  <div class="filter-category filter-slider">
+                <div class="filter-toggle" style="cursor: default">
+                  <span>Taxa de Inscrição</span>
+                </div>
+                <div id="fee-range-slider"></div>
+                <div class="slider-values">
+                  <span id="slider-min-value"></span>
+                  <span id="slider-max-value"></span>
+                </div>
+                </div>
+                </div>
+            <div class="favorites-box">
+              <h3 class="favorites-title">festmatch</h3>
+              <a href="favorites.html" class="favorites-badge">
+                <img src="public/icons/icon-heart-fav.svg" alt="" width="16" height="14" />
+                <span>FAV</span>
+              </a>
+            </div>
+            <div class="film-dis-actions">
+              <button class="action-icon">
+                <img src="public/icons/contact-icon.svg" alt="Contato" />
+              </button>
+              <button class="action-icon">
+                <img src="public/icons/report-icon.svg" alt="Relatório" />
+              </button>
+              <button class="action-icon">
+                <img src="public/icons/link-shortener-icon.svg" alt="Link curto" />
+              </button>
+            </div>
+          </aside>
+
+          <div class="content-column">
+
+            <div class="board-content"></div>
+            <div class="distrib-title">
+              <span>Distribuição</span>
+            </div>
+            
+            <div class="film-dashboard">
+              <!-- Cabeçalho -->
+              <div class="dashboard-header">
+                <h2 class="dashboard-title">dashboard</h2>
+            
+                <!-- Grupo dos botões de navegação -->
+                <div class="dashboard-nav">
+                  <button class="dashboard-nav-btn prev-btn" aria-label="Anterior">
+                    <img src="public/icons/icon-chevronleft.svg" alt="Anterior" />
+                  </button>
+                  <button class="dashboard-nav-btn next-btn" aria-label="Próximo">
+                    <img src="public/icons/icon-chevronright.svg" alt="Próximo" />
+                  </button>
                 </div>
               </div>
-            </aside>
-            <div class="content-column">
-                <div class="board-content"></div>
-                <div class="load-more-container">
-                    <button id="load-more-btn" class="btn-primary">Ver mais festivais</button>
+            
+              <!-- Container dos cards -->
+              <di<div class="dashboard-container">
+                <div class="dashboard-cards-wrapper">
+                  <!-- CARD 1 -->
+                  <div class="dashboard-card performance-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Performance de Festivais</h3>
+                      <p class="card-subtitle">(Funil de Distribuição)</p>
+                      <button class="info-btn" title="Mais informações">
+                        <img src="public/icons/icon-info.svg" alt="info" />
+                      </button>
+                    </div>
+            
+                    <!-- Métricas só a partir do 2º item -->
+                    <div class="metrics-row">
+                      <div class="metric-spacer"></div>
+            
+            
+            
+                    </div>
+            
+                    <div class="stats-grid">
+                      <div class="stat-item">
+                        <div class="metric-item"><span class="metric-label">.</span><span class="metric-value">.</span></div>
+                        <img src="public/icons/icon-film-ticket.svg" alt="Inscrições" />
+                        <div class="stat-content">
+                          <span class="stat-number">280</span>
+                          <span class="stat-label">inscrições</span>
+                        </div>
+                      </div>
+            
+                      <div class="stat-item">
+                        <div class="metric-item"><span class="metric-label">TS </span><span class="metric-value">29,6%</span></div>
+                        <img src="public/icons/icon-film-selected.svg" alt="Seleções" />
+                        <div class="stat-content">
+                          <span class="stat-number">83</span>
+                          <span class="stat-label">seleções</span>
+                          <span class="badge-light">70 pagas</span>
+                        </div>
+                      </div>
+            
+                      <div class="stat-item">
+                        <div class="metric-item"><span class="metric-label">TI </span><span class="metric-value">21,7%</span></div>
+                        <img src="public/icons/icon-film-indicated.svg" alt="Indicações" />
+                        <div class="stat-content">
+                          <span class="stat-number">18</span>
+                          <span class="stat-label">indicações</span>
+                        </div>
+                      </div>
+            
+                      <div class="stat-item">
+                        <div class="metric-item"><span class="metric-label">TCF </span><span class="metric-value">7,2%</span></div>
+                        <img src="public/icons/icon-film-awards.svg" alt="Premiações" />
+                        <div class="stat-content">
+                          <span class="stat-number">6</span>
+                          <span class="stat-label">premiações</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+            
+                  <!-- CARD 2 -->
+                  <div class="dashboard-card">
+                    <h3 class="card-title">KPIs de Eficiência</h3>
+                    <p class="card-subtitle">(Custo vs. Performance)</p>
+                  </div>
+            
+                  <!-- CARD 3 -->
+                  <div class="dashboard-card">
+                    <h3 class="card-title">Distribuição Global</h3>
+                    <p class="card-subtitle">(Inscrições por País)</p>
+                  </div>
                 </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </main>
+            </div>
+            
+            
+            
+            
+            <details class="festival-accordion">
+              <summary class="festival-summary">
+                <div class="festival-card-top">
+                  <div class="festival-card">
+                    <header class="festival-title-section">
+                      <div class="festival-title-wrapper">
+                        <h3 class="festival-title">Festival de Gramado</h3>
+                        <img src="public/icons/icon-verified.svg" alt="Verificado" class="icon-verified" />
+                      </div>
+                      <button class="festival-status-btn" data-festival-id="1" data-status-id="3">
+                        Verificado
+                      </button>
+                      <button class="festival-chevron-btn" type="button">
+                        <img src="public/icons/btn-chevron-down.svg" alt="Expandir" />
+                      </button>
+                    </header>
+            
+                    <div class="festival-card-header">
+                      <!-- País / Qualificadores / Edição -->
+                      <div class="festival-col festival-col-country">
+                        <div class="festival-country">
+                          <img src="public/icons/icon-flag.svg" alt="Bandeira do Brasil" class="flag-icon" />
+                          <span>Brasil</span>
+                        </div>
+                        <div class="festival-qualifiers">
+                          <span class="label-small">Qualifying</span>
+                          <div class="tags-list">
+                            <span class="tag-qualifier">Oscar</span>
+                            <span class="tag-qualifier">Goya</span>
+                          </div>
+                        </div>
+                        <div class="festival-age">52ª Edição</div>
+                      </div>
+            
+                      <div class="divider-vertical"></div>
+            
+                      <!-- Informações principais -->
+                      <div class="festival-col festival-col-info">
+                        <div class="festival-info-item">
+                          <img src="public/icons/icon-calendar-period.svg" alt="Período" />
+                          <span>Agosto</span>
+                        </div>
+                        <div class="festival-info-item">
+                          <img src="public/icons/icon-calendar-openentries.svg" alt="Abertura" />
+                          <span>Março</span>
+                        </div>
+                        <div class="festival-info-item">
+                          <img src="public/icons/timer-film.svg" alt="Tipos de Filme" />
+                          <span>Curta / Longa</span>
+                        </div>
+                        <div class="festival-info-item">
+                          <img src="public/icons/icon-globe.svg" alt="Plataforma" />
+                          <a href="https://filmfreeway.com" target="_blank" rel="noopener noreferrer">
+                            FilmFreeway
+                          </a>
+                        </div>
+                      </div>
+            
+                      <div class="divider-vertical"></div>
+            
+                      <!-- Deadlines -->
+                      <div class="festival-col festival-col-deadlines">
+                        <h4 class="col-title">Deadlines</h4>
+                        <div class="deadline-item">
+                          <span class="deadline-label">Early</span>
+                          <span class="deadline-date">15/03/2024</span>
+                        </div>
+                        <div class="deadline-item">
+                          <span class="deadline-label">Last Date</span>
+                          <span class="deadline-date">30/06/2024</span>
+                        </div>
+                      </div>
+            
+                      <!-- Resultado -->
+                      <div class="festival-col festival-col-result">
+                        <h4 class="col-title">Resultado</h4>
+                        <span class="result-date">Agosto, 2024</span>
+                        <div class="festival-col festival-col-fee">
+                          <img src="public/icons/icon_fest_currency2.svg" alt="Taxa" />
+                          <span class="fee-status">USD 25</span>
+                        </div>
+                      </div>
+            
+                      <!-- Categorias e Gêneros -->
+                      <div class="festival-item-tags">
+                        <div class="icon-tag">
+                          <img src="public/icons/icon-tag.svg" alt="Tag Icon" />
+                        </div>
+                        <div class="tags-group">
+                          <span class="label-small">Categorias</span>
+                          <div class="tags-box">
+                            <div class="tags-list">
+                              <span>Internacional</span>
+                              ,
+                              <span>Nacional</span>
+                            </div>
+                            <img src="public/icons/icon-chevron-right.svg" alt="Seta" class="icon-chevron" />
+                          </div>
+                        </div>
+            
+                        <div class="tags-group">
+                          <span class="label-small">Gêneros</span>
+                          <div class="tags-box">
+                            <div class="tags-list">
+                              <span>Ficção</span>
+                              ,
+                              <span>Documentário</span>
+                            </div>
+                            <img src="public/icons/icon-chevron-right.svg" alt="Seta" class="icon-chevron" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <!-- Botões laterais -->
+                  <aside class="festival-actions">
+                    <button class="action-btn action-btn--favorite" title="Favoritar">
+                      <img src="public/icons/icon-heart.svg" alt="Favoritar" />
+                    </button>
+                    <button class="action-btn" data-action="edit" data-id="1" title="Editar">
+                      <img src="public/icons/icon-edit.svg" alt="Editar" />
+                    </button>
+                    <a href="https://www.festivaldegramado.net" target="_blank" rel="noopener noreferrer" class="action-btn"
+                      title="Site Oficial">
+                      <img src="public/icons/icon-external-link.svg" alt="Link Externo" />
+                    </a>
+                    <a href="https://www.instagram.com/festivaldegramado" target="_blank" rel="noopener noreferrer"
+                      class="action-btn" title="Instagram">
+                      <img src="public/icons/icon-instagram.svg" alt="Instagram" />
+                    </a>
+                    <button class="add-button" title="Adicionar ao meu filme">
+                      <img src="public/icons/icon-plus.svg" alt="Adicionar" />
+                    </button>
+                  </aside>
+                </div>
+              </summary>
+            
+              <!-- Painel expandido -->
+              <div class="card-expanded-content">
+                <p class="description">
+                  O Festival de Gramado é um dos mais tradicionais eventos de cinema do Brasil,
+                  dedicado à valorização da produção audiovisual latino-americana.
+                </p>
+            
+                <div class="more-details-panel">
+                  <div class="detail-section detail-premiere">
+                    <div class="detail-header">
+                      <img src="public/icons/icon-premiere.svg" alt="" />
+                      <h4>Premiere</h4>
+                    </div>
+                    <ul class="premiere-list">
+                      <li class="active">World Premiere</li>
+                      <li class="inactive">Latin America</li>
+                    </ul>
+                  </div>
+            
+                  <div class="detail-section detail-fee">
+                    <div class="detail-header">
+                      <img src="public/icons/icon_fest_currency.svg" alt="" />
+                      <h4>Fee</h4>
+                    </div>
+                    <div class="fee-table">
+                      <div class="fee-row">
+                        <span class="fee-label">Early</span>
+                        <span class="fee-value">USD 20</span>
+                      </div>
+                      <div class="fee-row">
+                        <span class="fee-label">Late</span>
+                        <span class="fee-value">USD 40</span>
+                      </div>
+                    </div>
+                    <p class="fee-note">Verifique todas as categorias na página do festival.</p>
+                  </div>
+            
+                  <div class="detail-section detail-more">
+                    <div class="detail-header">
+                      <img src="public/icons/icon_fest_more.svg" alt="" />
+                      <h4>Mais</h4>
+                    </div>
+                    <ul class="more-list">
+                      <li>Realização: Prefeitura de Gramado</li>
+                      <li>Idioma: Português / Espanhol</li>
+                      <li>Submissão: via FilmFreeway</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </details>
 
-    <div id="feedback-modal-overlay" class="modal-overlay" style="display: none;">
-      <div class="modal-content">
-        <p id="feedback-modal-message" style="margin-top: 0; margin-bottom: 24px; font-size: 1.1rem; text-align: center;">
-          Mensagem padrão.
-        </p>
-        <div class="modal-actions">
-          <button id="feedback-modal-close" class="btn-primary">OK</button>
-        </div>
-      </div>
-    </div>
+            <div class="load-more-container">
+              <button id="load-more-btn" class="btn-primary">Ver mais festivais</button>
+            </div>
+            </div>
+            </div>
+            </section>
+            </div>
+            </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-    <script src="js/supabase.min.js"></script>
-    <script src="js/flatpickr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/accordion.js"></script>
-    <script src="js/card-actions.js"></script>
-    <script src="js/tags-tooltip.js"></script>
-    <script src="js/status-handler.js"></script>
-    <script src="js/form-handler.js"></script>
-    <script src="js/static-ui-handlers.js"></script>
-    <script src="js/feedback-handler.js"></script>
-    <script src="js/festivals-render.js"></script>
-    <script src="js/filters.js"></script>
-    <script src="js/favoritos-logic.js"></script>
+  <div id="feedback-modal-overlay" class="modal-overlay" style="display: none">
+    <div class="modal-content">
+      <p id="feedback-modal-message" style="margin-top: 0; margin-bottom: 24px; font-size: 1.1rem; text-align: center">
+        Mensagem padrão.
+      </p>
+      <div class="modal-actions">
+        <button id="feedback-modal-close" class="btn-primary">OK</button>
+      </div>
+      </div>
+      </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <script src="js/supabase.min.js"></script>
+  <script src="js/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/accordion.js"></script>
+  <script src="js/card-actions.js"></script>
+  <script src="js/tags-tooltip.js"></script>
+  <script src="js/status-handler.js"></script>
+  <script src="js/static-ui-handlers.js"></script>
+  <script src="js/feedback-handler.js"></script>
+  <script src="js/filters.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      flatpickr('#deadline-early, #deadline-late, #results', { dateFormat: 'd/m/Y' });
+    });
+  </script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        flatpickr("#deadline-early, #deadline-late, #results", { dateFormat: "d/m/Y" });
+                const wrapper = document.querySelector('.dashboard-cards-wrapper');
+                const prevBtn = document.querySelector('.prev-btn');
+                const nextBtn = document.querySelector('.next-btn');
+
+                let cardWidth = 0;
+                const updateCardWidth = () => {
+                  const firstCard = wrapper.querySelector('.dashboard-card');
+                  if (firstCard) cardWidth = firstCard.offsetWidth + parseInt(getComputedStyle(firstCard).marginRight);
+                };
+
+                updateCardWidth();
+                window.addEventListener('resize', updateCardWidth);
+
+                prevBtn.addEventListener('click', () => {
+                  wrapper.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', () => {
+                  wrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
       });
     </script>
+
+
   </body>
+
 </html>

@@ -233,15 +233,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="distribution_budget_amount">Orçamento de distribuição *</label>
-                                        <input type="number" id="distribution_budget_amount" name="distribution_budget_amount" placeholder="5000" required />
-                                    </div>
+            <label for="distribution_budget_amount">Orçamento de distribuição *</label>
+            <div class="input-with-suffix">
+                <input type="number" id="distribution_budget_amount" name="distribution_budget_amount" placeholder="5000" required />
+                <span class="input-suffix" id="distribution-currency-suffix">USD</span>
+            </div>
+        </div>
                                 </div>
                                
                                <div class="form-row two-cols" id="synopsis-poster-row" style="align-items: stretch;">
                                  <div class="form-group" style="flex: 0 0 70%;">
                                    <label for="synopsis">Sinopse</label>
-                                   <textarea id="synopsis" name="synopsis" placeholder="Digite aqui a sinopse do filme..." rows="10" style="height: 260px; font-family: inter;"></textarea>
+                                   <textarea id="synopsis" name="synopsis" placeholder="Digite aqui a sinopse do filme..." rows="10" style="height: 260px; font-family: inter;" required></textarea>
                                  </div>
                                  <div class="form-group" style="flex: 0 0 30%; display: flex; flex-direction: column; justify-content: flex-start;">
                                    <label for="poster-upload">Cartaz</label>
@@ -550,7 +553,7 @@
               meus filmes
             </h2>
           </div>
-          <div class="board-container-films single-column">
+          <div class="board-container-films single-column" id="my-films-list-container">
             <div class="film-card-container">
               <div class="poster-wrapper">
                 <div class="image-wrapper-poster">
