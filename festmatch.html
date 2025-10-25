@@ -16,6 +16,38 @@
 
 <body id="page-festmatch">
   <header class="header">
+    <div class="logo">
+      <img src="public/logos/logo_distribfy.svg" alt="Festmundi Logo" class="logo-image">
+      <span class="tagline">simplify your film distribution</span>
+    </div>
+    <nav class="menu">
+      <a href="#">Home</a>
+      <a href="/festivals.html" data-protected>Festivais</a>
+      <a href="/myfilms.html" data-protected>Meus Filmes</a>
+      <a href="#">Contato</a>
+    </nav>
+    <div class="user-area">
+      <button class="notification-btn">
+        <img src="public/icons/notification-icon.svg" alt="Notificações">
+      </button>
+  
+      <div class="user-menu-container" id="user-menu" style="display: none;">
+        <button class="avatar-button" id="user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+          <img id="header-avatar" src="https://via.placeholder.com/36" alt="Avatar do usuário" class="user-avatar-header">
+          <img src="public/icons/icon-chevron-down.svg" class="chevron-down" alt="Abrir menu">
+        </button>
+        <div class="dropdown-menu" id="user-dropdown">
+          <ul>
+            <li><a href="/userpage.html">Minha Conta</a></li>
+            <li><a href="#" id="logout-button">Sair</a></li>
+          </ul>
+        </div>
+      </div>
+  
+      <div id="login-container">
+        <a href="/login.html" class="header-login-link">Entrar</a>
+      </div>
+    </div>
   </header>
 
   <main class="main-container">
@@ -102,6 +134,7 @@
   <script src="js/static-ui-handlers.js"></script>
   <script src="js/festmatch-render.js"></script>
   <script src="js/filters.js"></script>
+  <script src="js/filter-ui.js"></script>
   
 
   <script>

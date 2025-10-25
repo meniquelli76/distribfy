@@ -104,6 +104,7 @@
     const payload = {
       search_term: document.querySelector('.search-field input')?.value || null,
       country_ids: getCheckedValues('filter-country'),
+      film_type_ids: getCheckedValues('filter-film-type'),
       genre_ids: getCheckedValues('filter-genre'),
       category_ids: getCheckedValues('filter-category'),
       qualifier_ids: getCheckedValues('filter-qualifier'),

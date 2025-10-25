@@ -217,9 +217,11 @@
 
 /* Estilos para o Range Slider de Taxa (Inalterados, exceto a classe container) */
 .filter-slider { /* ★ CORREÇÃO ★ Adicionada classe para container do slider, se necessário */
-  padding-bottom: var(--spacing-5);
+  padding-bottom: var(--spacing-3);
   /* border-bottom: 1px solid var(--color-border); */ /* Removido para usar o do .custom-filter */
-   margin-bottom: var(--spacing-2); /* Espaçamento consistente */
+  margin-top: 15px;
+  margin-bottom: var(--spacing-1); /* Espaçamento consistente */
+  border-top: 1px solid var(--color-border);
 }
 
 #fee-range-slider {

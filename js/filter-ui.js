@@ -116,6 +116,7 @@
     try {
       // Tenta buscar cada tabela individualmente para isolar o erro
       const countriesPromise = supabase.from('countries').select('id, country').order('country');
+      const filmTypesPromise = supabase.from('film_types').select('id, type').order('id');
       const genresPromise = supabase.from('genres').select('id, genre').order('genre');
       const categoriesPromise = supabase
         .from('categories')
@@ -135,6 +136,7 @@
       // Executa todas em paralelo
       const results = await Promise.all([
         countriesPromise,
+        filmTypesPromise,
         genresPromise,
         categoriesPromise,
         qualifiersPromise,
@@ -145,6 +147,14 @@
       ]);
 
       console.log('filter-ui.js: Promise.all concluído.');
+
+      // ★★★ LOG ADICIONADO AQUI ★★★
+      // Verifica o resultado bruto da última promise (film_types)
+      const filmTypesResult = results[results.length - 1]; // Pega o último resultado do array
+      console.log('--- RESULTADO BRUTO de supabase.from("film_types"): ---');
+      console.log(JSON.stringify(filmTypesResult, null, 2)); // Mostra o objeto inteiro
+      console.log('----------------------------------------------------');
+      // ★★★ FIM DO LOG ADICIONADO ★★★
 
       // Verifica erros em cada resultado individualmente
       const errors = results.filter((res) => res.error);
@@ -160,11 +170,12 @@
       console.log('filter-ui.js: Todas as buscas de lookup bem-sucedidas.');
 
       // Extrai os dados
-      const [countries, genres, categories, qualifiers, platforms, fee_status, months, status] =
+      const [countries, film_types, genres, categories, qualifiers, platforms, fee_status, months, status] =
         results;
 
       return {
         countries: countries.data,
+        film_types: film_types.data, 
         genres: genres.data,
         categories: categories.data,
         qualifiers: qualifiers.data,
@@ -195,67 +206,92 @@
     }
 
     // Função helper para criar cada filtro customizado
+    // Função helper para criar cada filtro customizado (COM VERIFICAÇÃO)
+    // Função helper para criar cada filtro customizado (VERSÃO COMPLETA E CORRETA)
     const createCustomFilter = (id, label, data, valueKey, labelKey) => {
-      // Gera o HTML para as opções (checkboxes)
+      // Verifica se 'data' é um array válido
+      if (!Array.isArray(data)) {
+        console.error(
+          `❌ filter-ui.js: Dados inválidos ou ausentes para o filtro "${label}" (ID: ${id}). Esperava um array, recebeu:`,
+          data
+        );
+        const errorHtml = `
+            <div class="filter-category custom-filter" data-filter-id="${id}">
+              <button type="button" class="filter-toggle" disabled>${label} (Erro)</button>
+              <div class="filter-dropdown" style="display: none;">
+                 <p style="padding: 5px 10px; color: red; font-size: 0.8em;">Não foi possível carregar opções.</p>
+              </div>
+            </div>`;
+        filtersListElement.insertAdjacentHTML('beforeend', errorHtml);
+        return; // Aborta
+      }
+
+      // Gera HTML das opções
       const optionsHtml = data
         .map(
-          (item) => `
-            <li>
-              <label>
-                <input type="checkbox" value="${item[valueKey]}" data-filter-group="${id}"> 
-                <span>${item[labelKey]}</span> 
-              </label>
-            </li>
-          `
+          (item) =>
+            `<li><label><input type="checkbox" value="${item[valueKey]}" data-filter-group="${id}"> <span>${item[labelKey]}</span></label></li>`
         )
         .join('');
 
-      // Gera o HTML do filtro completo
+      // Gera HTML do filtro
       const html = `
         <div class="filter-category custom-filter" data-filter-id="${id}">
-          <button type="button" class="filter-toggle">
-            ${label}
-            <img src="public/icons/icon-chevron-down.svg" alt="" class="chevron-icon" /> 
-          </button>
-          <div class="filter-dropdown" style="display: none;">
-            <ul class="filter-options-list" id="${id}-list"> 
-              ${optionsHtml}
-            </ul>
-          </div>
-        </div>
-      `;
+          <button type="button" class="filter-toggle"> ${label} <img src="public/icons/icon-chevron-down.svg" alt="" class="chevron-icon" /> </button>
+          <div class="filter-dropdown" style="display: none;"> <ul class="filter-options-list" id="${id}-list"> ${optionsHtml} </ul> </div>
+        </div>`;
       filtersListElement.insertAdjacentHTML('beforeend', html);
 
+      // =============================================================
+      // ★★★ BLOCO FALTANTE RESTAURADO ABAIXO ★★★
+      // =============================================================
       // Adiciona listeners para este filtro específico
       const filterElement = filtersListElement.querySelector(
         `.custom-filter[data-filter-id="${id}"]`
       );
       const toggleButton = filterElement.querySelector('.filter-toggle');
       const dropdown = filterElement.querySelector('.filter-dropdown');
+      // ★ Define a variável 'checkboxes' ★
       const checkboxes = filterElement.querySelectorAll('input[type="checkbox"]');
 
-      // Listener para abrir/fechar o dropdown
+      // Listener para abrir/fechar o dropdown (Inalterado)
       toggleButton.addEventListener('click', (e) => {
-        e.stopPropagation(); // Impede que o clique feche imediatamente (ver handleOutsideClick)
+        e.stopPropagation();
         const isOpening = dropdown.style.display === 'none';
-        // Fecha todos os outros dropdowns antes de abrir este
         closeAllDropdowns(filterElement);
         dropdown.style.display = isOpening ? 'block' : 'none';
         toggleButton.classList.toggle('active', isOpening);
       });
 
-      // Listener para checkboxes (dispara a busca)
+      // ★ Bloco 'checkboxes.forEach' com logs e setTimeout ★
+      // Listener para checkboxes (dispara a busca - COM LOGS E DELAY)
       checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', () => {
+        checkbox.addEventListener('change', (event) => {
+          // Adiciona 'event'
+          // Logs adicionados
+          const isChecked = event.target.checked;
+          const value = event.target.value;
+          const group = event.target.dataset.filterGroup;
+          console.log(`[Checkbox Change] Grupo: ${group}, Valor: ${value}, Marcado: ${isChecked}`);
+          console.log('[Checkbox Change] Elemento:', event.target);
+
+          // Chama a busca com delay
           if (typeof window.triggerFestivalSearch === 'function') {
-            window.triggerFestivalSearch();
+            setTimeout(() => {
+              console.log('[Checkbox Change] Chamando triggerFestivalSearch após delay...');
+              window.triggerFestivalSearch();
+            }, 50); // 50ms de delay
           }
         });
       });
-    };
+      // =============================================================
+      // ★★★ FIM DO BLOCO RESTAURADO ★★★
+      // =============================================================
+    }; // <-- Fim da função createCustomFilter
 
     // Criar os filtros usando a nova função helper
     createCustomFilter('filter-country', 'País', options.countries, 'id', 'country');
+    createCustomFilter('filter-film-type', 'Tipo', options.film_types, 'id', 'type');
     createCustomFilter('filter-genre', 'Gênero', options.genres, 'id', 'genre');
     createCustomFilter('filter-category', 'Categoria', options.categories, 'id', 'category');
     createCustomFilter('filter-qualifier', 'Qualificadores', options.qualifiers, 'id', 'name');
