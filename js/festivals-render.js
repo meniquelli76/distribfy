@@ -304,10 +304,28 @@ html += `<button class="festival-status-btn" data-festival-id="${f.id}" data-sta
     }
 }
 
-window.triggerFestivalSearch = function(ids = null) {
-    currentFilterIds = ids; // Armazena os IDs do filtro (ou null se limpou)
-    fetchAndRenderFestivals(false); // Inicia uma nova busca do zero
-}
+window.renderFestivalsByIds = function (ids = null, error = null) {
+  console.log(`[festivals-render.js] Recebido ${ids ? ids.length : 'null'} IDs para renderizar.`);
+
+    const root = document.querySelector('.board-content');
+
+  if (error) {
+    console.error('Renderizador notificado de erro:', error);
+    if (root)
+      root.innerHTML =
+        "<p style='text-align:center; padding: 2rem;'>Ocorreu um erro ao aplicar os filtros.</p>";
+    return;
+  }
+
+  console.log(`Renderizador recebendo ${ids === null ? 'null' : ids.length} IDs para renderizar.`);
+
+  // Armazena os IDs do filtro (ou null se limpou)
+  // Se 'ids' for um array vazio, a busca vai retornar "Nenhum festival encontrado".
+  currentFilterIds = ids;
+
+  // Inicia uma nova busca do zero usando os IDs fornecidos
+  fetchAndRenderFestivals(false);
+};
     
     function handleActionClick(e) {
         const btn = e.target.closest('button[data-action="edit"]');

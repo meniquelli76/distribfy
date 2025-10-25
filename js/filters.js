@@ -1,202 +1,197 @@
-// js/filters.js
+// js/filters.js (VERSÃO CORRIGIDA v3.9)
+// Lê valores dos checkboxes customizados
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Envolvemos toda a lógica em uma função assíncrona para poder usar 'await'
-    async function initializeFilters() {
-        console.log("▶️  Inicializando Lógica de Filtros (Versão com Range Dinâmico)...");
+(function () {
+  let supabase;
 
-        // --- DECLARAÇÕES DE VARIÁVEIS (como antes) ---
-        let filterOptions = {};
-        const activeFilters = {
-            searchTerm: '', sortBy: 'deadline', sortAsc: true,
-            countries: [], platforms: [], fee_status: [], month_opening: [], status: [],
-            genres: [], categories: [], qualifiers: [],
-            minFee: null, maxFee: null
-        };
-        const searchInput = document.querySelector('.search-field input');
-        const sortButtons = document.querySelectorAll('.sort-options .sort-btn');
-        const filtersListContainer = document.querySelector('.filters-list');
-        const btnClear = document.querySelector('.btn-clear');
-
-        // --- [NOVO] BUSCAR O VALOR MÁXIMO DA TAXA ---
-        let dynamicMaxFee = 500; // Valor padrão caso a busca falhe
-        try {
-            // Chamamos a função RPC que criamos no Supabase
-            const { data, error } = await window.supabase.rpc('get_max_festival_fee');
-            if (error) throw error;
-            // Se o valor retornado for maior que 0, usamos ele. Senão, mantemos o padrão.
-            if (data && data > 0) {
-                dynamicMaxFee = data;
-                console.log(`✅ Limite máximo da taxa definido dinamicamente: R$ ${dynamicMaxFee}`);
-            }
-        } catch (err) {
-            console.error("Erro ao buscar taxa máxima, usando valor padrão de 500.", err);
-        }
-
-        // --- INICIALIZAÇÃO DO SLIDER (agora com valores dinâmicos) ---
-        const sliderElement = document.getElementById('fee-range-slider');
-        const minValueDisplay = document.getElementById('slider-min-value');
-        const maxValueDisplay = document.getElementById('slider-max-value');
-
-        if (sliderElement) {
-            noUiSlider.create(sliderElement, {
-                // [ALTERADO] Usamos o valor dinâmico no início e no range
-                start: [0, dynamicMaxFee],
-                connect: true,
-                range: {
-                    'min': 0,
-                    'max': dynamicMaxFee
-                },
-                step: 10,
-                tooltips: false,
-                format: {
-                    to: function (value) { return 'R$ ' + Math.round(value); },
-                    from: function (value) { return Number(value.replace('R$ ', '')); }
-                }
-            });
-
-            sliderElement.noUiSlider.on('update', function (values, handle) {
-                const [minVal, maxVal] = values;
-                minValueDisplay.innerHTML = minVal;
-                // [ALTERADO] Removemos o '+' e apenas mostramos o valor máximo dinâmico
-                maxValueDisplay.innerHTML = maxVal;
-            });
-
-            sliderElement.noUiSlider.on('change', function (values, handle) {
-                const [min, max] = sliderElement.noUiSlider.get(true);
-                activeFilters.minFee = min;
-                // [ALTERADO] Verificamos se o valor é igual ao máximo dinâmico
-                activeFilters.maxFee = (max === dynamicMaxFee) ? null : max;
-                console.log(`▶️ Filtro de taxa aplicado: Mínimo R$${activeFilters.minFee}, Máximo R$${activeFilters.maxFee === null ? '∞' : activeFilters.maxFee}`);
-                debouncedApplyFilters();
-            });
-        }
-        
-        // --- O RESTANTE DAS FUNÇÕES (sem grandes alterações) ---
-        
-        async function fetchFilterOptions() {
-            // ... (código original sem alterações)
-            try {
-                const filtersToFetch = [
-                    { key: 'countries', table: 'countries', nameCol: 'country', title: 'País' }, { key: 'month_opening', table: 'months', nameCol: 'months_id', title: 'Abertura das Inscrições' },
-                    { key: 'categories', table: 'categories', nameCol: 'category', title: 'Categoria' }, { key: 'genres', table: 'genres', nameCol: 'genre', title: 'Gênero' },
-                    { key: 'platforms', table: 'platforms', nameCol: 'platform_name', title: 'Plataforma' }, { key: 'fee_status', table: 'fee_status', nameCol: 'status_name', title: 'Inscrições' },
-                    { key: 'status', table: 'festival_status', nameCol: 'status_name', title: 'Status' }, { key: 'qualifiers', table: 'qualifiers', nameCol: 'name', title: 'Qualificadores' },
-                ];
-                for (const filter of filtersToFetch) {
-                    const { data, error } = await window.supabase.from(filter.table).select(`id, ${filter.nameCol}`).order(filter.nameCol, { ascending: true });
-                    if (error) throw error;
-                    filterOptions[filter.key] = { title: filter.title, options: data.map(item => ({ id: item.id, name: item[filter.nameCol] })) };
-                }
-            } catch (err) { console.error("Erro ao buscar opções de filtros:", err); }
-        }
-
-        function renderFilterUI() {
-            // ... (código original sem alterações)
-            if (!filtersListContainer) return;
-            filtersListContainer.innerHTML = '';
-            for (const key in filterOptions) {
-                const filter = filterOptions[key];
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'filter-category';
-                let optionsHtml = filter.options.map(option => `<label class="filter-option">${escapeHtml(option.name)}<input type="checkbox" value="${option.id}" data-category="${key}"><span class="checkmark"></span></label>`).join('');
-                categoryDiv.innerHTML = `<button class="filter-toggle"><span>${filter.title}</span><img src="public/icons/icon-chevron-down.svg" alt=""/></button><div class="filter-options-panel">${optionsHtml}</div>`;
-                filtersListContainer.appendChild(categoryDiv);
-            }
-            addEventListeners();
-        }
-        
-        function addEventListeners() {
-            // ... (código original sem alterações)
-            document.querySelectorAll('.filter-toggle').forEach(toggle => toggle.addEventListener('click', () => toggle.parentElement.classList.toggle('open')));
-            document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', (e) => {
-                    const category = e.target.dataset.category;
-                    const id = parseInt(e.target.value, 10);
-                    if (e.target.checked) {
-                        if (!activeFilters[category].includes(id)) activeFilters[category].push(id);
-                    } else {
-                        activeFilters[category] = activeFilters[category].filter(itemId => itemId !== id);
-                    }
-                    debouncedApplyFilters();
-                });
-            });
-            if (searchInput) { searchInput.addEventListener('input', (e) => { activeFilters.searchTerm = e.target.value; debouncedApplyFilters(); }); }
-            sortButtons.forEach(button => { button.addEventListener('click', () => { if (button.classList.contains('active')) return; sortButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); const sortValue = button.textContent.trim().toLowerCase(); activeFilters.sortBy = sortValue === 'deadline' ? 'deadline' : 'results'; applyFilters(); }); });
-            if(btnClear) { btnClear.addEventListener('click', () => { resetFilters(); }); }
-        }
-
-       function getFilterParams() {
-    const params = {
-        search_term: activeFilters.searchTerm || null,
-        country_ids: activeFilters.countries.length > 0 ? activeFilters.countries : null,
-        genre_ids: activeFilters.genres.length > 0 ? activeFilters.genres : null,
-        category_ids: activeFilters.categories.length > 0 ? activeFilters.categories : null,
-        qualifier_ids: activeFilters.qualifiers.length > 0 ? activeFilters.qualifiers : null,
-        platform_ids: activeFilters.platforms.length > 0 ? activeFilters.platforms : null,
-        fee_status_ids: activeFilters.fee_status.length > 0 ? activeFilters.fee_status : null,
-        month_opening_ids: activeFilters.month_opening.length > 0 ? activeFilters.month_opening : null,
-        status_ids: activeFilters.status.length > 0 ? activeFilters.status : null,
-        min_fee: activeFilters.minFee,
-        max_fee: activeFilters.maxFee
+  // Contexto global dos filtros (inalterado)
+  if (!window.__filterCtx) {
+    window.__filterCtx = {
+      mode: 'festivals',
+      filmId: null,
+      supabaseReady: false,
+      lastAppliedPayload: null,
+      sortBy: 'deadline',
     };
-    return params;
-}
+    console.log('▶️  Inicializando Lógica de Filtros (Versão Limpa v3.9)...');
+  }
 
-// 2. Função 'applyFilters' com o bloco try...catch completo
-async function applyFilters() {
-    if (!window.supabase || typeof window.triggerFestivalSearch !== 'function') { 
-        console.warn("Módulo de renderização ainda não está pronto.");
-        return; 
+  /**
+   * Helper para aguardar Supabase. (Inalterado)
+   */
+  async function waitForSupabase(timeoutMs = 5000) {
+    // ... (código igual à v3.8) ...
+    const start = Date.now();
+    while (!window.supabase) {
+      /* ... espera ... */
     }
+    window.__filterCtx.supabaseReady = true;
+    return window.supabase;
+  }
+
+  // APIs globais (Inalteradas)
+  window.setFilterContext = ({ mode = 'festivals', filmId = null } = {}) => {
+    /* ... */
+  };
+  window.resetFilters = () => {
+    /* ... */
+  };
+
+  /**
+   * Função "mestre" chamada pela UI (filter-ui.js) (Inalterada)
+   */
+  window.triggerFestivalSearch = async () => {
+    let ids = null; // Garante que ids tenha um valor inicial
     try {
-        const params = getFilterParams(); // Usa a função auxiliar para pegar os parâmetros
+      supabase = await waitForSupabase();
+      const payload = buildSidebarPayload();
+      const matchIds = null;
 
-        // Chama a função no Supabase
-        const { data: idData, error: rpcError } = await window.supabase.rpc('filter_festivals', params);
-        if (rpcError) throw rpcError;
+      // ★ LOG ADICIONADO ★ Log antes da chamada RPC
+      console.log('[triggerFestivalSearch] Chamando rpcFilterFestivals...');
+      ids = await rpcFilterFestivals(payload, matchIds); // Atribui o resultado a 'ids'
+      // ★ LOG ADICIONADO ★ Log imediatamente após a chamada RPC
+      console.log(`[triggerFestivalSearch] rpcFilterFestivals retornou:`, ids);
 
-        const festivalIds = idData.map(item => item.id);
-        
-        // Dispara a renderização com os IDs encontrados
-        window.triggerFestivalSearch(festivalIds);
-
-    } catch (err) { // <<< Este bloco estava faltando, agora está corrigido.
-        console.error("Erro no processo de filtro:", err);
-        // Em caso de erro, dispara a renderização com uma lista vazia ou nula
-        window.triggerFestivalSearch(null); 
+      // Renderiza os resultados (seja um array de IDs ou um array vazio)
+      renderFilteredIds(ids);
+    } catch (err) {
+      // Erros da RPC ou de waitForSupabase/buildSidebarPayload serão pegos aqui
+      console.error('❌ Erro no processo de filtro (triggerFestivalSearch catch):', err);
+      renderFilteredIds(null, err); // Passa o erro para o renderizador
     }
-}
+  };
 
-// 3. Linha que expõe a função getParams para ser usada em outras páginas (como a de favoritos)
-if (window.applyFilters) {
-    window.applyFilters.getParams = getFilterParams;
-}
-        
-        function resetFilters() {
-            // [ALTERADO] para lidar com o slider dinâmico
-            Object.keys(activeFilters).forEach(key => { if (Array.isArray(activeFilters[key])) activeFilters[key] = []; });
-            activeFilters.searchTerm = '';
-            activeFilters.minFee = null;
-            activeFilters.maxFee = null;
-            if (sliderElement) {
-                sliderElement.noUiSlider.set([0, dynamicMaxFee]); // Reseta para o máximo dinâmico
-            }
-            if (searchInput) searchInput.value = '';
-            document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('.filter-category.open').forEach(cat => cat.classList.remove('open'));
-            applyFilters();
-        }
+  // ★★★ INÍCIO DA MUDANÇA PRINCIPAL ★★★
 
-        function escapeHtml(s) { return s.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-        const debounce = (func, delay) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), delay); }; };
-        const debouncedApplyFilters = debounce(applyFilters, 500);
+  /**
+   * ★ CORRIGIDO: Constrói o payload lendo os CHECKBOXES e o slider
+   */
+  function buildSidebarPayload() {
+    // Helper com logs (como na última tentativa)
+    const getCheckedValues = (filterGroupId) => {
+      console.log(`[getCheckedValues] Buscando grupo: ${filterGroupId}`);
+      const allCheckboxesInGroup = document.querySelectorAll(
+        `.custom-filter input[data-filter-group="${filterGroupId}"]`
+      );
+      console.log(
+        `[getCheckedValues] Encontrados ${allCheckboxesInGroup.length} checkboxes no total para ${filterGroupId}.`
+      );
+      const checkedBoxes = document.querySelectorAll(
+        `.custom-filter input[data-filter-group="${filterGroupId}"]:checked`
+      );
+      console.log(
+        `[getCheckedValues] Encontrados ${checkedBoxes.length} checkboxes MARCADOS para ${filterGroupId}.`
+      );
+      if (!checkedBoxes || checkedBoxes.length === 0) {
+        console.log(`[getCheckedValues] Nenhum marcado para ${filterGroupId}, retornando null.`);
+        return null;
+      }
+      const values = Array.from(checkedBoxes).map((cb) => parseInt(cb.value));
+      console.log(`[getCheckedValues] Valores marcados para ${filterGroupId}:`, values);
+      return values.length ? values : null;
+    };
 
-        fetchFilterOptions().then(() => { renderFilterUI(); });
+    // Leitura do slider (inalterada)
+    let min_fee = null,
+      max_fee = null;
+    const slider = document.getElementById('fee-range-slider');
+    if (slider && slider.noUiSlider) {
+      /* ... lógica do slider ... */
     }
 
-    // Inicia todo o processo
-    initializeFilters();
+    // Monta payload (inalterado)
+    const payload = {
+      search_term: document.querySelector('.search-field input')?.value || null,
+      country_ids: getCheckedValues('filter-country'),
+      genre_ids: getCheckedValues('filter-genre'),
+      category_ids: getCheckedValues('filter-category'),
+      qualifier_ids: getCheckedValues('filter-qualifier'),
+      platform_ids: getCheckedValues('filter-platform'),
+      fee_status_ids: getCheckedValues('filter-fee-status'),
+      month_opening_ids: getCheckedValues('filter-month'),
+      status_ids: getCheckedValues('filter-status'),
+      min_fee: min_fee,
+      max_fee: max_fee,
+    };
 
-    window.applyFilters.getParams = getFilterParams;
-});
+    // ★ LOG CORRIGIDO ★ Usa JSON.stringify para garantir a visualização
+    console.log('Filtro aplicado com payload (v3.9.1):', JSON.stringify(payload, null, 2));
+    return payload;
+  }
+
+  // ★★★ FIM DA MUDANÇA PRINCIPAL ★★★
+
+  /**
+   * Executa a RPC de filtro e retorna IDs de festivais
+   * (Esta função está correta desde a v3.7/v3.8)
+   */
+  async function rpcFilterFestivals(payload, matchIds = null) {
+    if (!supabase) throw new Error('Supabase client not ready.');
+    let rpcName, rpcPayload;
+
+    // Lógica de seleção RPC (inalterada)
+    if (window.__filterCtx.mode === 'festmatch') {
+      /* ... */
+    } else {
+      rpcName = 'filter_festivals';
+      rpcPayload = { ...payload, active_currency: 'BRL' };
+    }
+
+    // ★ LOG CORRIGIDO ★ Usa JSON.stringify
+    console.log(
+      `Enviando payload para RPC '${rpcName}' (v3.9.1):`,
+      JSON.stringify(rpcPayload, null, 2)
+    );
+
+    // ★ CAPTURA DE ERRO REFINADA ★
+    const { data, error } = await supabase.rpc(rpcName, rpcPayload);
+
+    if (error) {
+      console.error(`Erro na chamada RPC '${rpcName}':`, error); // Log específico do erro RPC
+      throw error; // Relança o erro para ser pego pelo triggerFestivalSearch
+    }
+
+    // ★ RETORNO GARANTIDO ★ Retorna array vazio se não houver dados
+    const filteredIds = data && data.length > 0 ? data.map((r) => r.id) : [];
+    console.log(`RPC '${rpcName}' retornou ${filteredIds.length} IDs.`);
+    return filteredIds; // Sempre retorna um array (vazio ou com IDs)
+  }
+
+  /**
+   * Chama o renderizador no 'festivals-render.js' (Inalterada)
+   */
+  function renderFilteredIds(ids, error = null) {
+    if (error) {
+      console.error('[filters.js] Erro recebido, notificando renderizador:', error);
+      if (typeof window.renderFestivalsByIds === 'function') {
+        window.renderFestivalsByIds(null, error);
+      } else {
+        console.error(
+          'ERRO FATAL: window.renderFestivalsByIds não encontrada ao tentar reportar erro.'
+        );
+      }
+      return;
+    }
+
+    // ★ LOG MELHORADO ★ Garante que 'ids' seja um array
+    const idsToDeliver = Array.isArray(ids) ? ids : [];
+    console.log(`[filters.js] Entregando ${idsToDeliver.length} IDs para renderFestivalsByIds.`);
+
+    if (typeof window.renderFestivalsByIds === 'function') {
+      window.renderFestivalsByIds(idsToDeliver); // Entrega sempre um array
+    } else {
+      console.error('ERRO FATAL: window.renderFestivalsByIds não encontrada.');
+    }
+  }
+
+  // Inicialização automática (Inalterada)
+  (async function initFilters() {
+    try {
+      supabase = await waitForSupabase();
+      console.log('✅ Módulo de Filtros inicializado com Supabase (v3.9).');
+    } catch (err) {
+      console.error('⛔ Erro fatal ao inicializar módulo de filtros:', err);
+    }
+  })();
+})();

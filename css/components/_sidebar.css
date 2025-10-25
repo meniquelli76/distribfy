@@ -1,4 +1,4 @@
-/* css/components/_sidebar.css */
+/* css/components/_sidebar.css (CORRIGIDO para UI Customizada v3.10) */
 
 .board-sidebar {
   position: sticky;
@@ -16,73 +16,21 @@
   padding: var(--spacing-5);
 }
 
-.favorites-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-5) var(--spacing-6);
-}
+/* ... (Estilos .favorites-* inalterados) ... */
 
-.festmatch-fav {
-  display: flex;
-  justify-content: center; /* <-- Centraliza o item restante */
-  align-items: center;
-  padding: var(--spacing-5) var(--spacing-6);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-large);
-  padding: var(--spacing-5);
-}
+.favorites-box { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-5) var(--spacing-6); }
+.festmatch-fav { display: flex; justify-content: center; align-items: center; padding: var(--spacing-5) var(--spacing-6); background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius-large); padding: var(--spacing-5); }
+.favorites-title { font-size: 1.125rem; font-weight: var(--font-weight-bold); color: var(--color-text-secondary); text-transform: lowercase; }
+.favorites-badge { display: flex; align-items: center; gap: var(--spacing-2); text-decoration: none; }
+.favorites-badge span { font-size: 0.875rem; font-weight: var(--font-weight-bold); color: var(--color-text-secondary); }
 
-.favorites-title {
-  font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-  text-transform: lowercase;
-}
 
-.favorites-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-}
+/* ... (Estilos .film-selector inalterados) ... */
+.film-selector { position: relative; width: 100%; }
+.film-selector select { -webkit-appearance: none; appearance: none; width: 100%; padding: var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-4); border: 1px solid var(--color-border); border-radius: var(--border-radius-medium); font-size: 0.875rem; color: var(--color-text-primary); background-color: var(--color-surface); }
+.film-selector select:focus { outline: none; box-shadow: 0 0 12px rgba(0, 0, 0, 0.1); border-color: var(--color-border); }
+.film-selector .select-icon { position: absolute; right: var(--spacing-4); top: 50%; transform: translateY(-50%); pointer-events: none; }
 
-.favorites-badge span {
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-}
-
-.film-selector {
-  position: relative;
-  width: 100%;
-}
-
-.film-selector select {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  padding: var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-medium);
-  font-size: 0.875rem;
-  color: var(--color-text-primary);
-  background-color: var(--color-surface);
-}
-
-.film-selector select:focus {
-  outline: none;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-border);
-}
-
-.film-selector .select-icon {
-  position: absolute;
-  right: var(--spacing-4);
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
 
 .filter-panel {
   position: relative;
@@ -94,124 +42,50 @@
   align-items: stretch;
   gap: var(--spacing-3);
   margin-bottom: var(--spacing-5);
-  /* AJUSTE 1: Aumenta o padding para afastar o campo de busca */
   padding-top: var(--spacing-6);
 }
 
 .btn-clear {
   position: absolute;
-  /* AJUSTE 2: Diminui o 'top' para subir o botão */
   top: var(--spacing-3);
   right: var(--spacing-5);
-  background: none;
-  border: none;
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  padding: var(--spacing-1);
+  background: none; border: none; font-size: 0.875rem; font-weight: var(--font-weight-medium); color: var(--color-text-secondary); cursor: pointer; transition: opacity 0.2s ease; padding: var(--spacing-1);
 }
+.btn-clear:hover { opacity: 0.7; }
 
-.btn-clear:hover {
-  opacity: 0.7;
-}
+.search-field { width: 100%; padding: var(--spacing-3) var(--spacing-4); border: 1px solid var(--color-border); border-radius: 20px; display: flex; align-items: center; gap: var(--spacing-2); }
+.search-field input { border: none; outline: none; background: transparent; font-size: 0.875rem; color: var(--color-text-primary); width: 100%; }
+.search-field input::placeholder { color: var(--color-text-placeholder); }
 
-.search-field {
-  width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-}
+.sort-options { display: flex; align-items: center; gap: var(--spacing-3); padding: var(--spacing-4) var(--spacing-3); margin-bottom: var(--spacing-4); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+.sort-label { font-size: 0.75rem; font-weight: var(--font-weight-medium); color: var(--color-text-secondary); margin-right: var(--spacing-2); line-height: 1.2; }
+.sort-btn { padding: var(--spacing-1) var(--spacing-3); font-size: 0.75rem; font-weight: var(--font-weight-bold); color: var(--color-text-primary); cursor: pointer; border-radius: var(--border-radius-medium); border: 1px solid var(--color-border); background: var(--color-background); transition: background-color 0.2s ease, color 0.2s ease; }
+.sort-btn.active { background-color: var(--color-primary-accent); color: var(--color-primary-accent-text); border-color: var(--color-primary-accent); }
+.sort-btn:hover:not(.active) { background-color: #e9ecef; }
 
-.search-field input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 0.875rem;
-  color: var(--color-text-primary);
-  width: 100%;
-}
-
-.search-field input::placeholder {
-  color: var(--color-text-placeholder);
-}
-
-.sort-options {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-4) var(--spacing-3);
-  margin-bottom: var(--spacing-4);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.sort-label {
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  margin-right: var(--spacing-2);
-  line-height: 1.2;
-}
-
-.sort-btn {
-  padding: var(--spacing-1) var(--spacing-3);
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  border-radius: var(--border-radius-medium);
-  border: 1px solid var(--color-border);
-  background: var(--color-background);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.sort-btn.active {
-  background-color: var(--color-primary-accent);
-  color: var(--color-primary-accent-text);
-  border-color: var(--color-primary-accent);
-}
-
-.sort-btn:hover:not(.active) {
-  background-color: #e9ecef;
-}
 
 .filters-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
-}
-
-.filter-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  background: none;
-  border: none;
-  padding: var(--spacing-2) var(--spacing-3);
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  text-align: left;
-  border-radius: var(--border-radius-medium);
-  transition: background-color 0.2s ease;
-}
-.filter-item:hover {
-  background-color: var(--color-background);
+  /* ★ CORREÇÃO ★ Removido gap aqui para controle fino no .custom-filter */
 }
 
 
+/* ============================================== */
+/* ★★★ ESTILOS CORRIGIDOS PARA UI CUSTOMIZADA ★★★ */
+/* ============================================== */
 
-/* Estilos para o Acordeão de Filtros */
-.filter-category {
+.custom-filter { /* ★ CORREÇÃO ★ Antigo .filter-category para espaçamento */
   border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--spacing-2); /* Espaço abaixo de cada filtro */
+  margin-bottom: var(--spacing-2); /* Espaço entre filtros */
 }
+.custom-filter:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 
 .filter-toggle {
   display: flex;
@@ -220,52 +94,70 @@
   width: 100%;
   background: none;
   border: none;
-  padding: var(--spacing-1) 0;
-  padding: var(--spacing-2) 0;
+  padding: var(--spacing-2) 0; /* Aumentado um pouco o padding vertical */
   cursor: pointer;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
+  text-align: left; /* Garante alinhamento */
 }
 
-.filter-toggle img {
+.filter-toggle .chevron-icon { /* ★ CORREÇÃO ★ Seletor mais específico */
   transition: transform 0.3s ease;
+  width: 10px; /* Ajuste o tamanho do ícone se necessário */
+  height: auto;
 }
 
-.filter-category.open .filter-toggle img {
+.filter-toggle.active .chevron-icon { /* ★ CORREÇÃO ★ Classe 'active' é adicionada pelo JS */
   transform: rotate(180deg);
 }
 
-.filter-options-panel {
+.filter-dropdown { /* ★ CORREÇÃO ★ Antigo .filter-options-panel */
   max-height: 0;
-  overflow-y: auto;
+  overflow: hidden; /* Esconde o conteúdo que transborda */
   visibility: hidden;
-  transition: max-height 0.4s ease-out, visibility 0.4s ease-out;
+  transition: max-height 0.3s ease-out, visibility 0.3s ease-out, padding-bottom 0.3s ease-out;
+  padding-bottom: 0; /* Começa sem padding */
 }
 
-.filter-category.open .filter-options-panel {
-  max-height: 200px; /* Altura máxima do painel aberto */
+.filter-toggle.active + .filter-dropdown { /* ★ CORREÇÃO ★ Condição para abrir */
+  max-height: 150px; /* Altura máxima da "caixinha" - AJUSTE CONFORME NECESSÁRIO */
   visibility: visible;
-  padding-bottom: var(--spacing-4);
+  overflow-y: auto; /* Adiciona rolagem se o conteúdo for maior */
+  padding-bottom: var(--spacing-3); /* Espaço no final da lista */
+  margin-top: var(--spacing-2); /* Espaço entre o botão e a lista */
 }
 
-/* Estilo para cada item de checkbox */
-.filter-option {
-  display: block;
+.filter-options-list { /* ★ CORREÇÃO ★ Estilo para a <ul> */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2); /* Espaço entre os itens da lista */
+}
+
+.filter-options-list li {
+  /* Nenhum estilo específico necessário aqui por enquanto */
+}
+
+/* Estilo customizado para o Checkbox */
+.filter-options-list label { /* ★ CORREÇÃO ★ Antigo .filter-option */
+  display: block; /* Garante que a label ocupe a linha */
   position: relative;
-  padding-left: 28px;
-  margin-bottom: var(--spacing-3);
+  padding-left: 28px; /* Espaço para o checkbox customizado */
   cursor: pointer;
   font-size: 0.8125rem;
+  color: var(--color-text-primary); /* Cor do texto da opção */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-/* Esconde o checkbox padrão do navegador */
-.filter-option input {
+/* Esconde o checkbox padrão */
+.filter-options-list input[type="checkbox"] { /* ★ CORREÇÃO ★ Seletor mais específico */
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -273,53 +165,61 @@
   width: 0;
 }
 
-/* Cria a caixinha customizada */
-.checkmark {
+/* Cria a "caixinha" do checkbox customizado */
+.filter-options-list label span::before { /* ★ CORREÇÃO ★ Usa ::before no SPAN */
+  content: "";
   position: absolute;
-  top: 0;
   left: 0;
-  height: 18px;
-  width: 18px;
+  top: 1px; /* Ajuste fino vertical */
+  height: 16px; /* Tamanho da caixinha */
+  width: 16px;  /* Tamanho da caixinha */
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-medium);
-  transition: background-color 0.2s ease;
+  border-radius: var(--border-radius-medium); /* Deixa quadrado com borda arredondada */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.filter-option:hover input ~ .checkmark {
-  background-color: #ccc;
+/* Hover na label afeta a caixinha */
+.filter-options-list label:hover input ~ span::before { /* ★ CORREÇÃO ★ */
+  background-color: #eee; /* Cor de fundo no hover */
 }
 
-.filter-option input:checked ~ .checkmark {
-  background-color: #343a40;
-  border-color: #343a40;
+/* Estilo da caixinha quando marcada */
+.filter-options-list input:checked ~ span::before { /* ★ CORREÇÃO ★ */
+  background-color: var(--color-primary-accent); /* Cor de fundo quando marcado */
+  border-color: var(--color-primary-accent);
 }
 
-/* Cria o símbolo de 'check' (escondido por padrão) */
-.checkmark:after {
+/* Cria o símbolo de "check" (escondido por padrão) */
+.filter-options-list label span::after { /* ★ CORREÇÃO ★ Usa ::after no SPAN */
   content: "";
   position: absolute;
   display: none;
-}
-
-.filter-option input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.filter-option .checkmark:after {
-  left: 6px;
-  top: 3px;
+  left: 5px;  /* Posição horizontal do check */
+  top: 2px;   /* Posição vertical do check */
   width: 5px;
   height: 10px;
-  border: solid white;
+  border: solid white; /* Cor do check */
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 
-/* Estilos para o Range Slider de Taxa */
-filter-slider {
+/* Mostra o "check" quando marcado */
+.filter-options-list input:checked ~ span::after { /* ★ CORREÇÃO ★ */
+  display: block;
+}
+
+
+/* ============================================== */
+/* ★★★ FIM DAS CORREÇÕES PARA UI CUSTOMIZADA ★★★ */
+/* ============================================== */
+
+
+/* Estilos para o Range Slider de Taxa (Inalterados, exceto a classe container) */
+.filter-slider { /* ★ CORREÇÃO ★ Adicionada classe para container do slider, se necessário */
   padding-bottom: var(--spacing-5);
-  border-bottom: 1px solid var(--color-border);
+  /* border-bottom: 1px solid var(--color-border); */ /* Removido para usar o do .custom-filter */
+   margin-bottom: var(--spacing-2); /* Espaçamento consistente */
 }
 
 #fee-range-slider {
@@ -332,44 +232,12 @@ filter-slider {
   font-size: 0.75rem;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
+  padding: 0 5px; /* Alinha com o slider */
 }
 
-/* Estilos customizados para o noUiSlider */
-.noUi-target {
-  background: #E9ECEF;
-  border-radius: 6px; /* ALTERADO: Aumenta o arredondamento */
-  border: 1px solid #DEE2E6;
-  box-shadow: none;
-  height: 6px; /* ALTERADO: Deixa a barra mais fina */
-}
-
-.noUi-connect {
-  background: var(--color-primary-accent, #343a40);
-}
-
-.noUi-handle {
-  border: 1px solid var(--color-primary-accent, #343a40); /* ALTERADO: Borda mais fina */
-  border-radius: 50%;
-  background: #FFF;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Opcional: Sombra sutil */
-  width: 16px !important;   /* ALTERADO: Levemente menor */
-  height: 16px !important;  /* ALTERADO: Levemente menor */
-  right: -8px !important;
-  top: -5px !important;
-  cursor: grab;
-}
-
-.noUi-handle:active {
-  cursor: grabbing;
-}
-
-.noUi-handle:after, .noUi-handle:before {
-  display: none;
-}
-
-.favorites-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  text-decoration: none; /* <-- ADICIONE ESTA LINHA */
-}
+/* Estilos noUiSlider (Inalterados) */
+.noUi-target { background: #E9ECEF; border-radius: 6px; border: 1px solid #DEE2E6; box-shadow: none; height: 6px; }
+.noUi-connect { background: var(--color-primary-accent, #343a40); }
+.noUi-handle { border: 1px solid var(--color-primary-accent, #343a40); border-radius: 50%; background: #FFF; box-shadow: 0 1px 3px rgba(0,0,0,0.1); width: 16px !important; height: 16px !important; right: -8px !important; top: -5px !important; cursor: grab; }
+.noUi-handle:active { cursor: grabbing; }
+.noUi-handle:after, .noUi-handle:before { display: none; }

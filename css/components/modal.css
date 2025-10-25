@@ -33,3 +33,54 @@
   gap: var(--spacing-4);
   margin-top: var(--spacing-7);
 }
+
+/* MODAL SALVANDO FILME */
+
+/* O container da barra */
+.progress-modal-bar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--color-surface-hover);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: var(--spacing-6);
+}
+
+/* O preenchimento da barra */
+.progress-modal-bar-inner {
+  width: 0%; /* Começa em 0 */
+  height: 100%;
+  background-color: var(--color-brand-primary);
+  border-radius: 6px;
+  transition: width 0.5s ease-out;
+}
+
+/* Estilo para o link do logo (Ação Final) */
+.festmatch-logo-link img {
+  height: 36px;
+  max-width: 150px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+.festmatch-logo-link:hover img {
+  opacity: 1;
+}
+
+/* Estilo para o botão "Depois" (Ação Final) */
+.btn-primary-outline {
+  /* (Defina seu estilo de botão primário vazado) */
+  /* Exemplo: */
+  background-color: transparent;
+  border: 1px solid var(--color-brand-primary);
+  color: var(--color-brand-primary);
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+.btn-primary-outline:hover {
+  background-color: var(--color-brand-primary-hover);
+  color: var(--color-surface);
+}

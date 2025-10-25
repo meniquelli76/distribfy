@@ -236,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initFestivalNameValidation() {
     const festivalNameInput = document.getElementById('festival-name');
+    if (!festivalNameInput) return;
     const errorSpan = document.getElementById('festival-name-error');
     const formGroup = festivalNameInput.closest('.form-group');
 

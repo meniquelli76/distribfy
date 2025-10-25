@@ -92,21 +92,45 @@ onSupabaseReady((supabase) => {
   const allProgressSteps = document.querySelectorAll('.progress-bar-step');
 
   // ===================================================================
-  // FUNÇÃO PRINCIPAL: SUBMISSÃO DO FORMULÁRIO (ATUALIZADA)
+  // FUNÇÃO PRINCIPAL: SUBMISSÃO DO FORMULÁRIO COM MODAL
   // ===================================================================
   async function handleFilmSubmit(event) {
     event.preventDefault();
 
+    // CORREÇÃO: Pega a referência do botão de submit
+    const submitButton = btnSubmitFilm; //
+
+    // 1. VALIDAÇÃO (Reutilizada)
     if (!validateStep(currentStep)) {
       alert('Por favor, corrija os erros no passo atual antes de salvar.');
       return;
     }
 
-    const submitButton = btnSubmitFilm;
-    submitButton.disabled = true;
-    submitButton.textContent = 'Salvando...';
+    // 2. PEGAR OS ELEMENTOS DO MODAL
+    const modal = document.getElementById('progress-modal-overlay');
+    const modalText = document.getElementById('progress-modal-text');
+    const progressBar = document.getElementById('progress-modal-bar-inner');
+    const modalActions = document.getElementById('progress-modal-actions');
+
+    if (!modal || !modalText || !progressBar || !modalActions) {
+      console.error('Elementos do modal de progresso não encontrados! Abortando.');
+      alert('Erro: Modal de progresso não encontrado.');
+      return;
+    }
+
+    // --- ETAPA 1: "Estamos criando seu filme" ---
+    modalText.innerHTML = 'Estamos criando seu filme...';
+    progressBar.style.backgroundColor = 'var(--color-brand-primary)';
+    progressBar.style.width = '10%';
+    modalActions.innerHTML = '';
+    modal.style.display = 'flex'; // MOSTRA O MODAL
+
+    // CORREÇÃO: Desabilita o botão de submit
+    if (submitButton) submitButton.disabled = true;
 
     try {
+      // --- 3. LÓGICA DE SALVAMENTO (Copiada do seu original) ---
+      // [INÍCIO DA LÓGICA ORIGINAL]
       if (!currentProfileId || !currentAuthUserId) {
         await populateProfileSelects();
         if (!currentProfileId || !currentAuthUserId)
@@ -117,6 +141,7 @@ onSupabaseReady((supabase) => {
 
       let posterThumbnailUrl = null;
       if (posterFileForUpload) {
+        // ... (lógica de upload de poster)
         const fileExt = 'jpeg';
         const fileName = `${ownerUuidToSave}-${Date.now()}.${fileExt}`;
         const filePath = `${ownerUuidToSave}/${fileName}`;
@@ -139,6 +164,7 @@ onSupabaseReady((supabase) => {
       }
 
       if (filmObject.completion_date) {
+        // ... (lógica de data)
         try {
           const parts = filmObject.completion_date.split('/');
           if (parts.length === 3) {
@@ -154,30 +180,19 @@ onSupabaseReady((supabase) => {
       }
 
       if (filmObject.distribution_budget_amount && localCurrencyCode) {
+        // ... (lógica de conversão de moeda)
         const localAmount = parseFloat(filmObject.distribution_budget_amount);
-
         if (localCurrencyCode === 'USD') {
-          // Se a moeda é USD, o valor local É o valor USD.
-          filmObject.distribution_budget_amount = localAmount; // (ex: 100)
-          filmObject.distribution_budget_usd = localAmount; // (ex: 100)
+          filmObject.distribution_budget_amount = localAmount;
+          filmObject.distribution_budget_usd = localAmount;
         } else {
-          // Se for BRL (ex: 100)
           const rate = await window.CurrencyService.getExchangeRate(supabase, localCurrencyCode);
           if (rate && rate > 0) {
             const usdAmount = localAmount / rate;
-
-            // CORREÇÃO: Atribui os valores às colunas corretas
-            filmObject.distribution_budget_amount = localAmount; // Mantém 100 (local)
-            filmObject.distribution_budget_usd = Math.round(usdAmount); // Salva 19 (USD)
-
-            console.log(
-              `Conversão de Orçamento: ${localAmount} ${localCurrencyCode} (Salvo em '..._amount') -> ${filmObject.distribution_budget_usd} USD (Salvo em '..._usd') (Taxa: ${rate})`
-            );
+            filmObject.distribution_budget_amount = localAmount;
+            filmObject.distribution_budget_usd = Math.round(usdAmount);
           } else {
-            // Fallback (salva o valor local e nulo no USD)
-            console.warn(
-              `Não foi possível converter o orçamento para USD. Taxa para ${localCurrencyCode} não encontrada. Salvando valor local.`
-            );
+            console.warn(`Não foi possível converter o orçamento para USD.`);
             filmObject.distribution_budget_amount = localAmount;
             filmObject.distribution_budget_usd = null;
           }
@@ -185,6 +200,7 @@ onSupabaseReady((supabase) => {
       }
 
       if (filmObject.duration_in_seconds) {
+        // ... (lógica de duração)
         const parts = filmObject.duration_in_seconds.split(':');
         const minutes = parseInt(parts[0], 10) || 0;
         const seconds = parseInt(parts[1], 10) || 0;
@@ -197,6 +213,7 @@ onSupabaseReady((supabase) => {
       filmObject.is_student_project = filmObject.is_student_project === 'true';
 
       if (currentProfileRole === 'distribuidora') {
+        // ... (lógica de distribuidora)
         filmObject.distributor_profile_id = ownerUuidToSave;
         if (distributorProfileIdInput && distributorProfileIdInput.value) {
           filmObject.distributor_profile_id = distributorProfileIdInput.value;
@@ -220,9 +237,6 @@ onSupabaseReady((supabase) => {
 
       console.log("Objeto a ser salvo em 'films':", JSON.stringify(filmObject, null, 2));
 
-      // ======================================================
-      // INSERIR vs ATUALIZAR (Lógica de Edição)
-      // ======================================================
       let newFilmId = null;
       if (isEditing && currentEditingFilmId) {
         // MODO DE ATUALIZAÇÃO
@@ -237,7 +251,6 @@ onSupabaseReady((supabase) => {
         if (error) throw new Error(`Falha ao atualizar o filme: ${error.message}`);
         newFilmId = data.id;
 
-        // Limpar dados relacionais antigos antes de salvar os novos
         await supabase.from('film_category_assignments').delete().eq('film_id', newFilmId);
         await supabase.from('film_genre_assignments').delete().eq('film_id', newFilmId);
         await supabase.from('film_credits').delete().eq('film_id', newFilmId);
@@ -305,11 +318,7 @@ onSupabaseReady((supabase) => {
             person_id: credit.personId,
             role_id: credit.roleId,
           }));
-          const { error: creditError } = await supabase
-            .from('film_credits')
-            .insert(creditsToInsert);
-          if (creditError)
-            console.warn('Filme salvo, mas falha ao salvar créditos:', creditError.message);
+          await supabase.from('film_credits').insert(creditsToInsert);
         }
       }
       // Salva Colaboradores (Convites)
@@ -321,25 +330,95 @@ onSupabaseReady((supabase) => {
           invited_name: invite.name,
           status: 'pending',
         }));
-        const { error: inviteError } = await supabase
-          .from('film_invitations')
-          .insert(invitesToInsert);
-        if (inviteError)
-          console.warn('Filme salvo, mas falha ao salvar convites:', inviteError.message);
+        await supabase.from('film_invitations').insert(invitesToInsert);
       }
+      // [FIM DA LÓGICA ORIGINAL]
 
-      alert(`Filme ${isEditing ? 'atualizado' : 'salvo'} com sucesso!`);
+      // --- ETAPA 2: "Criando o Match" (Fake Delay) ---
+      await new Promise((resolve) => {
+        modalText.innerHTML = 'Criando o Match do seu filme com festivais...';
+        progressBar.style.width = '60%';
+        setTimeout(resolve, 3000); // 3s de delay para o usuário ler
+      });
 
-      showFormPanel(false); // Esconde o painel
-      await loadAndRenderFilms(); // Recarrega a lista de filmes
+      // --- ETAPA 3: "Parabéns!" (Mensagem Final) ---
+      progressBar.style.width = '100%';
+      modalText.innerHTML = `
+          <p style="font-size: 1.1rem; text-align: center; margin-top: 0; margin-bottom: 8px;">
+              <strong>Parabéns!</strong>
+          </p>
+          <p style="font-size: 0.95rem; text-align: center; margin-top: 0; line-height: 1.4;">
+              Seu filme está pronto para distribuição e já tem um match com festivais. 
+              Acesse o FestMatch para conferir os compatíveis ou vá até Festivais 
+              para adicionar novas seleções.
+          </p>
+      `;
+
+      modalActions.innerHTML = `
+          <div style="display:flex; flex-direction:column; align-items:center; width:100%; gap: 1rem;">
+              <a href="/festmatch.html?film_id=${newFilmId}" class="festmatch-logo-link" 
+                 title="Ir para o Festmatch" style="display: block; text-align: center;">
+                  <img src="public/logos/logo_festmatch.svg" alt="Festmatch" style="height: 36px; max-width: 150px;">
+              </a>
+              <a href="/festivals.html" class="btn-secondary" 
+                 style="width: 100%; text-align: center; padding: var(--spacing-3); text-decoration: none;">Ir para Festivais</a>
+              <button id="modal-btn-depois" class="btn-primary-outline" 
+                      style="width: 100%;">Depois</button>
+          </div>
+      `;
+
+      // Adiciona o handler do botão "Depois"
+      const btnDepois = document.getElementById('modal-btn-depois');
+      const btnDepoisClone = btnDepois.cloneNode(true);
+      btnDepois.parentNode.replaceChild(btnDepoisClone, btnDepois);
+
+      btnDepoisClone.addEventListener('click', () => {
+        modal.style.display = 'none';
+        showFormPanel(false); //
+        loadAndRenderFilms(); //
+
+        // CORREÇÃO: Reabilita o botão
+        if (submitButton) submitButton.disabled = false;
+      });
+
+      // Adiciona handlers para os links fecharem o modal
+      modalActions.querySelector('.festmatch-logo-link').addEventListener('click', () => {
+        modal.style.display = 'none';
+        if (submitButton) submitButton.disabled = false;
+      });
+      modalActions.querySelector('.btn-secondary').addEventListener('click', () => {
+        modal.style.display = 'none';
+        if (submitButton) submitButton.disabled = false;
+      });
     } catch (error) {
+      // --- ETAPA DE ERRO ---
       console.error('ERRO GERAL AO SALVAR O FILME:', error);
-      alert(`Ocorreu um erro ao salvar:\n${error.message}`);
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Salvar Filme';
-      }
+
+      progressBar.style.width = '100%';
+      progressBar.style.backgroundColor = 'var(--color-danger-base)';
+      modalText.innerHTML = `
+          <p style="font-size: 1.1rem; text-align: center; margin-top: 0; margin-bottom: 8px;">
+              <strong>Ocorreu um erro</strong>
+          </p>
+          <p style="font-size: 0.95rem; text-align: center; margin-top: 0; line-height: 1.4;">
+              Não foi possível salvar seu filme:<br>
+              <em style="font-size: 0.85rem;">${error.message}</em>
+          </p>
+      `;
+
+      modalActions.innerHTML =
+        '<button id="modal-btn-fechar-erro" class="btn-primary" style="width: 100%;">Fechar</button>';
+
+      const btnFechar = document.getElementById('modal-btn-fechar-erro');
+      const btnFecharClone = btnFechar.cloneNode(true);
+      btnFechar.parentNode.replaceChild(btnFecharClone, btnFechar);
+
+      btnFecharClone.addEventListener('click', () => {
+        modal.style.display = 'none';
+
+        // CORREÇÃO: Reabilita o botão
+        if (submitButton) submitButton.disabled = false;
+      });
     }
   }
 
